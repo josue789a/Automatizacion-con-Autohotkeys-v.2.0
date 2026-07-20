@@ -45,3 +45,11 @@ Migrar el sistema a otro software de destino implicaría remapear las zonas de p
 
 ## Stack
 AutoHotkey v2 · Event-driven architecture · State machines · Real-time window & zone detection · Git automation
+
+## Herramienta de calibración (CALIBRADOR_v3_DPI)
+
+El sistema incluye un calibrador independiente que resuelve la recalibración de las 5 zonas de activación cada vez que cambia el hardware (tableta o monitor). Usa la misma DPI awareness que el motor principal, así que basta con capturar (F1) los mismos puntos de referencia que definen cada zona en el código, copiarlos (F2) y reemplazar las coordenadas viejas — sin tener que calcularlas ni editarlas a ciegas.
+
+Uso: F1 captura la coordenada del punto donde está el cursor, F2 copia todos los puntos capturados al portapapeles listos para pegar en el script principal, y F3 limpia la lista para una nueva ronda. Incluye además un modo de coordenadas en vivo (F4) para ubicar bordes exactos con precisión de píxel.
+
+Una recalibración completa toma segundos en vez de editar coordenadas a ciegas dentro del código del motor principal.
