@@ -40,8 +40,6 @@ Sí. El sistema fue construido para una herramienta específica, pero ninguno de
 
 Migrar el sistema a otro software de destino implicaría remapear las zonas de pantalla y los fragmentos de título — no rediseñar la arquitectura de eventos y estados que lo sostiene.
 
-## Stack
-AutoHotkey v2 · Event-driven architecture · State machines · Real-time window & zone detection · Git automation
 
 ## Herramienta de calibración (CALIBRADOR_v3_DPI)
 
