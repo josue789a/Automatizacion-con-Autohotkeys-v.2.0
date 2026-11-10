@@ -1,0 +1,9 @@
+# Archivos de respaldo y temporales
+*.bak
+*.bak*
+*.tmp
+desktop.ini
+*.rar
+_backups/
+_historico/
+*.lnk

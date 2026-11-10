@@ -1,0 +1,34 @@
+MANIFEST — petición a Claude: calibrador multi-monitor + paletas (2026-11-08 19:20)
+==================================================================================
+
+Carpeta: C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\_claude_entrega\peticion-20261108-calibrador-paletas
+
+Contenido (subida mínima: PETICION.md + MANIFEST.txt + img/; los 6 archivos de código
+fuente son opcionales porque §4 de PETICION.md va inline y verificado byte a byte):
+  PETICION.md   622 l  392c1262173c564ae223598807b6472eca7744b9460c168a1b2422b5f10c0e77
+                autocontenido: protocolo, contexto verificado, 3 peticiones con causas
+                diagnosticadas, código inline con anclas, formato de diffs, lista de subida
+                Verificado 2026-11-08: 10/10 bloques inline == disco en las líneas citadas;
+                /validate exit 0 en XPPEN_NO_ADMIN.ahk y XPPEN AHK VERSION ESTABLE.ahk
+  img/img1-monitor24-carga-ok.png    0af97363522dc87d743f3dfd242810a8dc80f06a932d10b07bdeb04400666036
+  img/img2-tableta-desborde.png      74648ec0895f9c19672c41936b4bffd8d31ee436f81b29cd14a7f7541c9179f7
+  img/img3-paletas-vacias.png        830ba5c29b2e787ef0e224195ad68913fdbffdd872faf475a4e1d9ca8b9e6b06
+  img/img4-csp-interfaz.png          872dad11eec698634a37387b2ab20b15718e7b6039036f147c68131bf33656d3
+
+Fuentes referenciadas (NO editar desde este paquete; hashes del estado verificado):
+  XPPEN AHK VERSION ESTABLE.ahk  2c7a7cae0711f782a1464543a2c27bd9a5ca92fa1337ef4db962a16721e2360b
+  lib/calibrador.ahk   1868 l    b9eb073c0c5c303c755349c2ed146c759c9dabc391e969e77ac31492e7fd2ddd
+  lib/theme_gfx.ahk     559 l    3a6713e25ce4b1ab342b14ed2655455a2d4a4d8e795ab6f9e0e48fea02519ef1
+  lib/core_config.ahk            e7d70e85c233f979a86d86db61af3c7ff7a2943acbc70a6cb981410a3d1a27d7
+  theme.ini                      7c19d26526c72887727f7318c96e31b046b87faa1bf06605df05202b653cf5ca
+  posiciones_gui.ini             db1001363a9e6136916024010a882b1bdef06dfadd8e5da99d039964c9ed6be8
+
+Reparto: un solo Claude recibe PETICION.md + img/ + MANIFEST.txt. Las 3 peticiones van
+numeradas y atómicas (§2, §3.3, §3.4); los diffs se devuelven en ese orden y se aplican
+1 -> 2 -> 3 sobre una copia con el gate único descrito en §5 de PETICION.md.
+
+Fuera de alcance (prohibido tocar): _PtsTopToggle / bPin / alwaysOnTop, hotkeys,
+estabilizador, HUB, los 5 perfiles de paleta existentes, encoding UTF-8 BOM + CRLF de los ini.
+
+Colores CSP medidos por píxel (moda por región de img4, 2560x1599): ver tabla §3.4 de
+PETICION.md. Base: 494949 / 515151 / 424242 / 636D83 / 6A748A / 2E2E2E / 464646.

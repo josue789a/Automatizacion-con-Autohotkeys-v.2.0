@@ -1,0 +1,8 @@
+﻿=== TEST RUN NO ADMIN ===
+Total GUIs de AutoHotkey encontradas: 6
+  GUI 528128: Vis=1 | X=-2560 Y=-217 W=21 H=17 | ''
+  GUI 332892: Vis=1 | X=-1079 Y=-189 W=21 H=17 | ''
+  GUI 332836: Vis=1 | X=-979 Y=-169 W=69 H=17 | ''
+  GUI 267292: Vis=1 | X=-986 Y=-190 W=69 H=17 | ''
+  GUI 267284: Vis=1 | X=-1055 Y=-191 W=69 H=17 | ''
+  GUI 201734: Vis=1 | X=-1057 Y=-168 W=69 H=17 | ''

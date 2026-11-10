@@ -1,0 +1,5 @@
+Ret SetProcessInformation: 1 (err: 0)
+1. Base: p50=15.56ms, p95=25.81ms, max=31.04ms, min=10.95ms
+2. timeBeginPeriod: p50=15.62ms, p95=30.17ms, max=35.60ms, min=1.71ms
+3. Throttling OFF + tBP: p50=16.01ms, p95=31.57ms, max=44.65ms, min=2.92ms
+4. Throttling OFF + tBP + GUI: p50=16.31ms, p95=27.18ms, max=32.33ms, min=3.03ms

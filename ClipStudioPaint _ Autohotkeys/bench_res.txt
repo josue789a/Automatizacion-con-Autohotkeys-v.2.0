@@ -1,0 +1,4 @@
+Sleep(3) SIN timeBeginPeriod: p50=17.89ms, p95=32.34ms, max=39.38ms, min=1.95ms
+Sleep(3) CON timeBeginPeriod(1): p50=15.79ms, p95=28.35ms, max=37.87ms, min=2.08ms
+Sleep(10) SIN timeBeginPeriod: p50=15.67ms, p95=26.37ms, max=66.23ms, min=2.90ms
+Sleep(10) CON timeBeginPeriod(1): p50=15.57ms, p95=21.91ms, max=90.59ms, min=8.03ms

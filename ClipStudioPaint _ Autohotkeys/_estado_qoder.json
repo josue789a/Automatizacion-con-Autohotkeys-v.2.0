@@ -1,0 +1,105 @@
+{
+  "area": "QODER — modularización lib/ (paquete v1, 2026-11-07)",
+  "status": "MODULARIZACIÓN COMPLETA — driver + 8 módulos literales, Zero-Rewrite OK, /validate exit 0, script corriendo en memoria (PID 21208)",
+  "version": "plan-v1",
+  "finished_at": "2026-11-07T18:33:50-05:00",
+  "fuente": {
+    "archivo": "XPPEN AHK VERSION ESTABLE.ahk.bak",
+    "sha256_crudo": "639d6af5a398dc9855b73f0a8eafda45333b0b08758b50b1b163d86a6fc73f2b",
+    "lineas": 6118,
+    "nota": "idéntico al .ahk del zip PAQUETE_CLAUDE.zip; hash crudo (sin normalizar CRLF)"
+  },
+  "archivos": {
+    "lib/audio.ahk": {
+      "sha256_crudo": "aacb9b5d2530daa2a56ecc6e528e6df3c56fa513671e67717d7ba363fd02c464",
+      "bytes": 4634,
+      "lineas": 112,
+      "mtime": "2026-11-07T18:24:38"
+    },
+    "lib/calibrador.ahk": {
+      "sha256_crudo": "7edfa2d10b09cfb7f5e3a00a02be839586200f6b2ef729ed99bebbb23fef5c35",
+      "bytes": 36235,
+      "lineas": 893,
+      "mtime": "2026-11-07T17:58:50"
+    },
+    "lib/companion.ahk": {
+      "sha256_crudo": "3a79d8d3868f352f208ae76c3670c4766947e00483896031729a533970c0b061",
+      "bytes": 65505,
+      "lineas": 1776,
+      "mtime": "2026-11-07T17:58:50"
+    },
+    "lib/core_config.ahk": {
+      "sha256_crudo": "68d08554f3808a90b2bcc805b1c7f8bc647613dea1f74106de3cb90c05a6d33a",
+      "bytes": 9407,
+      "lineas": 303,
+      "mtime": "2026-11-07T18:25:10"
+    },
+    "lib/estab_slider.ahk": {
+      "sha256_crudo": "f2cd71906e92c5cd50eda3125200c54f100164cefe69ddfaf8a45f49949f1208",
+      "bytes": 32771,
+      "lineas": 826,
+      "mtime": "2026-11-07T17:58:26"
+    },
+    "lib/hotkeys_csp.ahk": {
+      "sha256_crudo": "3d3e7cae770cdebd21685d65cc1bac5a58f02501fdcd2331cc1bbbc55a635c7b",
+      "bytes": 31921,
+      "lineas": 1168,
+      "mtime": "2026-11-07T17:58:26"
+    },
+    "lib/hud_badges.ahk": {
+      "sha256_crudo": "312ab11710e454e358e422c83751b14a22e9d4615bcef7b03b4de79ecd0692de",
+      "bytes": 21183,
+      "lineas": 535,
+      "mtime": "2026-11-07T18:25:10"
+    },
+    "lib/theme_gfx.ahk": {
+      "sha256_crudo": "0eacbe77e80f04869ccb7f4728eb0f4c8768fb7a9cc67bdfbd94c94a20acf89b",
+      "bytes": 13894,
+      "lineas": 388,
+      "mtime": "2026-11-07T18:24:38"
+    },
+    "XPPEN AHK VERSION ESTABLE.ahk": {
+      "sha256_crudo": "134cde48c10e4e6570f58b501d836cc993b9b5fdf3d6d09f33fb8ff1fc7d459c",
+      "bytes": 6325,
+      "lineas": 139,
+      "mtime": "2026-11-07T18:25:35"
+    }
+  },
+  "verificado": {
+    "copia_literal_hotkeys_csp": true,
+    "copia_literal_estab_slider": true,
+    "copia_literal_companion": true,
+    "copia_literal_calibrador": true,
+    "hotkeys_csp_sin_L130_L131_L180": true,
+    "hotkeys_csp_termina_en_HotIf": true,
+    "estab_slider_sin_nivel_superior_ejecutable": true,
+    "balance_llaves": {
+      "hotkeys_csp": 0,
+      "estab_slider": 0
+    },
+    "cobertura_mapa": "6115/6118 líneas; únicas no cubiertas: 1858, 5870, 6058 (las 3 en blanco; el filtro de Compare-Object las ignora)",
+    "copia_literal_audio": true,
+    "copia_literal_hud_badges": true,
+    "copia_literal_core_config": true,
+    "copia_literal_theme_gfx": true,
+    "compare_object_paso5": "VACÍO — 6017 líneas de contenido por lado",
+    "validate_driver": "exit 0 (AutoHotkey64.exe /validate, 2026-11-07)",
+    "desvios_cline_restaurados": [
+      "hud_badges: Cline escribió 'ToolTipCS(texto, duracion := 800)' con espacio extra; restaurado al original L2283 'ToolTipCS(texto,duracion := 800)'",
+      "core_config: Cline omitió las líneas en blanco L2795 y L4296 del original; restauradas"
+    ]
+  },
+  "fase_b_gate": "cumplido: 8 módulos en lib/",
+  "driver_recipe": "L1–128 + L130 + L131 + L180 + 8 #Include en el orden del plan",
+  "avisos": [
+    "/validate de módulos sueltos falla/cuelga (diálogo modal #32770 por referencias cruzadas): esperado, no validar módulos aislados",
+    "CHECKPOINT.md es propiedad de Antigravity: QODER no lo edita"
+  ],
+  "pendiente": "prueba manual del usuario en CSP (hotkeys, HUD, slider estab, calibrador 📍) + auditoría externa de Antigravity",
+  "reinicio": {
+    "instancia_activa_pid": 21208,
+    "nota": "cargó el driver corregido a las 18:25:38 (v2.0.26), 8 GUIs flotantes visibles; instancia única",
+    "incidente_resuelto": "PID 14404 quedó zombie tras cargar el estado intermedio del driver con escape \t roto (L133) a las 18:25:26; ya no existe. Diálogos de módulos sueltos (hud_badges/core_config/theme_gfx) cerrados. /restart de QODER salió exit 2 por instancia ya activa.",
+    "leccion": "_AHK_AutoManager.ahk recarga al detectar cambios: escribir el driver en un solo paso atómico, nunca dejar estados intermedios rotos en disco"
+  }
+}

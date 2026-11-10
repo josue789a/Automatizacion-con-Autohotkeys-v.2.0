@@ -1,0 +1,64 @@
+================================================================================
+PAQUETE P0: DIAGNÓSTICO, SALUD, PERFILADOR Y SALIDA SEGURA
+Fecha: 2026-11-09
+Ecosistema: Clip Studio Paint Companion (AutoHotkey v2)
+================================================================================
+
+1. PROPÓSITO DEL PAQUETE P0
+--------------------------------------------------------------------------------
+- Diagnóstico en tiempo real sin alterar la experiencia de dibujo ni añadir latencia.
+- Rescate y restauración automática de paneles de CSP (alpha 5 y click-through +0x20)
+  tanto al arrancar, al salir o ante caídas previas.
+- Orquestador de salida único con OnExit(Salir) en fases con prioridad estricta.
+- Perfilador QPC memoizado (Prof_T) en los 9 timers continuos.
+- Registro de salud cada 5 minutos en logs/salud.csv y telemetría de fallos en errores.log.
+- Eliminación de cuadros modales sobre CSP vía OnError global no bloqueante.
+- Conversión de BorderFrame a Singleton con .Destroy() para blindar el Desktop Heap.
+
+2. ARCHIVOS NUEVOS CREADOS
+--------------------------------------------------------------------------------
+- lib/diag.ahk:
+    Módulo de salud (salud.csv), perfilador (Prof_T), OnError y rotación de logs.
+- lib/salida.ahk:
+    Módulo de sesión (sesion.ini), RestaurarPanelesCSP() y Salir() ordenado.
+- rescate_paneles.ahk:
+    Botón de pánico autónomo (elevado como Admin) para restaurar paneles de CSP
+    si el script principal llegase a cerrarse abruptamente.
+
+3. ARCHIVOS MODIFICADOS
+--------------------------------------------------------------------------------
+- lib/companion.ahk:
+    BorderFrame actualizado a Singleton seguro:
+    - static vivos, contador Diag_BFCambio.
+    - Método .Destroy() explícito.
+    - __Delete() que limpia las 4 ventanas secundarias.
+    - Protección en LoopColorV, LoopColorCC y LoopAccesoRapido para reutilizar
+      las instancias en vez de re-crearlas.
+- XPPEN_NO_ADMIN.ahk:
+    Integración de Diag_Iniciar(), Sesion_Iniciar(), RestaurarPanelesCSP(),
+    Prof_T() en los 9 timers continuos, Salida_Registrar() y OnExit(Salir).
+- XPPEN AHK VERSION ESTABLE.ahk:
+    Misma integración canónica que en NO_ADMIN para el entorno de producción.
+
+4. LOGS GENERADOS (carpeta logs/)
+--------------------------------------------------------------------------------
+- logs/salud.csv:
+    Fila cada 5 min con métricas de GDI, USER, RAM (Working Set), Ventanas,
+    retrasos de timers y top 5 de tiempos de ejecución de funciones.
+- logs/salida.log:
+    Historial de arranques y cierres ordenados, paneles restaurados y duración.
+- logs/sesion.ini:
+    Bandera de estado limpio=0/1 y PID activo para detectar cierres no limpios.
+- logs/errores.log:
+    Captura silenciosa de cualquier advertencia de runtime sin popups en pantalla.
+
+5. CÓMO REVERTIR (ROLLBACK)
+--------------------------------------------------------------------------------
+Los respaldos exactos previos a P0 están guardados como:
+- lib/companion.ahk.bak-p0
+- XPPEN_NO_ADMIN.ahk.bak-p0
+- XPPEN AHK VERSION ESTABLE.ahk.bak-p0
+
+Para volver al estado anterior, simplemente restaura esos 3 archivos .bak-p0
+y elimina lib/diag.ahk y lib/salida.ahk.
+================================================================================

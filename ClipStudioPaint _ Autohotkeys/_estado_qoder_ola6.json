@@ -1,0 +1,110 @@
+{
+  "area": "QODER — ola 6, Req 6 y 8 sobre lib/calibrador.ahk (paquete v2, 2026-11-07)",
+  "status": "COMPLETO — 5 IDs nuevos + nombres reales + backup/restaurar + UX pestaña 2 + duración por evento. /validate del driver exit 0. Arnés aislado: 47 pruebas, 0 fallos. Ini real intacto. Falta prueba visual del usuario en CSP.",
+  "version": "ola6-v2",
+  "finished_at": "2026-11-07T22:25:00-05:00",
+  "checkpoint_md": "NO TOCADO — propiedad de Antigravity. El testigo de Qoder es este JSON + INFORME_QODER_OLA6.md.",
+  "archivos": {
+    "lib/calibrador.ahk": {
+      "sha256": "ac69059831713360082c1c2e296827023516ee9aa58a5b11f6e598fd9727a232",
+      "bytes": 48837,
+      "lineas_wc": 1163,
+      "mtime": "2026-11-07T22:19:50",
+      "diff_vs_inicio_ola": { "add": 276, "del": 44, "hunks": 14, "lineas_borradas_auditadas": 44, "zero_rewrite": true },
+      "unico_archivo_modificado_por_qoder": true
+    },
+    "XPPEN AHK VERSION ESTABLE.ahk": {
+      "sha256": "56ff28b8f5921dff6110bf0712322ecbe5e3778f6c397e3ecb1e489d7e918f74",
+      "bytes": 6461,
+      "lineas_wc": 146,
+      "solo_leido": true
+    },
+    "lib/core_config.ahk": {
+      "sha256": "1663e5fe55902b6dc4f67badcde2e0811874cb8c98c802b31ff6996083317e73",
+      "bytes": 12101,
+      "lineas_wc": 391,
+      "solo_leido": true,
+      "dueno": "Cline"
+    },
+    "lib/hotkeys_csp.ahk": {
+      "sha256": "dc7763d7aa8105900a52573c3e6c0ee6394381216df5a275a50ab713ab026f0e",
+      "bytes": 34738,
+      "lineas_wc": 1251,
+      "solo_leido": true,
+      "dueno": "OpenCode"
+    },
+    "lib/hud_badges.ahk": {
+      "sha256": "1c33cfe98d23cdde0ff4ebe2ae68a6a338c90f44dc36d6fd6fd86d027a384f5b",
+      "bytes": 21459,
+      "lineas_wc": 540,
+      "solo_leido": true,
+      "dueno": "Cline"
+    },
+    "posiciones_gui.ini": {
+      "sha256": "38ee952a67e79a3f605f0bcadf4a587890d16a7f282a3418be268e974ba9db9b",
+      "bytes": 12620,
+      "codificacion": "UTF-16LE (FF FE)",
+      "escrito_por_qoder": false,
+      "nota": "idéntico al respaldo de inicio de ola; las pruebas escribieron sobre una copia en %TEMP%"
+    }
+  },
+  "respaldos": {
+    "_backups/lib_calibrador.ahk.bak-qoder-ola6-20261107-214709": "5ba170d7ca795eecb7fceadc7c552c0ba3567d46e7ffb681265e8ac79eebb7e0",
+    "_backups/lib_calibrador.ahk.bak-qoder-ola6b-20261107-220639": "5e995df282b86bdf23da06a17ebc51904e535881393f8aa7ace527b028bcc5d6",
+    "_backups/lib_calibrador.ahk.bak-qoder-ola6c-20261107-222027": "estado previo a los arreglos de orden de backup y etiqueta de herencia",
+    "_backups/posiciones_gui.ini.bak-qoder-ola6-20261107-214709": "38ee952a67e79a3f605f0bcadf4a587890d16a7f282a3418be268e974ba9db9b"
+  },
+  "evidencia": {
+    "informe": "INFORME_QODER_OLA6.md",
+    "log_pruebas": "_backups/qoder_ola6_pruebas.txt",
+    "arnes": "_backups/qoder_ola6_arnes.ahk.txt",
+    "pruebas": { "total": 47, "pass": 47, "fail": 0 },
+    "validate_driver_exit": 0,
+    "comando_validate": "MSYS_NO_PATHCONV=1 timeout 90 \"/c/Program Files/AutoHotkey/v2/AutoHotkey64.exe\" /ErrorStdOut /validate \"XPPEN AHK VERSION ESTABLE.ahk\"",
+    "backup_vs_ini_sha256": {
+      "posiciones_gui_20261107_222037.bak.ini": "b8cce8effe4deba55d176cda459e68be6bcbb86faa0efea34512b4dfef13c411",
+      "snap_pre_restore.ini": "b8cce8effe4deba55d176cda459e68be6bcbb86faa0efea34512b4dfef13c411",
+      "posiciones_gui_20261107_222038.bak.ini (copia de deshacer)": "999b974f6f7e2b34277cc394323867b236f2c560a56f0d8d388910ef106c59bb",
+      "metodo": "memcmp dentro del arnés + Get-FileHash de PowerShell fuera de AHK"
+    },
+    "listview_colores_lvm": { "fondo_BGR": "0x1E1616", "texto_BGR": "0xA6938A" },
+    "arnes_aislado": "GUI en x-32767 y-32767 con NoActivate: no roba foco ni tapa la pantalla del usuario"
+  },
+  "cambios_funcionales": [
+    "Catálogo: 51 eventos, 5 IDs del contrato añadidos (capa_ocultar, capa_mostrar, macro_capas, mascara_recorte, shift_anclado), ningún ID existente renombrado",
+    "25 etiquetas sincronizadas con el atajo que el motor emite de verdad (leído en hotkeys_csp.ahk)",
+    "Pestaña 2: desactivados al final (reorder estable en dos pasadas), selección restaurada por id y no por índice",
+    "Pestaña 2: ListView Background16161E c8A93A6 + banner stEv Background2A2140 cFFFFFF en negrita (NM_CUSTOMDRAW descartado)",
+    "Pestaña 2: columna Duración + campo duracion_<id> por fila con aplicación en lote, rango 1..60000, vacío hereda, atajo 3=300 ms",
+    "Pestaña 2: el panel de prioridad escribe [HudDuraciones<PERFIL>] y además [HudDuracion<PERFIL>] (alta|media|baja en ms) que es lo que lee HudDuracionDe",
+    "Pestaña 3: grupo de backup con Crear backup / Restaurar último, sello AAAAMMDD_HHMMSS, confirmación, copia previa para deshacer y Reload sin GuardarPuntos",
+    "_gDurCache.Clear() tras cada escritura de duraciones (si no, HudDuracionDe devolvía el valor viejo)",
+    "_PtsUltimoBackupIni ordena por el sello del nombre: FileCopy hereda el mtime del original y dos copias seguidas empataban al segundo",
+    "_PtsSelloLibre evita que dos clics en el mismo segundo pisen un backup existente",
+    "La etiqueta Efectiva distingue 'heredada de <prioridad>' de 'por defecto del evento' según lo que HudDuracionDe devuelve de verdad",
+    "_PtsEvCambio captura el nombre del evento antes del rebuild (con el reorder, el índice viejo nombraba otro evento)"
+  ],
+  "avisos": [
+    "/validate de un módulo lib/ suelto cuelga un modal de #Warn (ptsEd no declarado): los super-globals los pone el driver. /ErrorStdOut NO suprime warnings de carga. Validar siempre el driver.",
+    "Para probar un módulo aislado: declarar los super-globals del driver + #Warn All, OutputDebug, y GUI fuera de pantalla con NoActivate (así está el arnés archivado).",
+    "FileDelete sobre un archivo inexistente LANZA en AHK v2: usar try FileDelete.",
+    "El ini es UTF-16LE: solo IniWrite/FileCopy lo tocan. Los .ahk son UTF-8 sin BOM con LF.",
+    "CHECKPOINT.md es de Antigravity: Qoder no lo edita, deja informe y avisa."
+  ],
+  "pendiente_otros_agentes": [
+    { "agente": "Cline", "prioridad": "ALTA", "donde": "lib/core_config.ahk:333,335", "que": "\"HudEventos2\" PERFIL produce [HudEventos22]/[HudEventos21]; debe ser \"HudEventos\" PERFIL. Con PERFIL=1 o 3 ignora la duración guardada por el usuario. Evidencia T19: [HudEventos1]duracion_capa_ocultar=777 pero HudDuracionDe=300. Mismo patrón en :356-358 (ahí sí hay fallback correcto en :360)." },
+    { "agente": "OpenCode/Cursor", "prioridad": "ALTA", "donde": "lib/hotkeys_csp.ahk:794", "que": "MacroCapas_Ejecutar no tiene ningún llamador en el proyecto; _CicloO (:778) sigue con MostrarMiniTexto por paso, así que el evento macro_capas nunca se emite. La fila del calibrador está configurable pero muerta." },
+    { "agente": "Cline", "prioridad": "MEDIA", "donde": "lib/core_config.ahk:337,346", "que": "HudDuracionDe no normaliza el atajo de segundos (3 -> 3 ms) mientras HudDuracionZona (:319) sí (3 -> 300 ms). Qoder normaliza antes de escribir; queda la divergencia para escrituras externas." },
+    { "agente": "Cline", "prioridad": "MEDIA", "donde": "lib/core_config.ahk:138", "que": "_gDurCache solo se limpia en _FlushIni. Todo módulo que escriba duraciones con IniWrite directo debe limpiarla o exponer un invalidador público." },
+    { "agente": "OpenCode", "prioridad": "MEDIA", "donde": "lib/hotkeys_csp.ahk:851-857", "que": "mascara_recorte manda M (máscara de capa), no recorte: el propio comentario dice que CSP no tiene atajo para layerchangebelowclip. Si el usuario lo asigna, actualizar el Send y la etiqueta del calibrador." },
+    { "agente": "Cline", "prioridad": "BAJA", "donde": "lib/hud_badges.ahk:360-361", "que": "_MapearTextoAEvento sigue ruteando HIDE LAYER/SHOW LAYER/VISIBILIDAD a capa_visibilidad; el atajo vivo ya emite capa_ocultar/capa_mostrar. capa_visibilidad se conserva como clave legacy del ini." },
+    { "agente": "USUARIO", "prioridad": "CIERRE", "donde": "CSP en vivo", "que": "Prueba visual tras recarga: contraste de la fila seleccionada, desactivados al final, columna Duración, Aplicar en lote, Crear backup y Restaurar último (reinicia el script)." }
+  ],
+  "no_tocado": [
+    "CHECKPOINT.md", "XPPEN AHK VERSION ESTABLE.ahk", "posiciones_gui.ini", "theme.ini",
+    "lib/core_config.ahk", "lib/theme_gfx.ahk", "lib/audio.ahk", "lib/hud_badges.ahk",
+    "lib/companion.ahk", "lib/estab_slider.ahk", "lib/hotkeys_csp.ahk",
+    "[LayoutNormal]", "[LayoutEnfoque]"
+  ],
+  "reinicio": "Qoder no reinició el companion del usuario. Los cambios en lib/ entran con la recarga en vivo (CheckReload mira A_ScriptFullPath, o el AutoManager externo). La prueba en CSP le queda al usuario."
+}

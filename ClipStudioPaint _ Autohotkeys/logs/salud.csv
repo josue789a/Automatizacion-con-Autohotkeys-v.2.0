@@ -1,0 +1,2 @@
+ts,min_activo,pid_csp,gdi,user,ws_mb,ventanas,bf_vivos,errores,foco_pct,retrasos,gap_max_ms,prof,motivo
+2026-11-09 03:10:26,0.2,19928,46,59,22.9,14,0,0,0,0,621,ResetAlphaStates=32.00/218.62(n22);CheckReload=2.00/1.44(n18);LoopAccesoRapido=0.25/0.37(n120);ChequearZonaAltA=0.25/0.29(n239);LoopColorV=0.25/0.25(n120),inicio

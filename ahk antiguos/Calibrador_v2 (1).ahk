@@ -1,11 +1,8 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
-; DPI awareness — IDÉNTICO al script principal de CSP, para que las
-; coordenadas que capture este calibrador coincidan exactamente con
-; lo que el script real va a leer en producción.
-DllCall("SetThreadDpiAwarenessContext", "ptr", -3, "ptr")
 CoordMode("Mouse", "Screen")
 SetTitleMatchMode(2)
+
 puntos := []
 
 ObtenerCSPHwnd() {
@@ -70,30 +67,6 @@ F11:: {
     A_Clipboard := texto
     ToolTip(texto . "`n(copiado al portapapeles)")
     SetTimer(() => ToolTip(), -4000)
-}
-
-; F4 — muestra coordenadas en VIVO mientras mueves el mouse (sin necesidad
-; de presionar F1 cada vez). Útil para encontrar el borde exacto de un ícono
-; moviendo el mouse lentamente y viendo cuándo cambia el número.
-modoVivo := false
-F4:: {
-    global modoVivo
-    modoVivo := !modoVivo
-    if (modoVivo) {
-        SetTimer(MostrarVivo, 30)
-        ToolTip("🟢 Modo vivo ON — F4 para apagar")
-        SetTimer(() => ToolTip(), -1000)
-    } else {
-        SetTimer(MostrarVivo, 0)
-        ToolTip()
-    }
-}
-MostrarVivo() {
-    pt := Buffer(8, 0)
-    DllCall("GetCursorPos", "ptr", pt)
-    x := NumGet(pt, 0, "int")
-    y := NumGet(pt, 4, "int")
-    ToolTip("X: " x "  Y: " y, x + 25, y + 25)
 }
 
 Escape:: ExitApp()

@@ -1,0 +1,39 @@
+2026-11-09 03:01:53 [Return] Expected a String but got a BorderFrame. | what= | C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk:81
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (81) : [IniciarDeteccion] If (!IsObject(colorV.bDS)) colorV.bDS := BorderFrame("44AA66")
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\XPPEN AHK VERSION ESTABLE.ahk (129) : [] IniciarDeteccion()
+    > Auto-execute
+    
+2026-11-09 03:03:12 [Return] Expected a String but got a BorderFrame. | what= | C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk:288
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (288) : [LoopColorCC] If (!IsObject(colorCC.bCC)) colorCC.bCC := BorderFrame("AA6622")
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\diag.ahk (207) : [_ProfLlamar] Return fn()
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\diag.ahk (227) : [] Return  _ProfLlamar(r, fn)
+    > Timer
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (37) : [BorderFrame.Prototype.Show] DllCall("SetWindowPos","Ptr",this.B.Hwnd,"Ptr",-1,"Int",x,"Int",y + h - g,"Int",w,"Int",g,"UInt",flags)
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (268) : [LoopColorV] colorV.bDS.Show(wx,wy,ww,wh)
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\diag.ahk (207) : [_ProfLlamar] Return fn()
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\diag.ahk (227) : [] Return  _ProfLlamar(r, fn)
+    > Timer
+    
+2026-11-09 03:03:28 [Return] Expected a String but got a BorderFrame. | what= | C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk:288
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (288) : [LoopColorCC] If (!IsObject(colorCC.bCC)) colorCC.bCC := BorderFrame("AA6622")
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\diag.ahk (207) : [_ProfLlamar] Return fn()
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\diag.ahk (227) : [] Return  _ProfLlamar(r, fn)
+    > Timer
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (18) : [Gui.Prototype.Show] g.Show("w0 h0 NoActivate")
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (18) : [BorderFrame.Prototype.__New] g.Show("w0 h0 NoActivate")
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (81) : [Object.Call] If (!IsObject(colorV.bDS)) colorV.bDS := BorderFrame("44AA66")
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (81) : [IniciarDeteccion] If (!IsObject(colorV.bDS)) colorV.bDS := BorderFrame("44AA66")
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\XPPEN AHK VERSION ESTABLE.ahk (129) : [] IniciarDeteccion()
+    > Auto-execute
+    
+2026-11-09 03:03:28 [Return] Expected a String but got a BorderFrame. | what= | C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk:81
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (81) : [IniciarDeteccion] If (!IsObject(colorV.bDS)) colorV.bDS := BorderFrame("44AA66")
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\XPPEN AHK VERSION ESTABLE.ahk (129) : [] IniciarDeteccion()
+    > Auto-execute
+    
+2026-11-09 03:03:48 [Return] Expected a String but got a BorderFrame. | what= | C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk:288
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\companion.ahk (288) : [LoopColorCC] If (!IsObject(colorCC.bCC)) colorCC.bCC := BorderFrame("AA6622")
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\diag.ahk (207) : [_ProfLlamar] Return fn()
+    C:\Users\jbard\Desktop\AHK-global-main\ClipStudioPaint _ Autohotkeys\lib\diag.ahk (227) : [] Return  _ProfLlamar(r, fn)
+    > Timer
+    

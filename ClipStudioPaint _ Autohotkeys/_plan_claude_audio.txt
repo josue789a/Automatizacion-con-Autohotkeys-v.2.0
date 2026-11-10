@@ -1,0 +1,407 @@
+﻿iconos.rar
+RAR
+sonidos.rar
+RAR
+
+Eres el **ARQUITECTO TÉCNICO Y PLANIFICADOR CENTRAL** del proyecto AutoHotkey v2: *Companion para Clip Studio Paint* (pantalla gráfica XP-Pen Artist 16 Pro Gen 2). ### 🎯 TU MISIÓN: Evaluar la recolección de ideas técnicas recientes, **separar la paja del trigo**, descartar de momento todo el co
+
+PASTED
+
+Tienes sonidos, iconos, instruccion aqui.
+Y lo demas en contexto de Poryecto.
+
+Veredicto técnico
+
+No pude abrir los .rar en mi entorno (no hay unrar), así que no verifiqué el formato interno de los WAV. Solo vi los nombres y tamaños: alpha_loud (19 KB), alpha_short (31 KB), fill_loud (354 KB) y recycle_loud (112 KB).
+
+#	Idea	Veredicto
+1	Háptico granular en el slider	Entra, optimizada.
+2	Pitch por racha en Ctrl+Z / Ctrl+Y	Entra, con 5 niveles.
+3	Acústica híbrida	Entra. Erradica \Windows\Media\*.wav y todos los kernel32\Beep.
+4	Audio en el Calibrador	Ola 2, con un solo cambio de ubicación (ver abajo).
+5	Creador dinámico de botones	Pospuesto a Ola 3.
+6	Blindaje	Entra, corregido en dos puntos (ver abajo).
+
+1. Saturación de la cola de mensajes
+
+PlaySoundW con SND_MEMORY|SND_ASYNC no encola nada. Cada llamada reemplaza el sonido anterior, sin hilos, sin SetTimer y sin I/O.
+No uses SetTimer(...,-1) en la ruta granular: eso sí llenaría la cola del hilo AHK.
+Hay tres frenos contra la saturación:
+Cuantización: solo suena cada 3 unidades, así que un barrido completo da ≤ 34 clics.
+Mínimo de 12 ms entre sonidos.
+El bucle de arrastre ya hace Sleep(8).
+Los 11 buffers (uno por banda de 10 %, 650–850 Hz, 7 ms, unos 350 bytes cada uno) se precargan al arrancar. La latencia restante es la del buffer de WinMM, no la de AHK.
+
+2. Racha en Ctrl+Z / Ctrl+Y
+
+Hay 5 niveles pentatónicos mayores (razones 1, 9/8, 5/4, 3/2, 5/3). Undo parte de 520 Hz y Redo de 760 Hz.
+Si pulsas en menos de 400 ms, el nivel sube hasta el tope (sin volver a empezar).
+Si te detienes, el nivel baja uno por cada 500 ms de pausa pasados los 400 ms. Con unos 1,9 s de inactividad vuelve a cero.
+
+3. Especificaciones de audio
+
+Tonos RAM: 22.050 Hz, mono, PCM 16-bit, 6–24 ms.
+WAV: 44.100 Hz, mono, PCM 16-bit, ≤ 150 ms (unos 13 KB). Así el escalado de volumen funciona; PCM float, ADPCM o 24-bit se reproducen pero sin escalar.
+fill_loud.wav (354 KB) y recycle_loud.wav (112 KB): probablemente duran más de 150 ms. PlaySound es monofónico y su cola se escucha aunque llegue otro sonido, así que recórtalos.
+Texturas nuevas: si añades Wood Block, Mechanical Switch o UI Pop, que sean WAV con esas especificaciones y nombres libres. _SonarWav("nombre", [f0,f1,ms]) cae solo a un tono RAM si el archivo falta.
+
+4. Calibrador (Ola 2)
+
+La pestaña 3 está llena (el GroupBox del Hub llega al límite de altura).
+Mi propuesta es renombrar la pestaña 2 como “🔔 Avisos y sonido” y poner debajo del Text gris final tres controles: CheckBox de audio, Edit de volumen 0–100 y DropDown de perfil acústico.
+Los perfiles son parámetros de _CrearTonoRAM: seno puro, seno + armónicos y cuadrada suavizada.
+Esto requiere _TemaRecargar() más vaciar _AudCache(). Ya dejo ese gancho preparado en la Ola 1: el volumen maestro se lee de [audio] volume en theme.ini, con 100 por defecto.
+
+5. Creador dinámico de botones: pospuesto
+
+Cada botón Companion es una global fija y está listado a mano en al menos 7 sitios:
+_EsPanelEmbebido
+_MostrarPaneles
+_TraerPanelesAlFrente
+_Companion_WM_RBUTTON
+_AplicarVisibilidadEmbebidos
+el reinicio de Numpad8
+ResetAlphaStates
+Además cada botón tiene su propio OnMessage(0x0201).
+Hacerlo dinámico exige primero un registro genérico de paneles. Es un refactor, no un diff, y contradice la regla ZERO-REWRITE.
+Propongo hacerlo en una Ola 3, ya con el código congelado.
+
+6. Blindaje (con correcciones)
+
+Rutas: solo queda una ruta absoluta, TraySetIcon("C:\Users\jbard\..."). Los demás C:\... son sonidos de Windows y se eliminan con la Ola 1.
+GDI+ no fuga en el redibujado. Ya liberas path, brush, pen, bitmap y DC en cada frame. Lo que persiste hasta cerrar el proceso son fam, fmt y fnt, que son static y están ocultos a cualquier limpieza. Los libero al reiniciar las GUIs (Numpad8) y en OnExit, junto con GdiplusShutdown.
+Fallo previo: _SonarUI comprobaba [audio] enabled después de _SonarFast, así que con audio desactivado seguían sonando Q, W y el color. Además leía el INI desde disco en cada sonido. Ahora se consulta la caché de _Tema, antes de cualquier sonido.
+_SweepToggle: Esc cancela y a los 3 s se corta el gesto (aplica lo ya barrido).
+Estructura de olas
+
+OLA 1: blindaje (ruta, GDI+, failsafe del barrido) más motor de audio (granular, racha y WAV precargados en RAM).
+OLA 2: controles de audio en la pestaña 2 y vaciado de caché en vivo. El creador dinámico de botones pasa a la Ola 3.
+
+Diffs quirúrgicos de la Ola 1
+
+Aplica cada diff en el orden indicado. Los textos entre // ancla son líneas existentes que no cambian.
+
+D1 · Ruta relativa del icono
+ahk
+// ancla anterior:
+    ExitApp()
+}
+>>> REEMPLAZA la línea  try TraySetIcon("C:\Users\jbard\Documents\@Otros\icons\clipstudio.ico")  POR: <<<
+for _ic in [A_ScriptDir "\iconos\clipstudio.ico", A_ScriptDir "\clipstudio.ico"] {
+    if FileExist(_ic) {
+        try TraySetIcon(_ic)
+        break
+    }
+}
+// ancla posterior:
+DllCall("SetThreadDpiAwarenessContext","ptr",-3,"ptr")
+D2 · Arranque: salida limpia y precarga
+ahk
+// ancla anterior:
+SetTimer(_VigilaFocoCSP, 150)
+>>> AÑADE <<<
+OnExit(_AudAlSalir)
+SetTimer(_AudPrecargar, -400)
+// ancla posterior (línea en blanco y luego):
+Pause::_LiberarModificadores()   ; tecla de rescate manual
+D3 · Volumen maestro en _SonarFast
+ahk
+// ancla anterior:
+    if (!ram.Has(evento)) {
+        p := perfil[evento]
+>>> REEMPLAZA  ram[evento] := _CrearTonoRAM(p[1], p[2], p[3])  POR: <<<
+        ram[evento] := _CrearTonoRAM(p[1], p[2], p[3], 0.18 * _AudVol())
+// ancla posterior:
+    }
+    ; el Buffer vive en ram, así que sigue válido mientras suena (requisito de SND_MEMORY)
+D4 · Reemplazo de _SonarUI y _SonarWav (sin sonidos de Windows ni Beep)
+
+Reemplaza desde _SonarUI(evento, val := 0) { hasta la } que cierra _SonarWav, justo antes de _BeepEstabAlta() => .... Deja intacto el comentario de cabecera “MOTOR UNIFICADO”.
+
+ahk
+_SonarUI(evento, val := 0) {
+    if !_AudActivo()
+        return
+    if (_SonarFast(evento))              ; ruta RAM de latencia cero (pluma, aerógrafo, colores, shift)
+        return
+    switch evento {
+        case "slider":
+            _HapticoSlider(val)
+        case "borrador", "lazo", "pincel", "reload":
+            _SonarWav("alpha_loud", [900, 700, 18])
+        case "relleno":
+            _SonarWav("fill_loud", [640, 480, 22])
+        case "guardar", "layout", "sync":
+            _SonarWav("alpha_short", [1000, 1400, 24])
+        case "enfoque_on", "color":
+            _AudTonoRAM("t_on", 760, 860, 20)
+        case "enfoque_off":
+            _AudTonoRAM("t_off", 620, 520, 20)
+        case "copiar", "flip", "calib":
+            _AudTonoRAM("t_tick", 680, 720, 14)
+        case "seleccion":
+            _AudTonoRAM("t_sel", 580, 640, 16)
+        default:
+            return
+    }
+}
+
+; WAV precargado en RAM; si falta el archivo, cae a un tono RAM [f0,f1,ms]. Sin sonidos de Windows.
+_SonarWav(nombreWav, fb := "") {
+    buf := _AudWavBuf(nombreWav)
+    if (buf) {
+        _AudPlay(buf)
+        return
+    }
+    if IsObject(fb)
+        _AudTonoRAM("fb_" nombreWav, fb[1], fb[2], fb[3])
+}
+D5 · Háptico granular en el slider
+ahk
+// ancla anterior:
+    estabGui.previsto := Max(0,Min(100,nuevo))
+>>> AÑADE <<<
+    _HapticoSlider(estabGui.previsto)
+// ancla posterior:
+    ActualizarEstabGUI(estabGui.previsto)
+D6 · Racha en deshacer / rehacer (2 sitios)
+ahk
+// ancla anterior (dentro de _DeshacerRehacer):
+        ToolTipCS("🟢 REHACER",600)
+>>> AÑADE justo debajo <<<
+        _HapticoRacha("redo")
+// ancla posterior:
+    } else {
+        SendInput("^z")
+>>> y tras  ToolTipCS("🔴 DESHACER",300)  AÑADE <<<
+        _HapticoRacha("undo")
+// ancla posterior:
+    }
+}
+$^z up:: stylus.botonSostenido := false
+ahk
+// ancla anterior (hotkey !^z):
+    SendInput("^y")
+    ToolTipCS("🟢 REHACER",600)
+>>> AÑADE <<<
+    _HapticoRacha("redo")
+// ancla posterior:
+}
+!^z up:: stylus.botonSostenido := false
+D7 · GDI+: recursos liberables
+
+D7a — token de GDI+ (dentro de _EstabGdipIniciar):
+
+ahk
+// ancla anterior:
+    tok := 0
+>>> REEMPLAZA las 2 líneas  if (DllCall("gdiplus\GdiplusStartup",...) = 0) / iniciado := true  POR: <<<
+    if (DllCall("gdiplus\GdiplusStartup","ptr*", &tok,"ptr",info,"ptr",0,"int") = 0) {
+        iniciado := true
+        _GdipRes().tok := tok
+    }
+// ancla posterior:
+}
+_ArgbDeHex(hex,alfa) => (alfa << 24) | Integer("0x" hex)
+
+D7b — _EstabPanelPintar: los recursos viven en un objeto accesible:
+
+ahk
+// ancla anterior:
+    global estabGui, panelBlk, ESTAB_COLOR
+>>> REEMPLAZA  static fam := 0, fnt := 0, fmt := 0, fntTam := 0, rc := Buffer(16,0)  POR: <<<
+    static rc := Buffer(16,0)
+    gr := _GdipRes()
+    fam := gr.fam, fnt := gr.fnt, fmt := gr.fmt, fntTam := gr.tam
+// ancla posterior:
+    val := estabGui.dibV
+ahk
+// ancla anterior (cierre del bloque fmt):
+            DllCall("gdiplus\GdipSetStringFormatLineAlign","ptr",fmt,"int",1,"int")
+        }
+>>> AÑADE <<<
+        gr.fam := fam, gr.fnt := fnt, gr.fmt := fmt, gr.tam := fntTam
+// ancla posterior:
+        txt := val >= 100 ? "100" : val "%"
+
+D7c — liberar al reiniciar GUIs (Numpad8):
+
+ahk
+// ancla anterior:
+    SetTimer(_EstabFocoVigilar,0)
+>>> AÑADE justo debajo <<<
+    _GdipLiberarFuentes()
+// ancla posterior:
+    try OnMessage(0x0201,_EstabGUI_WM_LBUTTONDOWN,0)
+D8 · Failsafe del barrido táctil (_SweepToggle)
+ahk
+// ancla anterior:
+        DllCall("GetCursorPos",Ptr",cur)
+        px := NumGet(cur,0,"int"), py := NumGet(cur,4,"int")
+>>> REEMPLAZA las 2 líneas  Loop {  /  soltado := !GetKeyState("LButton","P") ...  POR: <<<
+        t0 := A_TickCount
+        Loop {
+            if GetKeyState("Escape","P") {   ; Esc = cancelar el gesto sin aplicar nada
+                tocados := []
+                break
+            }
+            soltado := !GetKeyState("LButton","P") || (A_TickCount - t0 > 3000)   ; failsafe 3 s: aplica lo barrido
+// ancla posterior:
+            DllCall("GetCursorPos","Ptr",cur)
+
+Si el Loop { de _SweepToggle tiene un DllCall("GetCursorPos","Ptr",cur) justo antes (la línea px := NumGet...), no cambies esa línea: solo sustituyes Loop { más la línea de soltado := por el bloque de arriba.
+
+D9 · Módulo nuevo (pégalo al final del archivo, tras ; === STAB-UNIVERSAL-END ===)
+ahk
+; === AUDIO-HAPTICO-BEGIN ===
+_AudCache() {
+    static c := Map()
+    return c
+}
+_AudActivo() => (_Tema("audio","enabled","1") != "0")
+_AudVol() {
+    v := _Tema("audio","volume","100")
+    return IsInteger(v) ? Max(0,Min(100,Integer(v))) / 100 : 1.0
+}
+; SND_ASYNC(1)|SND_NODEFAULT(2)|SND_MEMORY(4): sin hilos, sin cola, un sonido reemplaza al anterior
+_AudPlay(buf) => DllCall("winmm\PlaySoundW","Ptr",buf,"Ptr",0,"UInt",0x0007)
+
+_AudTonoBuf(id, f0, f1, ms, vol := 0.20) {
+    c := _AudCache()
+    if !c.Has(id)
+        c[id] := _CrearTonoRAM(f0, f1, ms, vol * _AudVol())
+    return c[id]
+}
+_AudTonoRAM(id, f0, f1, ms, vol := 0.20) => _AudPlay(_AudTonoBuf(id, f0, f1, ms, vol))
+
+_AudWavBuf(nombre) {
+    c := _AudCache()
+    k := "wav:" nombre
+    if c.Has(k)
+        return c[k]
+    ruta := A_ScriptDir "\sonidos\" nombre ".wav"
+    buf := 0
+    if FileExist(ruta) {
+        try {
+            buf := FileRead(ruta, "RAW")
+            _AudEscalarWav(buf, _AudVol())
+        } catch
+            buf := 0
+    }
+    c[k] := buf          ; caché negativa: si falta, no se reintenta el disco
+    return buf
+}
+_AudEscalarWav(buf, vol) {
+    if (vol >= 0.995 || buf.Size < 44)
+        return
+    if (NumGet(buf,0,"UInt") != 0x46464952 || NumGet(buf,8,"UInt") != 0x45564157)
+        return
+    pos := 12, bits := 0, tag := 0
+    while (pos + 8 <= buf.Size) {
+        id := NumGet(buf,pos,"UInt")
+        sz := NumGet(buf,pos + 4,"UInt")
+        if (id = 0x20746D66) {
+            tag := NumGet(buf,pos + 8,"UShort")
+            bits := NumGet(buf,pos + 22,"UShort")
+        } else if (id = 0x61746164) {
+            if (tag != 1 || bits != 16)
+                return
+            n := Min(sz, buf.Size - pos - 8) // 2
+            p := pos + 8
+            loop n {
+                NumPut("Short", Round(NumGet(buf,p,"Short") * vol), buf, p)
+                p += 2
+            }
+            return
+        }
+        pos += 8 + sz + (sz & 1)
+    }
+}
+
+_SliderBuf(banda) {
+    f := 650 + banda * 20                          ; ~750 Hz de centro, seco y ultracorto
+    return _AudTonoBuf("hap_sl_" banda, f, f, 7, 0.24)
+}
+_HapticoSlider(v) {
+    static ultV := -999, ultSnd := 0, ultCall := 0
+    if !_AudActivo()
+        return
+    ahora := A_TickCount
+    if (ahora - ultCall > 300)                     ; arrastre nuevo: el primer clic siempre suena
+        ultV := -999
+    ultCall := ahora
+    if (Abs(v - ultV) < 3 || ahora - ultSnd < 12)  ; cada 3 unidades y mínimo 12 ms
+        return
+    ultV := v
+    ultSnd := ahora
+    _AudPlay(_SliderBuf(Min(10, Integer(v) // 10)))
+}
+
+_RachaBuf(clave, nivel) {
+    static r := [1.0, 1.125, 1.25, 1.5, 1.667]     ; pentatónica mayor
+    f := Round((clave = "redo" ? 760 : 520) * r[nivel + 1])
+    return _AudTonoBuf("rch_" clave "_" nivel, f, Round(f * 1.05), 16, 0.22)
+}
+_HapticoRacha(clave) {
+    static nivel := Map("undo",0,"redo",0), ult := Map("undo",0,"redo",0)
+    if !_AudActivo()
+        return
+    ahora := A_TickCount
+    gap := ahora - ult[clave]
+    if (gap < 400)
+        nivel[clave] := Min(4, nivel[clave] + 1)
+    else                                           ; reseteo suave: un nivel por cada 500 ms de pausa
+        nivel[clave] := Max(0, nivel[clave] - ((gap - 400) // 500 + 1))
+    ult[clave] := ahora
+    _AudPlay(_RachaBuf(clave, nivel[clave]))
+}
+
+_AudPrecargar() {
+    Loop 11
+        _SliderBuf(A_Index - 1)
+    for clave in ["undo","redo"] {
+        Loop 5
+            _RachaBuf(clave, A_Index - 1)
+    }
+    for nombre in ["alpha_loud","alpha_short","fill_loud","recycle_loud"]
+        _AudWavBuf(nombre)
+}
+
+_GdipRes() {
+    static r := {fam:0, fnt:0, fmt:0, tam:0, tok:0}
+    return r
+}
+_GdipLiberarFuentes() {
+    gr := _GdipRes()
+    if gr.fnt
+        DllCall("gdiplus\GdipDeleteFont","ptr",gr.fnt,"int")
+    if gr.fmt
+        DllCall("gdiplus\GdipDeleteStringFormat","ptr",gr.fmt,"int")
+    if gr.fam
+        DllCall("gdiplus\GdipDeleteFontFamily","ptr",gr.fam,"int")
+    gr.fnt := 0, gr.fmt := 0, gr.fam := 0, gr.tam := 0
+}
+_AudAlSalir(*) {
+    DllCall("winmm\PlaySoundW","Ptr",0,"Ptr",0,"UInt",0)   ; corta el sonido antes de liberar buffers
+    _GdipLiberarFuentes()
+    gr := _GdipRes()
+    if gr.tok {
+        DllCall("gdiplus\GdiplusShutdown","ptr",gr.tok)
+        gr.tok := 0
+    }
+}
+; === AUDIO-HAPTICO-END ===
+
+Pruebas sugeridas tras validar
+
+Arrastra el slider rápido: debe oír un clic cada 3 unidades, sin retrasos ni ráfagas.
+Pulsa Ctrl+Z en racha: el tono sube hasta el quinto nivel y baja suave al parar.
+Pon [audio] enabled=0 en theme.ini: no debe sonar nada, ni Q ni W.
+Pon el cursor en un panel y mantén el barrido más de 3 s: debe cortarse solo; Esc debe cancelar.
+
+FINALIZADO, REALIZAR PRUEBAS EN ANTIGRAVITY
+
+Archivos a modificar en tu PC: solo XPPEN AHK VERSION ESTABLE.ahk (diffs D1–D9). theme.ini y posiciones_gui.ini no cambian en la Ola 1; [audio] volume es opcional y el valor por defecto es 100. Copia clipstudio.ico a la carpeta iconos\, porque no venía en el .rar. Si falta, el script simplemente conserva el icono por defecto.
+Comando de validación en PowerShell (debe dar ExitCode 0):
+powershell
+& "C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" /validate "XPPEN AHK VERSION ESTABLE.ahk"; "ExitCod
