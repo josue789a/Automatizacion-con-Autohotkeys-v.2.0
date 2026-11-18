@@ -7,3 +7,8 @@ desktop.ini
 _backups/
 _historico/
 *.lnk
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
