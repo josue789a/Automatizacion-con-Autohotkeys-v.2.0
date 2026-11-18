@@ -49,6 +49,16 @@ class Draft:
                 raw = dv
         return to_ui(name, raw)
 
+    def explicito(self, name: str, id_ev: str) -> bool:
+        """True si la clave tiene valor propio (en el borrador o en el INI).
+
+        False = no está asignada y la UI debe mostrar el valor de fábrica en gris.
+        """
+        sec, key = self.resolve(name, id_ev)
+        if (sec.lower(), key.lower()) in self.pending:
+            return True
+        return self.store.get(sec, key) is not None
+
     def set(self, name: str, id_ev: str, value) -> bool:
         """False si el valor es inválido (no se registra)."""
         val = to_ini(name, value)

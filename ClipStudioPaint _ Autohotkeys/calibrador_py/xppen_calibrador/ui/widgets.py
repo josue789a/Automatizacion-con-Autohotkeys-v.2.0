@@ -112,14 +112,25 @@ class Hint(ctk.CTkLabel):
 
 
 class Stepper(ctk.CTkFrame):
-    """Spinbox vertical compacto: [valor] [▴/▾] estilo caja casi cuadrada."""
-    def __init__(self, parent, lo, hi, step=1, width=38, on_commit=None):
+    """Spinbox vertical compacto: [valor] [sufijo] [▴/▾] estilo caja casi cuadrada.
+
+    El sufijo (p. ej. «ms») se dibuja **dentro** del marco: el borde derecho de
+    la caja es también el final del grupo, así puede alinearse con otras cajas
+    de la misma columna sin que el texto se salga de la línea.
+
+    Modo «valor de fábrica»: `set_default()` muestra el número en gris (sin
+    valor propio); `set()` lo muestra en negro (asignado a mano).
+    """
+    def __init__(self, parent, lo, hi, step=1, width=38, on_commit=None, suffix=""):
         super().__init__(parent, fg_color="#FAF9FD", corner_radius=4, border_width=1, border_color="#D8D2E7", height=24)
         self.lo, self.hi, self.step, self.on_commit = lo, hi, step, on_commit
+        self.fallback = None            # valor de fábrica (se pinta en gris)
+        self._factory = False
         self._v = tk.StringVar(value=str(lo))
 
+        sfx_w = 14 if suffix else 0
         # Entry sin relleno interno: CTkEntry reserva >= 6 px por lado y recortaba el "100"
-        ent_w = max(26, width - 12)
+        ent_w = max(26, width - 12 - sfx_w)
         self.ent = ctk.CTkEntry(self, width=ent_w, height=20, textvariable=self._v, justify="center",
                                 font=T.font_cap(11), fg_color="transparent", border_width=0,
                                 corner_radius=0, text_color=T.TXT)
@@ -128,6 +139,10 @@ class Stepper(ctk.CTkFrame):
         except Exception:
             pass
         self.ent.pack(side="left", padx=(1, 0), pady=1)
+
+        if suffix:
+            ctk.CTkLabel(self, text=suffix, width=sfx_w, font=T.font(9),
+                         text_color=T.TXT2, height=1).pack(side="left")
 
         # Micro-muescas: mismo tamaño y vector, espejadas respecto al eje y=7 (14 - y)
         cv = tk.Canvas(self, width=9, height=14, bg="#FAF9FD", highlightthickness=0, bd=0, cursor="hand2")
@@ -156,20 +171,56 @@ class Stepper(ctk.CTkFrame):
 
         self.ent.bind("<Return>", self._commit)
         self.ent.bind("<FocusOut>", self._commit)
+        self.ent.bind("<FocusIn>", self._focus_in)
+        self.ent.bind("<KeyRelease>", self._typed)
 
     def set(self, value):
-        self._v.set(str(value))
+        """Valor propio (negro)."""
+        self._factory, self.fallback = False, None
+        self._v.set("" if value is None else str(value))
+        self.ent.configure(text_color=T.TXT)
         self.configure(border_color="#D8D2E7")
 
-    def _bump(self, d):
+    def set_default(self, texto):
+        """Sin valor propio: muestra el valor de fábrica en gris."""
         try:
-            cur = int(self._v.get())
+            self.fallback = int(str(texto).strip())
+        except (TypeError, ValueError):
+            self.fallback = None
+        self._factory = True
+        self._v.set("" if texto is None else str(texto))
+        self.ent.configure(text_color=T.TXT3)
+        self.configure(border_color="#D8D2E7")
+
+    def _value(self):
+        try:
+            return int(self._v.get())
         except ValueError:
-            cur = self.lo
+            return self.fallback if self.fallback is not None else self.lo
+
+    def _focus_in(self, _e=None):
+        # En modo fábrica el texto se selecciona para que escribir lo reemplace
+        if self._factory:
+            try:
+                self.ent._entry.selection_range(0, "end")
+            except Exception:
+                pass
+
+    def _typed(self, _e=None):
+        if self._factory and self._value() != self.fallback:
+            self._factory = False
+            self.ent.configure(text_color=T.TXT)
+
+    def _bump(self, d):
+        cur = self._value()
+        self._factory = False
+        self.ent.configure(text_color=T.TXT)
         self._v.set(str(max(self.lo, min(self.hi, cur + d))))
         self._commit()
 
     def _commit(self, _e=None):
+        if self._factory and self._value() == self.fallback:
+            self.ent.configure(text_color=T.TXT3)
         ok = self.on_commit(self._v.get()) if self.on_commit else True
         self.configure(border_color="#D8D2E7" if ok else T.DANGER)
 

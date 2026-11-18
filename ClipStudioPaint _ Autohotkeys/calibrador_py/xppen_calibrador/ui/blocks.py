@@ -20,6 +20,13 @@ class Ctx:
     def get(self, name):
         return self.draft.get(name, self.eid(name))
 
+    def explicito(self, name) -> bool:
+        """False = la clave no tiene valor propio (se muestra la fábrica en gris)."""
+        try:
+            return self.draft.explicito(name, self.eid(name))
+        except Exception:
+            return True
+
     def set(self, name, value) -> bool:
         ok = self.draft.set(name, self.eid(name), value)
         if ok:
@@ -264,9 +271,52 @@ class Block(ctk.CTkFrame):
             w.delete(0, "end")
             if cur and cur.lower() != str(vacio).lower():
                 w.insert(0, cur)            # valor propio -> negro
+            else:
+                # delete() borra el texto del placeholder: hay que reactivarlo
+                try:
+                    w._activate_placeholder()
+                except Exception:
+                    pass
             w.configure(border_color=T.FIELD_BORDER)
         self._loaders.append(load)
         return w
+
+    def f_stepper_default(self, parent, name, step=1, width=48, suffix=""):
+        """Stepper con valor de fábrica en gris y valor propio en negro.
+
+        - Sin valor propio: se muestra el valor efectivo de fábrica en gris
+          (p. ej. el `quick_ms` del evento: 250/300/400 según la tabla de
+          particularidades), no un número inventado.
+        - Con valor propio: negro.
+        - Vaciar el campo y confirmar vuelve al valor de fábrica.
+        - Los ▴/▾ parten del valor de fábrica aunque el campo esté en gris.
+
+        Reutilizable en cualquier bloque; B03 lo usa para el umbral (ms).
+        """
+        f = FIELDS[name]
+        w = Stepper(parent, f.lo, f.hi, step, width, suffix=suffix,
+                    on_commit=lambda t: self._commit_stepper_default(name, w, t))
+
+        def load():
+            val = self.ctx.get(name)
+            if self.ctx.explicito(name):
+                w.set(val)                  # propio -> negro
+            else:
+                w.set_default(val)          # fábrica -> gris
+        self._loaders.append(load)
+        return w
+
+    def _commit_stepper_default(self, name, w, texto):
+        txt = str(texto).strip()
+        if txt == "":
+            txt = str(w.fallback if w.fallback is not None else FIELDS[name].default)
+        if not self._commit(name, txt):
+            return False
+        if self.ctx.explicito(name):
+            w.set(self.ctx.get(name))
+        else:
+            w.set_default(self.ctx.get(name))
+        return True
 
     def f_key_entry(self, parent, name, width=90, on_clear=None):
         """Campo estándar para captura de atajos de teclado (hasta 4 teclas).
@@ -610,23 +660,50 @@ class B03Modulacion(Block):
         p.grid_columnconfigure(0, weight=1)
         p.grid_columnconfigure(1, weight=1)
 
-        # Columna Izquierda: Pulsación rápida
+        # ── Columna Izquierda: Pulsación rápida ──
         a = ctk.CTkFrame(p, fg_color="transparent")
         a.grid(row=0, column=0, sticky="nsew", padx=(0, 12))
-        ra1 = ctk.CTkFrame(a, fg_color="transparent")
-        ra1.pack(fill="x", pady=(0, 4))
-        self.f_check(ra1, "quick", "Pulsación rápida").pack(side="left", padx=(0, 10))
-        lbl(ra1, "Umbral:", 11, T.TXT2).pack(side="left", padx=(0, 4))
-        self.f_stepper(ra1, "quick_ms", 50, 48, "ms").pack(side="left", padx=(0, 4))
 
+        # 1) Renglón A/B: fija la referencia de ancho de la columna.
         ra2 = ctk.CTkFrame(a, fg_color="transparent")
-        ra2.pack(fill="x")
+        ra2.grid(row=1, column=0, sticky="w")
         lbl(ra2, "A:", 11, T.TXT2).pack(side="left", padx=(0, 4))
         c_qa, _ = self.f_key_entry(ra2, "quick_a", 90)
         c_qa.pack(side="left", padx=(0, 8))
         lbl(ra2, "B:", 11, T.TXT2).pack(side="left", padx=(0, 4))
-        c_qb, _ = self.f_key_entry(ra2, "quick_b", 90)
+        c_qb, e_qb = self.f_key_entry(ra2, "quick_b", 90)
         c_qb.pack(side="left")
+
+        # 2) Renglón del umbral: «ms» va DENTRO de la caja y el borde derecho de
+        #    la caja queda alineado con el de la caja B de abajo (hueco elástico).
+        ra1 = ctk.CTkFrame(a, fg_color="transparent")
+        ra1.grid(row=0, column=0, sticky="w", pady=(0, 4))
+        chk = self.f_check(ra1, "quick", "Pulsación rápida")
+        chk.pack(side="left")
+        self._gap = ctk.CTkFrame(ra1, fg_color="transparent", width=8, height=1)
+        self._gap.pack(side="left")
+        mun = ctk.CTkFrame(ra1, fg_color="transparent")
+        mun.pack(side="left")
+        lbl(mun, "Umbral:", 11, T.TXT2).pack(side="left", padx=(0, 4))
+        self.f_stepper_default(mun, "quick_ms", 50, 48).pack(side="left")
+        # «ms» fuera del grupo alineado: la caja termina en la vertical de la caja B
+        # y el sufijo cuelga a la derecha de esa línea.
+        lbl(ra1, "ms", 9, T.TXT2).pack(side="left", padx=(4, 0))
+
+        def _alinear(*_):
+            try:
+                wb = e_qb.winfo_width()
+                if wb <= 20:                                    # aún sin geometría
+                    a.after(60, _alinear)
+                    return
+                x_b = c_qb.winfo_x() + wb                       # borde der. de la caja B (px)
+                hueco = x_b - chk.winfo_reqwidth() - mun.winfo_reqwidth()
+                self._gap.configure(width=self._reverse_widget_scaling(max(4, hueco)))
+            except Exception:
+                pass
+        a.bind("<Configure>", _alinear, add="+")
+        self.after(60, _alinear)
+        self._loaders.append(lambda: a.after_idle(_alinear))
 
         # Columna Derecha: Alternador A ⇄ B
         b = ctk.CTkFrame(p, fg_color="transparent")
