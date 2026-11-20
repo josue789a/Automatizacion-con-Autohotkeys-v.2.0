@@ -276,14 +276,14 @@ class StylusContextMenu(tk.Toplevel):
 VAL_ARBOL = "🌳 Por Teclas Físicas (Árbol)"
 
 FAMILIAS_TECLAS = (
-    ("🔴 [ E ]  BORRADORES Y CAPAS", ("borrador", "borrador_suave", "borrador_lazo", "borrador_all_layers", "capa_visibilidad")),
-    ("🔵 [ W ]  AERÓGRAFO Y PINTURA", ("aerografo", "aerografo_alpha", "difu_mixer", "opc_presion")),
-    ("🟠 [ S ]  SELECCIÓN Y LAZO", ("lazo", "area_color")),
-    ("🟣 [ Q ]  PLUMILLA Y PINCELES", ("pluma", "color_primario", "color_secundario", "pincel_duro", "pincel_suave")),
-    ("⚪ [ F ]  HERRAMIENTAS F / SMEAR", ("smear", "smear_soft", "shift_sostenido")),
-    ("⚪ [ X ]  MEZCLA Y SELECCIÓN", ("deseleccion", "reseleccion", "color_mix", "smudge")),
-    ("⚪ [ Z ]  LIENZO Y ZOOM", ("zoom_lienzo", "rotar_lienzo", "flip_horizontal", "inv_seleccion", "regla_ocultar", "relleno")),
-    ("⚪ ACCIONES Y SISTEMA", ("guardar", "deshacer", "rehacer", "copiar", "enfoque", "history_lock", "panel_ds", "panel_cc", "gui_frente", "estab_slider", "layout", "reload")),
+    ("[ E ]  BORRADORES Y CAPAS", ("borrador", "borrador_suave", "borrador_lazo", "borrador_all_layers", "capa_visibilidad")),
+    ("[ W ]  AERÓGRAFO Y PINTURA", ("aerografo", "aerografo_alpha", "difu_mixer", "opc_presion")),
+    ("[ S ]  SELECCIÓN Y LAZO", ("lazo", "area_color")),
+    ("[ Q ]  PLUMILLA Y PINCELES", ("pluma", "color_primario", "color_secundario", "pincel_duro", "pincel_suave")),
+    ("[ F ]  HERRAMIENTAS F / SMEAR", ("smear", "smear_soft", "shift_sostenido")),
+    ("[ X ]  MEZCLA Y SELECCIÓN", ("deseleccion", "reseleccion", "color_mix", "smudge")),
+    ("[ Z ]  LIENZO Y ZOOM", ("zoom_lienzo", "rotar_lienzo", "flip_horizontal", "inv_seleccion", "regla_ocultar", "relleno")),
+    ("ACCIONES Y SISTEMA", ("guardar", "deshacer", "rehacer", "copiar", "enfoque", "history_lock", "panel_ds", "panel_cc", "gui_frente", "estab_slider", "layout", "reload")),
 )
 
 
@@ -308,8 +308,8 @@ class CatalogoPanel(ctk.CTkFrame):
         top.grid(row=0, column=0, sticky="ew", padx=2, pady=(2, 1))
         top.grid_columnconfigure(0, weight=1)
         lbl(top, "Eventos", 14, T.TXT, True).grid(row=0, column=0, sticky="w")
-        self.grp = combo(top, ["Todos los grupos"], command=lambda _v: self._filter(), width=160)
-        self.grp.set(VAL_ARBOL)
+        self.grp = combo(top, ["Todos los grupos"], command=lambda _v: self._filter(), width=150)
+        self.grp.set("Todos los grupos")
         self.grp.grid(row=0, column=1)
 
         bar = ctk.CTkFrame(self, fg_color="transparent", width=0, height=0)
@@ -330,6 +330,7 @@ class CatalogoPanel(ctk.CTkFrame):
         import tkinter as tk
         self._ROW_H, self._HEAD_H = 26, 16
         self._W = 0
+        self._total_h = 0
         self._vis: list = []
         self._items: dict[str, tuple] = {}
         self._row_bounds: list[tuple[int, int, str]] = []
@@ -353,6 +354,8 @@ class CatalogoPanel(ctk.CTkFrame):
         self.cv.bind("<ButtonRelease-1>", lambda _e: self._cancel_lp(), add="+")
         self.cv.bind("<B1-Motion>", self._on_lp_motion, add="+")
         self.cv.bind_all("<MouseWheel>", self._wheel, add="+")
+        for _seq in ("<Up>", "<Down>", "<Prior>", "<Next>", "<Home>", "<End>"):
+            self.cv.bind_all(_seq, self._on_nav_key, add="+")
 
         self.count = lbl(self, "", 10, T.TXT2)
         self.count.grid(row=3, column=0, sticky="w", padx=14, pady=(0, 10))
@@ -378,6 +381,85 @@ class CatalogoPanel(ctk.CTkFrame):
         except Exception:
             pass
 
+    # ── navegación con teclado (↑ ↓, RePág/AvPág, Inicio/Fin) ──
+    def _is_inside(self, w) -> bool:
+        while w is not None:
+            if w is self:
+                return True
+            w = getattr(w, "master", None)
+        return False
+
+    def _panel_active(self, e=None) -> bool:
+        """Solo navega si el foco está en el panel o el puntero está sobre él."""
+        try:
+            if not self.winfo_ismapped():
+                return False
+        except Exception:
+            return False
+        try:
+            f = self.focus_get()
+        except Exception:
+            f = None
+        if f is not None and self._is_inside(f):
+            return True
+        try:
+            if e is not None:
+                w = self.winfo_containing(e.x_root, e.y_root)
+                if w is not None and self._is_inside(w):
+                    return True
+        except Exception:
+            pass
+        return False
+
+    def _nav_keys(self) -> list[str]:
+        return [it[1] for it in self._vis if it[0] == "r"]
+
+    def _on_nav_key(self, e):
+        if not self._panel_active(e):
+            return None
+        keys = self._nav_keys()
+        if not keys:
+            return "break"
+        cur = self.selected if self.selected in keys else None
+        idx = keys.index(cur) if cur else -1
+        ks = e.keysym
+        if ks == "Up":
+            idx = len(keys) - 1 if idx < 0 else max(0, idx - 1)
+        elif ks == "Down":
+            idx = 0 if idx < 0 else min(len(keys) - 1, idx + 1)
+        elif ks == "Prior":
+            idx = 0 if idx < 0 else max(0, idx - 5)
+        elif ks == "Next":
+            idx = 0 if idx < 0 else min(len(keys) - 1, idx + 5)
+        elif ks == "Home":
+            idx = 0
+        elif ks == "End":
+            idx = len(keys) - 1
+        else:
+            return None
+        nuevo = keys[idx]
+        if nuevo != self.selected:
+            self.select(nuevo, notify=True)
+        self._ensure_visible(nuevo)
+        return "break"
+
+    def _ensure_visible(self, key: str):
+        rango = next(((y1, y2) for y1, y2, k in self._row_bounds if k == key), None)
+        if not rango:
+            return
+        y1, y2 = rango
+        cv = self.cv
+        try:
+            top = cv.canvasy(0)
+            alto = max(cv.winfo_height(), 1)
+            total = max(getattr(self, "_total_h", 0), 1)
+            if y1 - 4 < top:
+                cv.yview_moveto(max(0.0, (y1 - 4) / total))
+            elif y2 + 4 > top + alto:
+                cv.yview_moveto(min(1.0, max(0.0, (y2 + 4 - alto) / total)))
+        except Exception:
+            pass
+
     def _on_resize(self, e):
         if abs(e.width - self._W) > 1:
             self._render_canvas(keep=True)
@@ -399,6 +481,16 @@ class CatalogoPanel(ctk.CTkFrame):
             self.after_cancel(self._job)
         self._job = self.after(150, lambda: self._filter(keep=False))
 
+    @staticmethod
+    def _tree_prefix(pos: int, total: int) -> str:
+        """Conector de árbol: └─ en la última fila, ├─ en todas las demás (incluida la primera)."""
+        return "   └─ " if pos == total - 1 else "   ├─ "
+
+    def _add_tree_rows(self, eids: list[str]):
+        """Agrega filas bajo el encabezado actual, todas con conector alineado."""
+        total = len(eids)
+        self._vis.extend(("r", eid, self._tree_prefix(k, total)) for k, eid in enumerate(eids))
+
     def _filter(self, keep=True):
         self._job = None
         q = self.q.get().strip().lower()
@@ -409,24 +501,21 @@ class CatalogoPanel(ctk.CTkFrame):
             asignados = set()
             for titulo, eids in FAMILIAS_TECLAS:
                 vis = []
-                for idx, eid in enumerate(eids):
+                for eid in eids:
                     if eid in self._rows:
                         ev = self._rows[eid][2]
                         if not q or q in ev.nombre.lower():
-                            pref = "   └─ " if idx == len(eids) - 1 else ("   ├─ " if idx > 0 else "")
-                            vis.append((eid, pref))
+                            vis.append(eid)
                             asignados.add(eid)
                 if vis:
                     self._vis.append(("h", titulo))
-                    self._vis.extend(("r", eid, pfx) for eid, pfx in vis)
+                    self._add_tree_rows(vis)
                     n += len(vis)
-            sobrantes = []
-            for eid, (_, _, ev) in self._rows.items():
-                if eid not in asignados and (not q or q in ev.nombre.lower()):
-                    sobrantes.append((eid, ""))
+            sobrantes = [eid for eid, (_, _, ev) in self._rows.items()
+                         if eid not in asignados and (not q or q in ev.nombre.lower())]
             if sobrantes:
-                self._vis.append(("h", "⚪ PERSONALIZADOS Y OTROS"))
-                self._vis.extend(("r", eid, pfx) for eid, pfx in sobrantes)
+                self._vis.append(("h", "PERSONALIZADOS Y OTROS"))
+                self._add_tree_rows(sobrantes)
                 n += len(sobrantes)
         else:
             for grupo in self.catalogo.grupos():
@@ -436,9 +525,7 @@ class CatalogoPanel(ctk.CTkFrame):
                 if not vis:
                     continue
                 self._vis.append(("h", grupo))
-                for idx, i in enumerate(vis):
-                    pref = "   └─ " if idx == len(vis) - 1 else "   ├─ "
-                    self._vis.append(("r", i, pref))
+                self._add_tree_rows(vis)
                 n += len(vis)
         self.count.configure(text=f"{n} evento{'s' if n != 1 else ''}")
         self._render_canvas(keep=keep)
@@ -459,10 +546,10 @@ class CatalogoPanel(ctk.CTkFrame):
             if kind == "h":
                 key = item[1]
                 y += 14 if y > 2 else 2
-                # Círculo decorativo
-                cv.create_oval(10, y + self._HEAD_H / 2 - 3, 16, y + self._HEAD_H / 2 + 3,
-                               fill=pri, outline="")
-                cv.create_text(24, y + self._HEAD_H / 2, text=key.upper(), font=self._fh,
+                cy = y + self._HEAD_H / 2
+                # Viñeta única y consistente (sin glifos de círculo que cambian de relleno según la fuente)
+                cv.create_oval(10, cy - 3, 16, cy + 3, fill=pri, outline="")
+                cv.create_text(24, cy, text=key.upper(), font=self._fh,
                                fill=pri, anchor="w", state="disabled")
                 y += self._HEAD_H + 2
                 continue
@@ -478,20 +565,14 @@ class CatalogoPanel(ctk.CTkFrame):
             font_use = self._fb if (is_lead or on) else self._f
             indent = 8 if pfx else 0
             txt = cv.create_text(22 + indent, y + self._ROW_H / 2 - 1,
-                                 text=ellipsize(nom, self._f, max(60, w - 75 - indent)),
+                                 text=ellipsize(nom, self._f, max(60, w - 58 - indent)),
                                  font=font_use,
                                  fill=self._c(T.PRIMARY if on else (T.TXT2 if pausado else T.TXT)),
                                  anchor="w", state="disabled")
-            dots = cv.create_text(w - 20, y + self._ROW_H / 2 - 1,
-                                 text="⋮", font=T.font(14, True),
-                                 fill=self._c(T.TXT3), anchor="center")
-            self._items[key] = (rect, txt, dots)
+            self._items[key] = (rect, txt)
             self._row_bounds.append((y, y + self._ROW_H, key))
             cv.tag_bind(rect, "<Button-1>", lambda e, i=key: self._on_row_down(e, i))
             cv.tag_bind(txt, "<Button-1>", lambda e, i=key: self._on_row_down(e, i))
-            cv.tag_bind(dots, "<Button-1>", lambda e, i=key: self._on_context_menu(e, i))
-            cv.tag_bind(dots, "<Enter>", lambda _e, i=key: self._hov(i, True))
-            cv.tag_bind(dots, "<Leave>", lambda _e, i=key: self._hov(i, False))
             cv.tag_bind(rect, "<ButtonRelease-1>", lambda e: self._on_row_up(e))
             cv.tag_bind(txt, "<ButtonRelease-1>", lambda e: self._on_row_up(e))
             cv.tag_bind(rect, "<B1-Motion>", self._on_lp_motion)
@@ -502,6 +583,7 @@ class CatalogoPanel(ctk.CTkFrame):
             cv.tag_bind(rect, "<Leave>", lambda _e, i=key: self._hov(i, False))
             y += self._ROW_H
         total = y + 4
+        self._total_h = total
         cv.configure(scrollregion=(0, 0, w, total))
         if keep and py0 > 0.0:
             vis_h = max(cv.winfo_height(), 1)
@@ -516,9 +598,6 @@ class CatalogoPanel(ctk.CTkFrame):
         self.cv.configure(cursor="hand2" if enter else "")
         if i not in self.selected_set:
             self.cv.itemconfigure(it[0], fill=self._c(T.SOFT) if enter else self._bg)
-        if len(it) > 2:
-            # Resaltar los 3 puntos al pasar el mouse
-            self.cv.itemconfigure(it[2], fill=self._c(T.PRIMARY if enter else T.TXT3))
 
     def _on_row_click(self, event, key: str):
         shift = bool(event.state & 0x0001)
@@ -579,18 +658,13 @@ class CatalogoPanel(ctk.CTkFrame):
             ev = self._rows[i][2] if i in self._rows else None
             pausado = getattr(ev, "pausado", False) if ev else False
             font_use = self._fb if (is_lead or on) else self._f
-            # Recuperar el prefijo original del objeto ev en self._rows
-            pfx = self._rows[i][1] if len(self._rows[i]) > 1 else "" # Esto es incorrecto, la estructura de _rows cambió.
-            # Necesitamos obtener el pfx guardado en _vis durante el filtrado.
-            # Como _vis se regenera, busquemos el pfx asociado a esta key i
             pfx = ""
             for item in self._vis:
-                if item[0] == "r" and item[1] == i:
+                if len(item) > 2 and item[0] == "r" and item[1] == i:
                     pfx = item[2]
                     break
-
             nom = f"{pfx}{'⏸ ' if pausado else ''}{ev.nombre}"
-            self.cv.itemconfigure(txt, text=ellipsize(nom, self._f, max(60, w - 75 - (8 if pfx else 0))),
+            self.cv.itemconfigure(txt, text=ellipsize(nom, self._f, max(60, w - 58 - (8 if pfx else 0))),
                                   fill=self._c(T.PRIMARY if on else (T.TXT2 if pausado else T.TXT)),
                                   font=font_use)
             if dots:
@@ -918,9 +992,10 @@ GROUP_META = {
 
 
 class EditorPanel(ctk.CTkFrame):
-    def __init__(self, master, ctx: Ctx):
+    def __init__(self, master, ctx: Ctx, render: str = "ctk"):
         super().__init__(master, fg_color="transparent")
         self.ctx = ctx
+        self.render_mode = render
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         hd = ctk.CTkFrame(self, fg_color="transparent", width=0, height=0)
@@ -933,14 +1008,53 @@ class EditorPanel(ctk.CTkFrame):
         self.title.grid(row=1, column=0, sticky="w", pady=(2, 0))
         lbl(hd, "Configuración del evento seleccionado", 11, T.TXT2).grid(row=2, column=0, sticky="w")
 
-        self.scroll = ctk.CTkScrollableFrame(self, fg_color="transparent", corner_radius=0,
-                                             scrollbar_button_color="#D9D4E6", scrollbar_button_hover_color=T.ACCENT)
-        self.scroll.grid(row=1, column=0, sticky="nsew")
+        # Contenedor limpio tk.Canvas para scroll sin cascada de CTk
+        self.canvas = tk.Canvas(self, bg=T.BG, highlightthickness=0, bd=0)
+        self.scrollbar = ctk.CTkScrollbar(self, command=self.canvas.yview, button_color="#D9D4E6",
+                                         button_hover_color=T.ACCENT, width=12)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.canvas.grid(row=1, column=0, sticky="nsew")
+        self.scrollbar.grid(row=1, column=1, sticky="ns")
+
+        self.scroll = ctk.CTkFrame(self.canvas, fg_color="transparent", corner_radius=0)
+        self.scroll._parent_canvas = self.canvas
+        self._canvas_win = self.canvas.create_window((0, 0), window=self.scroll, anchor="nw")
         self.scroll.grid_columnconfigure(0, weight=1)
+
+        def _on_c_config(e):
+            if self.winfo_exists():
+                self.canvas.itemconfig(self._canvas_win, width=e.width)
+        self.canvas.bind("<Configure>", _on_c_config)
+
+        def _on_s_config(e):
+            if self.winfo_exists():
+                self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.scroll.bind("<Configure>", _on_s_config)
+
+        def _on_wheel(e):
+            if self.winfo_exists():
+                self.canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
+        self.canvas.bind("<MouseWheel>", _on_wheel)
+        self.scroll.bind("<MouseWheel>", _on_wheel)
+
         self.opened: list = []
         r = 0
         self.groups: dict[str, list] = {}
-        for key, title, group, collapsed in (("A", "A · CONFIGURACIÓN BÁSICA", GROUP_A, False), ("B", "B · PARTICULARIDADES", GROUP_B, False)):
+        self._group_hdr: dict[str, dict] = {}
+        self._auto_col: set[str] = set()      # grupos colapsados automáticamente (vacíos)
+        self.canvas_a = None
+
+        # Si el motor es canvas, montamos el Grupo A con CanvasGroupA (windowless)
+        if self.render_mode == "canvas":
+            from .canvas_engine import CanvasGroupA
+            self.canvas_a = CanvasGroupA(self.scroll, ctx, height=360)
+            self.canvas_a.grid(row=r, column=0, sticky="ew", pady=(0, T.GAP), padx=(0, 6))
+            r += 1
+            groups_to_build = (("B", "B · PARTICULARIDADES", GROUP_B, False),)
+        else:
+            groups_to_build = (("A", "A · CONFIGURACIÓN BÁSICA", GROUP_A, False), ("B", "B · PARTICULARIDADES", GROUP_B, False))
+
+        for key, title, group, collapsed in groups_to_build:
             head = ctk.CTkFrame(self.scroll, fg_color="transparent", cursor="hand2")
             head.grid(row=r, column=0, sticky="ew", padx=4, pady=(T.GAP if r else 0, 3))
             head.grid_columnconfigure(1, weight=1)
@@ -954,8 +1068,13 @@ class EditorPanel(ctk.CTkFrame):
             l1.grid(row=0, column=1, sticky="w")
             l_sub = lbl(head, GROUP_META[key][1], 10, T.TXT2)
             l_sub.grid(row=1, column=1, sticky="w")
+            vacio = lbl(head, "Vacío", 9, T.MUTED_TXT, True, fg_color=T.MUTED_BG,
+                        corner_radius=7, width=44, height=17)
+            vacio.grid(row=0, column=2, rowspan=2, padx=(8, 2), sticky="e")
             chev = lbl(head, "⌄" if collapsed else "⌃", 14, T.TXT2, anchor="e")
-            chev.grid(row=0, column=2, rowspan=2, padx=(0, 10))
+            chev.grid(row=0, column=3, rowspan=2, padx=(0, 10))
+            self._group_hdr[key] = dict(head=head, badge=badge, b_lbl=b_lbl, l1=l1,
+                                        l_sub=l_sub, vacio=vacio, chev=chev)
             r += 1
             self.groups[key] = []
             for cls in group:
@@ -966,7 +1085,7 @@ class EditorPanel(ctk.CTkFrame):
                     b.grid_remove()
                 r += 1
             toggle_cb = lambda _e, k=key, c=chev: self._toggle_group(k, c)
-            for w in (head, badge, b_lbl, l1, l_sub, chev):
+            for w in (head, badge, b_lbl, l1, l_sub, vacio, chev):
                 w.bind("<Button-1>", toggle_cb)
                 if hasattr(w, "_canvas") and w._canvas:
                     w._canvas.bind("<Button-1>", toggle_cb)
@@ -978,6 +1097,7 @@ class EditorPanel(ctk.CTkFrame):
                     pass
             self.groups[key + "_collapsed"] = collapsed
         self.blocks = ctx.blocks
+        ctx.add_listener(self._update_group_state)
         for b in self.blocks:
             if b.__class__.__name__ in ("A01Base", "A02Hud", "A03Sonido",
                                         "B01Presencia", "B02Disparador"):
@@ -988,6 +1108,7 @@ class EditorPanel(ctk.CTkFrame):
 
     def _toggle_group(self, key, chev):
         _t0 = time.perf_counter()
+        self._auto_col.discard(key)          # decisión manual del usuario
         col = not self.groups[key + "_collapsed"]
         self.groups[key + "_collapsed"] = col
         for b in self.groups[key]:
@@ -1013,9 +1134,66 @@ class EditorPanel(ctk.CTkFrame):
                   f"idletasks={(_t3-_t2)*1000:.1f}ms sync={(_t4-_t3)*1000:.1f}ms")
             print(f"[PROF]   configure events: {dict(sorted(_cnt.items(), key=lambda kv: -kv[1])[:6])}")
 
+    # ── cabeceras de grupo: estado vacío / con contenido ──
+    def _grupo_activo(self, key: str) -> bool:
+        """True si algún bloque del grupo tiene configuración propia para el evento."""
+        for b in self.groups.get(key, []):
+            if not getattr(b, "available", True):
+                continue
+            try:
+                if b.configurado():
+                    return True
+            except Exception:
+                return True          # ante la duda, no atenuar
+        return False
+
+    def _collapse_group(self, key: str, col: bool):
+        """Muestra/oculta el contenido del grupo sin pasar por el toggle manual."""
+        if self.groups.get(key + "_collapsed") == col:
+            return
+        self.groups[key + "_collapsed"] = col
+        for b in self.groups.get(key, []):
+            (b.grid_remove if col else b.grid)()
+        h = self._group_hdr.get(key)
+        if h:
+            h["chev"].configure(text="⌄" if col else "⌃")
+        self._queue_sync()
+
+    def _update_group_state(self, aplicar_colapso: bool = False):
+        """Atenúa la cabecera (A/B) cuando el grupo no tiene nada configurado.
+
+        Con aplicar_colapso=True (cambio de evento) un grupo vacío se colapsa solo,
+        ocultando todas sus tarjetas; si vuelve a tener contenido, se reexpande.
+        """
+        if getattr(self.ctx, "event_id", None) is None:
+            return
+        for key, h in getattr(self, "_group_hdr", {}).items():
+            activo = self._grupo_activo(key)
+            try:
+                h["badge"].configure(fg_color=T.PRIMARY if activo else T.MUTED_BG)
+                h["b_lbl"].configure(text_color="#FFFFFF" if activo else T.MUTED_TXT)
+                h["l1"].configure(text_color=T.TXT if activo else T.MUTED_TXT)
+                h["l_sub"].configure(text_color=T.TXT2 if activo else T.MUTED_TXT2)
+                h["chev"].configure(text_color=T.TXT2 if activo else T.MUTED_TXT2)
+                (h["vacio"].grid_remove if activo else h["vacio"].grid)()
+            except Exception:
+                pass
+            if not aplicar_colapso:
+                continue
+            if not activo:
+                self._collapse_group(key, True)
+                self._auto_col.add(key)
+            elif key in self._auto_col:
+                self._collapse_group(key, False)
+                self._auto_col.discard(key)
+
     def _on_toggle(self, block):
         if block.expanded:
             self.opened.append(block)
+            while len(self.opened) > MAX_OPEN:
+                old = self.opened.pop(0)
+                if old is not block:
+                    old.set_expanded(False)
         elif block in self.opened:
             self.opened.remove(block)
         self._queue_sync()
@@ -1069,6 +1247,10 @@ class EditorPanel(ctk.CTkFrame):
             pass
 
     def show_event(self, ev):
+        try:
+            self.focus_set()
+        except Exception:
+            pass
         prev_id = getattr(self.ctx, "event_id", None)
         self.ctx.event_id = ev.id
         if getattr(self, "_title_txt", None) != ev.nombre:
@@ -1083,6 +1265,9 @@ class EditorPanel(ctk.CTkFrame):
                     self.opened.remove(b)
         _p0 = time.perf_counter()
         self.ctx.refresh_all()
+        self._update_group_state(aplicar_colapso=True)
+        if getattr(self, "canvas_a", None) is not None:
+            self.canvas_a.refresh_values()
         _p1 = time.perf_counter()
         if prev_id != ev.id:
             try:

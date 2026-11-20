@@ -7,6 +7,8 @@ ACCENT, PRIMARY, PRIMARY_HOVER = "#7863A6", "#6E56A4", "#5E4893"
 SOFT, SOFT_HOVER = "#F1EDF8", "#E6DFF2"
 TXT, TXT2, TXT3 = "#201B38", "#6E6885", "#9D97B0"
 FIELD_BORDER, FIELD_OFF = "#DCD6E8", "#C7C0D8"
+MUTED_BG, MUTED_TXT = "#F7F5FB", "#B3ACC6"      # cabecera de grupo sin contenido (tenue)
+MUTED_TXT2 = "#CFC9DC"                          # subtítulo/chevron atenuados
 DANGER, WARN, OK = "#D64545", "#B7791F", "#2F855A"
 
 GAP, PAD, HEADER_H, LEFT_W, FOOTER_H = 8, 12, 38, 272, 56

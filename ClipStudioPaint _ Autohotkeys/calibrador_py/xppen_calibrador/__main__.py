@@ -4,7 +4,14 @@ import argparse
 import logging
 import sys
 import tempfile
+import time
 from pathlib import Path
+
+_T0 = time.perf_counter()
+
+
+def mark(n):
+    print(f"[{n}] {time.perf_counter() - _T0:.2f}s", flush=True)
 
 
 def main(argv=None) -> int:
@@ -13,6 +20,7 @@ def main(argv=None) -> int:
     ap.add_argument("--perfil", default="1")
     ap.add_argument("--modo", default="normal")
     ap.add_argument("--ahk-hwnd", type=int, default=0)
+    ap.add_argument("--render", choices=["ctk", "canvas"], default="ctk", help="motor de renderizado: ctk (actual) o canvas (nuevo piloto)")
     ap.add_argument("--selftest", action="store_true", help="construye la ventana, la cierra y devuelve 0 si todo OK")
     ap.add_argument("--dump-schema", action="store_true", help="imprime dónde vive cada clave del contrato en el INI real")
     a = ap.parse_args(argv)
@@ -27,8 +35,11 @@ def main(argv=None) -> int:
         return 0
     try:
         from .app import CalibradorApp
-        app = CalibradorApp(a.ini, a.perfil, a.modo, a.ahk_hwnd)
+        mark("imports ok")
+        app = CalibradorApp(a.ini, a.perfil, a.modo, a.ahk_hwnd, render=a.render)
+        mark("ventana creada")
         if a.selftest:
+            app.diagnostico_fase0()
             app.update_idletasks()
             app.update()
             app.destroy()

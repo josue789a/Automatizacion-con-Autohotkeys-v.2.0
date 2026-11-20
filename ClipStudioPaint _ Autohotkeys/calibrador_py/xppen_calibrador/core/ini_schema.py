@@ -63,7 +63,7 @@ FIELDS: dict[str, Field] = {
     "hud_dur":     F("@auto", "duracion_{id}", "str", "auto", fallback="HudEventos{p}"),   # "auto" o ms
     "snd_ambito":  F("@auto", "snd_ambito_{id}", "choice", "global", choices=("global", "este_evento"), fallback="HudSonido{p}"),
     "snd_activo":  F("@auto", "ev_{id}_activo", "bool", 1, fallback="HudSonido{p}"),
-    "snd_tipo":    F("@auto", "ev_{id}_tipo", "choice", "clic", choices=("clic", "suave", "beep", "mute"), fallback="HudSonido{p}"),
+    "snd_tipo":    F("@auto", "ev_{id}_tipo", "choice", "clic", choices=("clic", "suave", "agudo", "grave", "doble", "pluma", "aerografo", "color_primario", "color_secundario", "borrador", "lazo", "relleno", "guardar", "mute"), fallback="HudSonido{p}"),
     "snd_vol":     F("@auto", "ev_{id}_vol", "int", 60, 0, 100, fallback="HudSonido{p}"),
     # ── B1 · Presencia y Superficie ─────────────────────────
     "pildora":       F("Particularidades", "pildora_{id}", "bool", 0),

@@ -108,8 +108,10 @@ _CalPyExportarCatalogo() {
     for d in defs {
         atajo := ""
         try atajo := _PtsEvAtajoDefault(d[1])               ; ANCLA: atajo por defecto del evento
+        remap := ""
+        try remap := _PtsEvRemapDefault(d[1])               ; ANCLA: remap por defecto del evento
         out .= sep '{"id":' _CalPyJ(d[1]) ',"nombre":' _CalPyJ(d[2]) ',"grupo":' _CalPyJ(d[3])
-            . ',"atajo":' _CalPyJ(atajo) '}'
+            . ',"atajo":' _CalPyJ(atajo) ',"remap":' _CalPyJ(remap) '}'
         sep := ","
     }
     out .= "]}"
@@ -387,6 +389,8 @@ _CalPyProbarSnd(tipo := "clic", vol := 60, idEv := "") {
         t := "grave"
     else if (t = "doble")
         t := "doble"
+    else if (t = "pluma" || t = "aerografo" || t = "color_primario" || t = "color_secundario" || t = "borrador" || t = "lazo" || t = "relleno" || t = "guardar")
+        t := t
 
     if (t != "mute" && v > 0) {
         try {

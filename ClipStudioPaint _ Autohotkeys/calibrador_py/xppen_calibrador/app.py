@@ -2,10 +2,18 @@
 from __future__ import annotations
 import logging
 import sys
+import time
 import tkinter as tk
 from pathlib import Path
 from tkinter import messagebox
 import customtkinter as ctk
+
+try:
+    from .__main__ import mark
+except Exception:
+    _T0 = time.perf_counter()
+    def mark(n):
+        print(f"[{n}] {time.perf_counter() - _T0:.2f}s", flush=True)
 from .core.ahk_bridge import AhkBridge
 from .core.catalogo import Catalogo
 from .core.draft import Draft
@@ -31,9 +39,11 @@ TABS = (("⚡", "Eventos y particularidades"), ("✎", "Zonas y rangos"), ("⚙"
 
 
 class CalibradorApp(ctk.CTk):
-    def __init__(self, ini_path, perfil="1", modo="Normal", ahk_hwnd=0):
+    def __init__(self, ini_path, perfil="1", modo="Normal", ahk_hwnd=0, render="ctk"):
         ctk.set_appearance_mode("light")
         super().__init__(fg_color=T.BG)
+        self.render_mode = render
+        self.withdraw()   # Oculto durante la construcción inicial
         T.init_fonts(self)
         self.title(TITULO)
         self.minsize(940, 600)
@@ -70,14 +80,73 @@ class CalibradorApp(ctk.CTk):
         except Exception:
             pass
         self.show_tab(0)
-        self.after(700, self._prebuild_pages)
         self._refrescar_btn_anclar()
         self._center()
+        self.deiconify()   # Ventana visible inmediatamente con A01 y A02
+        self.after(300, self._prebuild_pages)
         self.protocol("WM_DELETE_WINDOW", self._close)
         first = self.catalogo.por_id("estab_slider") or (self.catalogo.eventos[0] if self.catalogo.eventos else None)
         if first:
             self.cat_panel.select(first.id)
         self.after(600, self._poll)
+        self.after_idle(self.diagnostico_fase0)
+
+    def diagnostico_fase0(self):
+        if getattr(self, "_fase0_hecho", False):
+            return
+        self._fase0_hecho = True
+        self.update_idletasks()
+        mark("contenido listo")
+
+        def contar(w):
+            if w is None:
+                return 0
+            try:
+                ch = w.winfo_children()
+                return 1 + sum(contar(c) for c in ch)
+            except Exception:
+                return 1
+
+        print("\n" + "=" * 55)
+        print("DIAGNÓSTICO FASE 0: CONTEO DE WIDGETS")
+        print("=" * 55)
+        total_root = contar(self)
+        total_cat = contar(getattr(self, "cat_panel", None))
+        total_editor = contar(getattr(self, "editor", None))
+        total_footer = contar(getattr(self, "footer", None))
+        print(f"Total ventana (root): {total_root}")
+        print(f"  ├── Panel Izquierdo (cat_panel): {total_cat}")
+        print(f"  ├── Panel Derecho (editor): {total_editor}")
+        print(f"  └── Footer / Barras: {total_footer}")
+
+        if hasattr(self, "editor") and hasattr(self.editor, "blocks"):
+            print("\nDesglose por bloque en EditorPanel:")
+            for b in self.editor.blocks:
+                nombre = b.__class__.__name__
+                cnt = contar(b)
+                exp = getattr(b, "expanded", False)
+                disp = getattr(b, "available", True)
+                print(f"  • {nombre:16s} -> {cnt:3d} widgets (expandido={exp}, disponible={disp})")
+
+        print("\n" + "=" * 55)
+        print("MEDICIÓN DE CAMBIO DE EVENTO")
+        print("=" * 55)
+        if hasattr(self, "catalogo") and len(self.catalogo.eventos) > 1:
+            ev_actual = self.ctx.event_id
+            otro_ev = next((e for e in self.catalogo.eventos if e.id != ev_actual), None)
+            if otro_ev:
+                t0_s1 = time.perf_counter()
+                self._select(otro_ev.id)
+                self.update_idletasks()
+                d1 = (time.perf_counter() - t0_s1) * 1000
+                print(f"Cambio 1: '{ev_actual}' -> '{otro_ev.id}': {d1:.2f} ms")
+
+                t0_s2 = time.perf_counter()
+                self._select(ev_actual)
+                self.update_idletasks()
+                d2 = (time.perf_counter() - t0_s2) * 1000
+                print(f"Cambio 2: '{otro_ev.id}' -> '{ev_actual}': {d2:.2f} ms")
+        print("=" * 55 + "\n", flush=True)
 
     # ── estructura ─────────────────────────────────────────
     def _tabbar(self):
@@ -218,7 +287,6 @@ class CalibradorApp(ctk.CTk):
         ph = self._show_placeholder() if self.pages[i] is None else None
         try:
             activa = self._ensure_page(i)
-            activa.update_idletasks()  # layout resuelto mientras la anterior sigue visible
             activa.lift()
             activa.place(relx=0.0, rely=0.0, relwidth=1.0, relheight=1.0)
         finally:
@@ -263,7 +331,7 @@ class CalibradorApp(ctk.CTk):
         pg.grid_rowconfigure(0, weight=1)
         self.cat_panel = CatalogoPanel(pg, self.catalogo, self._select, self._add_event, app=self)
         self.cat_panel.grid(row=0, column=0, sticky="ns", padx=(0, 12))
-        self.editor = EditorPanel(pg, self.ctx)
+        self.editor = EditorPanel(pg, self.ctx, render=getattr(self, "render_mode", "ctk"))
         self.editor.grid(row=0, column=1, sticky="nsew")
         return pg
 
@@ -339,7 +407,7 @@ class CalibradorApp(ctk.CTk):
 
     def save_and_close(self):
         if self.save():
-            self.after(120, self.destroy)
+            self.withdraw()
 
     def _close(self):
         if self.draft.count:
@@ -348,7 +416,8 @@ class CalibradorApp(ctk.CTk):
                 return
             if r and not self.save():
                 return
-        self.destroy()
+        # Modo residente: ocultar ventana (deiconify al volver a llamar)
+        self.withdraw()
 
     # ── cambios externos (AHK escribe el INI) ──────────────
     def _refresh_tabs(self, external=False):

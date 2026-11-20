@@ -2,8 +2,29 @@
 ; INI [HudSonido<PERFIL>]: global_activo/tipo/vol · ev_<id>_activo/tipo/vol (vacío = hereda)
 
 _SndTiposDef() {
-    static d := {claves: ["clic","agudo","grave","doble"], nombres: ["Clic suave","Beep agudo","Beep grave","Doble"]}
+    static d := {claves: ["clic","suave","agudo","grave","doble","pluma","aerografo","color_primario","color_secundario","borrador","lazo","relleno","guardar","mute"], nombres: ["Clic","Clic suave","Beep agudo","Beep grave","Doble beep","Plumilla (Q)","Aerógrafo (W)","Color Primario","Color Secundario","Borrador","Lazo / Sel","Relleno","Guardar","Silencio"]}
     return d
+}
+
+; Tipo por defecto por evento cuando el INI no define ev_<id>_tipo.
+; 1) subcadena temática  2) hash estable del id -> rotación de tonos distintos
+_SndTipoPorDefecto(idEv) {
+    static pat := [["pluma", "pluma"], ["aero", "aerografo"]
+                 , ["primari", "color_primario"], ["secundari", "color_secundario"]
+                 , ["borrador", "borrador"], ["goma", "borrador"]
+                 , ["lazo", "lazo"], ["selec", "lazo"]
+                 , ["relleno", "relleno"], ["cubeta", "relleno"]
+                 , ["guardar", "guardar"], ["save", "guardar"]]
+    static rot := ["clic", "agudo", "grave", "doble"]
+    id := StrLower(idEv)
+    for p in pat {
+        if InStr(id, p[1])
+            return p[2]
+    }
+    h := 0
+    Loop Parse id
+        h += Ord(A_LoopField)
+    return rot[Mod(h, rot.Length) + 1]
 }
 _SndIdxTipo(tipo) {
     for i, k in _SndTiposDef().claves
@@ -40,6 +61,8 @@ _SndLeer(idEv := "") {
         if (t != "") {
             tipo := t
             propio := true
+        } else if (IniRead(ini, sec, "snd_ambito_" idEv, "") != "global") {
+            tipo := _SndTipoPorDefecto(idEv)   ; derivado: propio sigue en false
         }
         if (v != "") {
             vol := v
@@ -61,6 +84,7 @@ _SndWav(tipo, vol) {
         return cache[k]
     sr := 22050
     switch tipo {
+        case "suave": segs := [[1800, 10]]
         case "agudo": segs := [[1500, 90]]
         case "grave": segs := [[520, 120]]
         case "doble": segs := [[1100, 55], [0, 45], [1100, 55]]
@@ -92,9 +116,16 @@ _SndWav(tipo, vol) {
     return buf
 }
 _SndTocar(tipo, vol) {
-    if (vol <= 0)
+    if (vol <= 0 || tipo = "mute")
         return
-    DllCall("winmm\PlaySoundW", "Ptr", _SndWav(tipo, vol), "Ptr", 0, "UInt", 0x7)  ; MEMORY|ASYNC|NODEFAULT
+    switch tipo {
+        case "pluma", "aerografo", "color_primario", "color_secundario":
+            try _SonarFast(tipo)
+        case "borrador", "lazo", "relleno", "guardar":
+            try _SonarUI(tipo)
+        default:
+            DllCall("winmm\PlaySoundW", "Ptr", _SndWav(tipo, vol), "Ptr", 0, "UInt", 0x7)  ; MEMORY|ASYNC|NODEFAULT
+    }
 }
 
 ; ── Hook (lo llama _AvisoEvento) ──

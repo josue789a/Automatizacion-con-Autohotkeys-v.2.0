@@ -17,9 +17,8 @@ PARTICULARIDADES_DEFAULTS: dict[str, dict[str, object]] = {
     # ── Borradores y Mezcla ──
     "borrador_suave":  {"quick": 1, "quick_a": "e", "quick_b": "l", "quick_ms": _QUICK_MS},
     "borrador":        {"quick": 1, "quick_a": "e", "quick_b": "l", "quick_ms": _QUICK_MS},
-    "smudge":          {"quick": 1, "quick_a": "b", "quick_b": "p", "quick_ms": _QUICK_MS},
+    "smudge":          {"quick": 1, "quick_a": "d", "quick_b": "p", "quick_ms": _QUICK_MS},
     "smear_soft":      {"quick": 1, "quick_a": "b", "quick_b": "NumpadEnd", "quick_ms": _QUICK_MS},
-    "color_mix":       {"quick": 1, "quick_a": "b", "quick_b": "d", "quick_ms": _QUICK_MS},
 
     # ── Pinceles y Trazos ──
     "pluma":           {"quick": 1, "quick_a": "q", "quick_b": "Ctrl+2", "quick_ms": _QUICK_MS},
@@ -37,10 +36,9 @@ PARTICULARIDADES_DEFAULTS: dict[str, dict[str, object]] = {
     "reseleccion":     {"toggle": 1, "toggle_a": "x", "toggle_b": "F10"},
 
     # ── Lienzo y Reglas ──
-    "shift_sostenido": {"quick": 1, "quick_a": "Shift", "quick_b": "Shift", "quick_ms": 250, "hover": 1},
+    "shift_sostenido": {"hover": 1},
     "rotar_lienzo":    {"quick": 1, "quick_a": "z", "quick_b": "r", "quick_ms": _QUICK_MS},
     "zoom_lienzo":     {"quick": 1, "quick_a": "z", "quick_b": "r", "quick_ms": _QUICK_MS},
-    "regla_ocultar":   {"quick": 1, "quick_a": "t", "quick_b": "!t", "quick_ms": 250},
 
     # ── Deslizador y Píldoras ──
     "estab_slider":    {"slider": 1, "pildora": 1},

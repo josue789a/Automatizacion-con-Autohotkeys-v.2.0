@@ -417,7 +417,8 @@ _AvisoEvento(clave, textoPrincipal := "", subtexto := "", colorAcento := "00E5FF
             }
         }
     }
-    _SndEvento(clave)          ; independiente de c.formato (suena aunque sea "desactivado")
+    if (clave != "deshacer" && clave != "rehacer")
+        _SndEvento(clave)          ; independiente de c.formato (suena aunque sea "desactivado")
     MostrarAvisoUI(c.formato, textoPrincipal, subtexto, zNum, colorAcento, duracion, c.opacidad, clave)
 }
 

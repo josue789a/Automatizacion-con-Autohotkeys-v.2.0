@@ -13,6 +13,12 @@ class Ctx:
         self.draft, self.bridge, self.catalogo, self.on_dirty = draft, bridge, catalogo, on_dirty
         self.event_id: str | None = None
         self.blocks: list["Block"] = []
+        self.listeners: list = []
+
+    def add_listener(self, cb):
+        """Suscriptores avisados tras cada cambio real (p. ej. cabeceras de grupo)."""
+        if cb not in self.listeners:
+            self.listeners.append(cb)
 
     def eid(self, name: str) -> str:
         return "" if "{id}" not in FIELDS[name].key else (self.event_id or "")
@@ -31,6 +37,11 @@ class Ctx:
         ok = self.draft.set(name, self.eid(name), value)
         if ok:
             self.on_dirty()
+            for cb in list(self.listeners):
+                try:
+                    cb()
+                except Exception:
+                    pass
         return ok
 
     def refresh_all(self):
@@ -45,6 +56,8 @@ class Block(ctk.CTkFrame):
     NUM, TITLE, SUB, CAP = "", "", "", None          # CAP: nombre de capacidad en Evento.tiene()
     MASTER: tuple[str, ...] = ()                     # flags que gobiernan el check de cabecera
     MASTER_DEFAULT = ""                              # flag que se enciende al activar el maestro
+    ESENCIAL = False                                 # True = siempre cuenta como contenido del grupo
+    KEYS: tuple[str, ...] = ()                       # campos propios (sin MASTER) que indican configuración
 
     def __init__(self, master, ctx: Ctx, on_toggle):
         super().__init__(master, fg_color=T.CARD, corner_radius=12, border_width=1, border_color="#E5E0F0")
@@ -138,6 +151,17 @@ class Block(ctk.CTkFrame):
     def master_on(self) -> bool:
         return any(self.ctx.get(n) for n in self.MASTER)
 
+    def configurado(self) -> bool:
+        """True si el bloque tiene configuración propia para este evento.
+
+        Lo usan las cabeceras de grupo (A/B) para atenuarse cuando el grupo está vacío.
+        """
+        if self.ESENCIAL:
+            return True
+        if self.MASTER:
+            return self.master_on()
+        return any(self.ctx.explicito(n) for n in self.KEYS)
+
     def master_apply(self, on: bool):
         if on:
             restore = {n: v for n, v in self._stash.items() if v}
@@ -154,6 +178,9 @@ class Block(ctk.CTkFrame):
 
     def _sync_master(self):
         nv = 1 if self.master_on() else 0
+        if getattr(self, "_last_m_val", None) == nv and self.m_var.get() == nv:
+            return
+        self._last_m_val = nv
         if self.m_var.get() != nv:
             self.m_var.set(nv)
         try:
@@ -208,6 +235,9 @@ class Block(ctk.CTkFrame):
         w._var = var
         def _load_chk():
             v = int(bool(self.ctx.get(name)))
+            if getattr(w, "_last_val", None) == v:
+                return
+            w._last_val = v
             var.set(v)
             try:
                 (w.select if v else w.deselect)()
@@ -219,7 +249,13 @@ class Block(ctk.CTkFrame):
     def f_switch(self, parent, name):
         var = tk.IntVar(value=0)
         w = switch(parent, var, lambda: self._commit(name, var.get()))
-        self._loaders.append(lambda: var.set(self.ctx.get(name)))
+        def _load_sw():
+            v = int(bool(self.ctx.get(name)))
+            if getattr(w, "_last_val", None) == v:
+                return
+            w._last_val = v
+            var.set(v)
+        self._loaders.append(_load_sw)
         return w
 
     def f_menu(self, parent, name, items, width=130, on_change=None):
@@ -239,7 +275,12 @@ class Block(ctk.CTkFrame):
             lab = v2l.get(cur.lower())
             if lab is None:
                 lab = cur
-                w.configure(values=[*[l for l, _ in items], lab])
+                if getattr(w, "_last_values_key", None) != lab:
+                    w._last_values_key = lab
+                    w.configure(values=[*[l for l, _ in items], lab])
+            if getattr(w, "_last_val", None) == lab:
+                return
+            w._last_val = lab
             w.set(lab)
         self._loaders.append(load)
         return w
@@ -251,10 +292,22 @@ class Block(ctk.CTkFrame):
             w = Stepper(box, f.lo, f.hi, step, width, on_commit=lambda t: self._commit(name, t))
             w.pack(side="left")
             lbl(box, suffix, 10, T.TXT2).pack(side="left", padx=(4, 0))
-            self._loaders.append(lambda: w.set(self.ctx.get(name)))
+            def _load_s1():
+                v = self.ctx.get(name)
+                if getattr(w, "_last_val", None) == v:
+                    return
+                w._last_val = v
+                w.set(v)
+            self._loaders.append(_load_s1)
             return box
         w = Stepper(parent, f.lo, f.hi, step, width, on_commit=lambda t: self._commit(name, t))
-        self._loaders.append(lambda: w.set(self.ctx.get(name)))
+        def _load_s2():
+            v = self.ctx.get(name)
+            if getattr(w, "_last_val", None) == v:
+                return
+            w._last_val = v
+            w.set(v)
+        self._loaders.append(_load_s2)
         return w
 
     def f_entry(self, parent, name, width=140, placeholder=""):
@@ -267,22 +320,18 @@ class Block(ctk.CTkFrame):
         w.bind("<Return>", commit)
 
         def load():
+            val = str(self.ctx.get(name) or "")
+            if getattr(w, "_last_val", None) == val:
+                return
+            w._last_val = val
             w.delete(0, "end")
-            w.insert(0, str(self.ctx.get(name)))
+            w.insert(0, val)
             w.configure(border_color=T.FIELD_BORDER)
         self._loaders.append(load)
         return w
 
     def f_entry_default(self, parent, name, width=56, defecto="1000", vacio="auto"):
-        """Entry con valor de fábrica visible en gris.
-
-        - Sin valor propio (INI == `vacio`, p. ej. "auto"): el campo se ve
-          vacío y muestra `defecto` en gris (placeholder).
-        - Con valor propio: el número se muestra en negro (texto normal).
-        - Confirmar en blanco guarda `vacio` y vuelve al valor de fábrica.
-
-        Reutilizable en cualquier bloque; A02Hud lo usa para la duración.
-        """
+        """Entry con valor de fábrica visible en gris."""
         def _get_def():
             return str(defecto() if callable(defecto) else defecto)
 
@@ -298,13 +347,16 @@ class Block(ctk.CTkFrame):
 
         def load():
             cur_def = _get_def()
-            w.configure(placeholder_text=cur_def)
             cur = str(self.ctx.get(name) or "").strip()
+            st_key = (cur_def, cur)
+            if getattr(w, "_last_state", None) == st_key:
+                return
+            w._last_state = st_key
+            w.configure(placeholder_text=cur_def)
             w.delete(0, "end")
             if cur and cur.lower() != str(vacio).lower():
                 w.insert(0, cur)            # valor propio -> negro
             else:
-                # delete() borra el texto del placeholder: hay que reactivarlo
                 try:
                     w._activate_placeholder()
                 except Exception:
@@ -314,27 +366,21 @@ class Block(ctk.CTkFrame):
         return w
 
     def f_stepper_default(self, parent, name, step=1, width=48, suffix=""):
-        """Stepper con valor de fábrica en gris y valor propio en negro.
-
-        - Sin valor propio: se muestra el valor efectivo de fábrica en gris
-          (p. ej. el `quick_ms` del evento: 250/300/400 según la tabla de
-          particularidades), no un número inventado.
-        - Con valor propio: negro.
-        - Vaciar el campo y confirmar vuelve al valor de fábrica.
-        - Los ▴/▾ parten del valor de fábrica aunque el campo esté en gris.
-
-        Reutilizable en cualquier bloque; B03 lo usa para el umbral (ms).
-        """
         f = FIELDS[name]
         w = Stepper(parent, f.lo, f.hi, step, width, suffix=suffix,
                     on_commit=lambda t: self._commit_stepper_default(name, w, t))
 
         def load():
             val = self.ctx.get(name)
-            if self.ctx.explicito(name):
-                w.set(val)                  # propio -> negro
+            expl = self.ctx.explicito(name)
+            st_key = (expl, val)
+            if getattr(w, "_last_state", None) == st_key:
+                return
+            w._last_state = st_key
+            if expl:
+                w.set(val)
             else:
-                w.set_default(val)          # fábrica -> gris
+                w.set_default(val)
         self._loaders.append(load)
         return w
 
@@ -433,8 +479,12 @@ class Block(ctk.CTkFrame):
 
             def load():
                 cur_def = _get_def()
-                w.configure(placeholder_text=cur_def, placeholder_text_color=T.TXT3)
                 cur = str(self.ctx.get(name) or "").strip()
+                st_key = (cur_def, cur)
+                if getattr(w, "_last_key_state", None) == st_key:
+                    return
+                w._last_key_state = st_key
+                w.configure(placeholder_text=cur_def, placeholder_text_color=T.TXT3)
                 w.delete(0, "end")
                 is_custom = bool(cur and (not cur_def or cur.lower() != cur_def.lower()))
                 if is_custom:
@@ -456,7 +506,11 @@ class Block(ctk.CTkFrame):
                 d = str(ev.atajo_def if name == "atajo" else (ev.remap_def if name == "remap" else ""))
                 return "" if d == "—" else d
 
+            loaded_ev = [self.ctx.event_id]
+
             def commit(_e=None):
+                if loaded_ev[0] is not None and loaded_ev[0] != self.ctx.event_id:
+                    return
                 val = w.get().strip()
                 cat_def = _get_catalog_def()
                 val_to_commit = "" if (cat_def and val.lower() == cat_def.lower()) else val
@@ -471,8 +525,13 @@ class Block(ctk.CTkFrame):
             w.bind("<Return>", commit)
 
             def load():
+                loaded_ev[0] = self.ctx.event_id
                 cur = str(self.ctx.get(name) or "").strip()
                 cat_def = _get_catalog_def()
+                st_key = (self.ctx.event_id, cat_def, cur)
+                if getattr(w, "_last_key_state", None) == st_key:
+                    return
+                w._last_key_state = st_key
                 w.delete(0, "end")
                 val_to_show = cur if (cur and cur != "—") else cat_def
                 if val_to_show:
@@ -556,8 +615,6 @@ class Block(ctk.CTkFrame):
                 m.grab_release()
 
         attach_keycapture(e, on_clear=clear_h, on_commit=commit_h, get_history=hist.history_tuple)
-        rb_button(c, e).pack(side="left", padx=(0, 1))
-        duo_ok_clear(c, on_ok=lambda: commit_h(), on_clear=clear_h).pack(side="left", padx=(1, 0))
         return c, e
 
     def row(self, parent, r, label, widget, label_w=120):
@@ -587,6 +644,7 @@ def _cols(parent, weights=(1,)):
 # ═══ A · Configuración básica ═══════════════════════════════════════════════
 class A01Base(Block):
     NUM, TITLE, SUB = "01", "Base", "Identidad, apariencia y comportamiento general del evento."
+    ESENCIAL = True                                  # el atajo/base siempre forma parte del evento
 
     def build(self, p):
         _cols(p, (1,))
@@ -778,7 +836,23 @@ class A03Sonido(Block):
         cs = ctk.CTkFrame(fr, fg_color="transparent")
         cs.pack(side="left", padx=(0, 36))
         lbl(cs, "Sonido", 11, T.TXT2).pack(side="left", padx=(0, 8))
-        self.f_menu(cs, "snd_tipo", [("Clic suave", "suave"), ("Clic", "clic"), ("Beep", "beep"), ("Silencio", "mute")], 106).pack(side="left")
+        SND_OPCIONES = [
+            ("Clic suave", "suave"),
+            ("Clic", "clic"),
+            ("Beep agudo", "agudo"),
+            ("Beep grave", "grave"),
+            ("Doble beep", "doble"),
+            ("Plumilla (Q)", "pluma"),
+            ("Aerógrafo (W)", "aerografo"),
+            ("Color Primario", "color_primario"),
+            ("Color Secundario", "color_secundario"),
+            ("Borrador", "borrador"),
+            ("Lazo / Sel", "lazo"),
+            ("Relleno", "relleno"),
+            ("Guardar", "guardar"),
+            ("Silencio", "mute")
+        ]
+        self.f_menu(cs, "snd_tipo", SND_OPCIONES, 130).pack(side="left")
 
         vol = ctk.CTkFrame(fr, fg_color="transparent")
         vol.pack(side="left")
@@ -1119,6 +1193,10 @@ class B04Deslizador(Block):
 class B05Ventanas(Block):
     NUM, TITLE, SUB = "05", "Nuevas Ventanas y Lienzos", "Visibilidad dinámica de sub-lienzos, opacidad en reposo/hover y encuadre."
     MASTER, MASTER_DEFAULT = ("nv_lienzos", "hover"), "nv_lienzos"
+
+    def configurado(self) -> bool:
+        """nv_lienzos es global (NvConfig); la particularidad propia del evento es «hover»."""
+        return bool(self.ctx.get("hover"))
 
     def build(self, p):
         p.grid_columnconfigure(0, weight=1)

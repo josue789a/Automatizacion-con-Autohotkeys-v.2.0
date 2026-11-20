@@ -3015,16 +3015,16 @@ _AccOnWheel(wParam, lParam, msg, hwnd) {
         px -= 0x100000000
     if (py > 0x7FFFFFFF)
         py -= 0x100000000
-    rc := Buffer(16, 0)
-    DllCall("user32\GetWindowRect", "Ptr", ACC.vp.Hwnd, "Ptr", rc)
-    rx1 := NumGet(rc, 0, "Int"), ry1 := NumGet(rc, 4, "Int")
-    rx2 := NumGet(rc, 8, "Int"), ry2 := NumGet(rc, 12, "Int")
-    dentro := (px >= rx1 && px <= rx2 && py >= ry1 && py <= ry2)
-    if (!dentro) {
-        h := DllCall("user32\WindowFromPoint", "Int64", pt, "Ptr")
-        if (h != ACC.vp.Hwnd && !DllCall("user32\IsChild", "Ptr", ACC.vp.Hwnd, "Ptr", h))
-            return
-    }
+    
+    ; Obtener ventana bajo el cursor
+    hUnder := DllCall("user32\WindowFromPoint", "Int64", pt, "Ptr")
+    
+    ; Permitir si el cursor está en el viewport O si el cursor está en el editor de eventos (g)
+    esViewport := (hUnder = ACC.vp.Hwnd || DllCall("user32\IsChild", "Ptr", ACC.vp.Hwnd, "Ptr", hUnder))
+    esEditor := (hUnder = ACC.g.Hwnd || DllCall("user32\IsChild", "Ptr", ACC.g.Hwnd, "Ptr", hUnder))
+    
+    if (!esViewport && !esEditor)
+        return
     delta := (wParam >> 16)
     if (delta > 0x7FFF)
         delta -= 0x10000
@@ -3489,7 +3489,7 @@ _PtsEvAtajoDefault(idEv) {
         "pincel_duro", "F6", "difu_mixer", "Ñ", "opc_presion", "<", "borrador", "E",
         "borrador_suave", "L", "borrador_lazo", "F12", "smudge", "P", "smear", "B",
         "smear_soft", "NumpadEnd", "color_mix", "D", "color_primario", "Q", "color_secundario", "Ctrl+2",
-        "relleno", "V", "area_color", "—", "lazo", "S", "deseleccion", "X", "reseleccion", "F10",
+        "relleno", "V", "area_color", "Ctrl+X", "lazo", "S", "deseleccion", "X", "reseleccion", "F10",
         "inv_seleccion", "C", "shift_sostenido", "Shift", "flip_horizontal", "Alt+G",
         "rotar_lienzo", "R", "zoom_lienzo", "Z", "regla_ocultar", "Alt+T", "capa_visibilidad", "Shift+D",
         "guardar", "Ctrl+S", "deshacer", "Ctrl+Z", "rehacer", "Ctrl+Y", "copiar", "Ctrl+C", "enfoque", "Tab",
@@ -3501,15 +3501,15 @@ _PtsEvAtajoDefault(idEv) {
 
 _PtsEvRemapDefault(idEv) {
     static m := Map(
-        "pluma", "Q", "aerografo", "W", "aerografo_alpha", "W (doble tap)", "pincel_suave", "Alt+Q",
-        "pincel_duro", "Stylus+Q", "difu_mixer", "Stylus+W", "opc_presion", "Alt+W", "borrador", "E",
-        "borrador_suave", "E (doble tap)", "borrador_lazo", "Stylus+E", "smudge", "Alt+B + F (rápido)",
-        "smear", "Alt+B + F", "smear_soft", "Alt+B + X (rápido)", "color_mix", "Alt+B + X (rápido)",
-        "color_primario", "Q (doble tap)", "color_secundario", "Q (doble alt)", "relleno", "Stylus+1",
-        "area_color", "S (doble tap)", "lazo", "S", "deseleccion", "X (toggle 0)", "reseleccion", "X (toggle 1)",
-        "inv_seleccion", "C", "shift_sostenido", "Stylus+F / Space+-", "flip_horizontal", "Space + Alt+B",
-        "rotar_lienzo", "Z (doble tap)", "zoom_lienzo", "Z", "regla_ocultar", "Stylus+T (rápido)",
-        "capa_visibilidad", "Space+E", "guardar", "Ctrl+S", "deshacer", "Ctrl+Z", "rehacer", "Ctrl+Y",
+        "pluma", "Q", "aerografo", "W", "aerografo_alpha", "W²", "pincel_suave", "Alt+Q",
+        "pincel_duro", "RButton + Q", "difu_mixer", "RButton + W", "opc_presion", "Alt+W", "borrador", "E",
+        "borrador_suave", "E²", "borrador_lazo", "RButton + E", "smudge", "Alt + X²",
+        "smear", "Alt + F", "smear_soft", "Alt + F²", "color_mix", "Alt + X",
+        "color_primario", "Q²", "color_secundario", "Q²", "relleno", "RButton + 1",
+        "area_color", "S²", "lazo", "S", "deseleccion", "X (toggle 0)", "reseleccion", "X (toggle 1)",
+        "inv_seleccion", "Space + RButton", "shift_sostenido", "RButton + F", "flip_horizontal", "Space + Alt+B",
+        "rotar_lienzo", "Z²", "zoom_lienzo", "Z", "regla_ocultar", "RButton + T",
+        "capa_visibilidad", "Space + E", "guardar", "Ctrl+S", "deshacer", "Ctrl+Z", "rehacer", "Ctrl+Y",
         "copiar", "Ctrl+C", "enfoque", "Tab / F3", "history_lock", "Píldora lock", "panel_ds", "Píldora ds / Hover",
         "panel_cc", "Píldora cc / Hover", "gui_frente", "Píldora frente", "estab_slider", "Slider estab",
         "layout", "Menú Companion", "reload", "Píldora reload"

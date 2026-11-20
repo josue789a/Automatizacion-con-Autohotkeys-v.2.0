@@ -736,6 +736,12 @@ x:: {
     }
 }
 $^z:: _DeshacerRehacer()
+$^y:: {
+    SendInput("^y")
+    ToolTipCS("🟢 REHACER",600)
+    _RachaConteo("redo")
+    _HapticoRacha("redo")
+}
 _MaskRButton() {
     stylus.comboUsado := true
     if (stylus.botonSostenido)
