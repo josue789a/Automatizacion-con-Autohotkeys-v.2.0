@@ -403,3 +403,12 @@
 20261119200740 [CAP] seq=4 estado=ok combo=Win+RButton dt=1.78ms target=
 20261119200754 [CAP] seq=5 estado=ok combo=Ctrl+W dt=316.75ms target=
 20261119200802 [CAP] seq=6 estado=ok combo=Ctrl+Space+W dt=208.31ms target=
+20261119201639 [CAP] seq=1 estado=ok combo=Alt+Q dt=188.65ms target=
+20261119201648 [CAP] seq=2 estado=timeout combo= dt=0ms target=
+20261119201659 [CAP] seq=3 estado=ok combo=Alt+Q dt=565.75ms target=
+20261119202219 [CAP] seq=1 estado=cancel_fuera combo= dt=0ms target=
+20261119202219 [CAP] seq=2 estado=cancel_fuera combo= dt=0ms target=
+20261119202223 [CAP] seq=3 estado=cancel_fuera combo= dt=0ms target=
+20261119202239 [CAP] seq=4 estado=cancel_fuera combo= dt=0ms target=
+20261119202248 [CAP] seq=5 estado=cancel_esc combo= dt=0ms target=
+20261119202308 [CAP] seq=6 estado=cancel_fuera combo= dt=0ms target=

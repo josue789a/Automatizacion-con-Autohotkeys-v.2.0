@@ -513,7 +513,7 @@ class Block(ctk.CTkFrame):
             finally:
                 m.grab_release()
 
-        attach_keycapture(e, on_clear=clear_h, on_commit=commit_h)
+        attach_keycapture(e, on_clear=clear_h, on_commit=commit_h, get_history=hist.history_tuple)
         rb_button(c, e).pack(side="left", padx=(0, 1))
         duo_ok_clear(c, on_ok=lambda: commit_h(), on_clear=clear_h).pack(side="left", padx=(1, 0))
         return c, e

@@ -32,7 +32,8 @@ _CapEstado() {
         fase: "IDLE",
         swallowHasta: 0,
         seq: 0, target: "", etiqueta: "",
-        gui: 0, tTitulo: 0, estado: 0, bX: 0, bar: 0,
+        gui: 0, tTitulo: 0, estado: 0, bX: 0, bUndo: 0, bHist: 0, bar: 0,
+        prevVal: "", historial: 0,
         modsLR: 0, pico: 0, espera: 0, sawKey: false,
         tInicio: 0, tFocoOk: 0, tReact: 0, tUlt: 0,
         cfg: 0, hkOn: false, hkLista: 0, atom: 0, salidaReg: false,
@@ -53,6 +54,22 @@ _CapReset(e) {
     e.tFocoOk := 0
     e.tReact := 0
     e.tUlt := A_TickCount
+    e.prevVal := ""
+    e.historial := []
+    try {
+        histFile := A_Temp "\_ahk_cap_hist.txt"
+        if FileExist(histFile) {
+            txt := FileRead(histFile, "UTF-8")
+            lineas := StrSplit(txt, "`n", "`r")
+            if (lineas.Length >= 1)
+                e.prevVal := Trim(lineas[1])
+            loop lineas.Length - 1 {
+                it := Trim(lineas[A_Index + 1])
+                if (it != "")
+                    e.historial.Push(it)
+            }
+        }
+    }
 }
 
 _CapQ() {
@@ -130,12 +147,19 @@ _CapCrearGui() {
     g := Gui("+AlwaysOnTop -Caption +ToolWindow -DPIScale +E0x08000000", "XPPEN_CapturaPildora")
     g.BackColor := "1E1E2E"
     g.SetFont("s10 cFFFFFF", "Segoe UI")
-    e.tTitulo := g.AddText("x" px(14) " y" px(8) " w" px(150) " h" px(24) " +0x200", "")
-    e.estado := g.AddText("x" px(172) " y" px(8) " w" px(170) " h" px(24) " +0x200 +0x100 Center", "")
-    e.bX := g.AddText("x" px(350) " y" px(8) " w" px(34) " h" px(24) " +0x200 +0x100 Center cEF5350", "✕")
-    e.bar := g.AddProgress("x" px(14) " y" px(38) " w" px(370) " h" px(4) " -Smooth -Theme Background2A2A3E c7C4DFF Range0-100")
+    e.tTitulo := g.AddText("x" px(14) " y" px(8) " w" px(140) " h" px(22) " +0x200", "")
+    e.estado := g.AddText("x" px(156) " y" px(8) " w" px(240) " h" px(22) " +0x200 +0x100 Center", "")
+    e.bX := g.AddText("x" px(405) " y" px(8) " w" px(32) " h" px(22) " +0x200 +0x100 Center cEF5350", "✕")
+    
+    g.SetFont("s9 cD1C4E9", "Segoe UI")
+    e.bUndo := g.AddText("x" px(14) " y" px(34) " w" px(205) " h" px(22) " +0x200 +0x100 Center Background2A2A3E", "↺ Deshacer a cambio anterior")
+    e.bHist := g.AddText("x" px(228) " y" px(34) " w" px(210) " h" px(22) " +0x200 +0x100 Center Background2A2A3E", "▾ Ver historial de asignaciones")
+    
+    e.bar := g.AddProgress("x" px(14) " y" px(60) " w" px(424) " h" px(4) " -Smooth -Theme Background2A2A3E c7C4DFF Range0-100")
     e.estado.OnEvent("Click", _CapOnEstadoClick)
     e.bX.OnEvent("Click", _CapOnXClick)
+    e.bUndo.OnEvent("Click", _CapOnUndoClick)
+    e.bHist.OnEvent("Click", _CapOnHistClick)
     e.gui := g
     ; Windows Ink: sin press-and-hold / feedback sobre la píldora (evita RButton falso del lápiz)
     e.atom := DllCall("GlobalAddAtom", "str", "MicrosoftTabletPenServiceProperty", "ushort")
@@ -155,8 +179,8 @@ Cap_MouseActivate(wParam, lParam, msg, hwnd) {
 
 _CapMostrar(e) {
     s := A_ScreenDPI / 96
-    W := Round(398 * s)
-    H := Round(50 * s)
+    W := Round(452 * s)
+    H := Round(70 * s)
     x := 0
     y := 0
     if (e.cfg.pillX != "" && e.cfg.pillY != "") {
@@ -173,7 +197,7 @@ _CapMostrar(e) {
         }
     }
     e.gui.Show("NA x" x " y" y " w" W " h" H)
-    try WinSetRegion("0-0 w" W " h" H " R" Round(16 * s) "-" Round(16 * s), "ahk_id " e.gui.Hwnd)
+    try WinSetRegion("0-0 w" W " h" H " R" Round(14 * s) "-" Round(14 * s), "ahk_id " e.gui.Hwnd)
 }
 
 _CapPunteroEnPildora() {
@@ -198,6 +222,32 @@ _CapOnEstadoClick(*) {
 
 _CapOnXClick(*) {
     Cap_Terminar("cancel_x")
+}
+
+_CapOnUndoClick(*) {
+    e := _CapEstado()
+    if (e.fase != "ARMED" && e.fase != "ARMING")
+        return
+    Cap_Terminar("ok", e.prevVal)
+}
+
+_CapOnHistClick(*) {
+    e := _CapEstado()
+    if (e.fase != "ARMED" && e.fase != "ARMING")
+        return
+    if (!e.historial || e.historial.Length = 0) {
+        ToolTip("Sin historial previo en esta sesión")
+        SetTimer(() => ToolTip(), -1500)
+        return
+    }
+    m := Menu()
+    for item in e.historial {
+        if (item != "")
+            m.Add(item, (nom, *) => Cap_Terminar("ok", nom))
+    }
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(&mx, &my)
+    m.Show(mx, my)
 }
 
 ; ------------------------------------------------------------------ entradas
@@ -302,6 +352,12 @@ _CapPasarAArmed(e) {
     e.tReact := 0
     e.estado.SetFont("cFFD54F")
     e.estado.Text := "⏺ Pulsa la tecla…"
+    if (e.bUndo) {
+        if (e.prevVal != "")
+            e.bUndo.Text := "↺ Deshacer a: " e.prevVal
+        else
+            e.bUndo.Text := "↺ Deshacer a cambio anterior"
+    }
     e.bar.Value := 100
     SetTimer(_CapTick, 100)
 }

@@ -154,6 +154,10 @@ class KeyHistory:
         finally:
             self._busy = False
 
+    def history_tuple(self):
+        prev = self._stack[-2] if len(self._stack) > 1 else ""
+        return (prev, self.items())
+
 
 def entry(parent, width=140, placeholder=""):
     return ctk.CTkEntry(parent, width=width, height=KEY_H, font=T.font(11), fg_color="#FAF9FD", text_color=T.TXT,
@@ -694,7 +698,7 @@ def _cap_send(cmd):
             pass
 
 
-def attach_keycapture(host, on_clear=None, on_commit=None):
+def attach_keycapture(host, on_clear=None, on_commit=None, get_history=None):
     """El Entry captura combinaciones (Ctrl+Alt+Shift+Win + tecla).
     Supr/Retroceso solos = on_clear(). Doble clic = escritura manual."""
     ent = _find_entry(host)
@@ -864,6 +868,16 @@ def attach_keycapture(host, on_clear=None, on_commit=None):
         st["manual"] = False
         try:
             _res_file.unlink(missing_ok=True)
+        except Exception:
+            pass
+        try:
+            prev_val = ""
+            items = []
+            if callable(get_history):
+                prev_val, items = get_history()
+            hist_file = Path(tempfile.gettempdir()) / "_ahk_cap_hist.txt"
+            lines = [str(prev_val or "")] + [str(it) for it in items if it]
+            hist_file.write_text("\n".join(lines), encoding="utf-8-sig")
         except Exception:
             pass
         st["arm_deadline"] = _mono() + _ARM_MAX_S
