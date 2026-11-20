@@ -515,10 +515,6 @@ class Block(ctk.CTkFrame):
 
         attach_keycapture(e, on_clear=clear_h, on_commit=commit_h)
         rb_button(c, e).pack(side="left", padx=(0, 1))
-        b_undo = icon_btn(c, "↺", undo_h, size=20, tip="Deshacer (valor anterior)")
-        b_undo.pack(side="left", padx=(0, 1))
-        b_hist = icon_btn(c, "▾", menu_h, size=20, tip="Historial de teclas")
-        b_hist.pack(side="left", padx=(0, 1))
         duo_ok_clear(c, on_ok=lambda: commit_h(), on_clear=clear_h).pack(side="left", padx=(1, 0))
         return c, e
 

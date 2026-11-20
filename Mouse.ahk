@@ -1,39 +1,56 @@
-﻿#Requires AutoHotkey v2.0
+#Requires AutoHotkey v2.0
 #SingleInstance Force
+#NoTrayIcon                      ; Oculto del System Tray de Windows
+Persistent(true)
+#UseHook true                    ; LL keyboard hook: captura teclas incluso con menús modales abiertos
+InstallKeybdHook(true)           ; fuerza la instalación del hook de teclado
+InstallMouseHook(true)           ; fuerza la instalación del hook de mouse
 SetWorkingDir(A_ScriptDir)
-TraySetIcon("C:\Users\jbard\Documents\@Otros\icons\mouse.ico")
-A_IconTip := "Atajos de Mouse — Fin/Inicio, selección por palabra/línea (AHK)"
 
+; Mutex de sesión para que el Watchdog lo detecte de forma instantánea y robusta (0% CPU)
+global g_MouseMutex := DllCall("CreateMutexW", "ptr", 0, "int", 1, "str", "Local\AHK_AtajosMouse_Mutex", "ptr")
 
+; Centinela cruzado: Mouse.ahk también vigila a Watchdog.ahk cada 3 segundos
+targetWatchdog := "C:\Users\jbard\Desktop\AHK-global-main\Watchdog.ahk"
+CheckWatchdogScript()
+SetTimer(CheckWatchdogScript, 3000)
+
+CheckWatchdogScript() {
+    global targetWatchdog
+    SYNCHRONIZE := 0x00100000
+    hMutex := DllCall("OpenMutexW", "uint", SYNCHRONIZE, "int", 0, "str", "Local\AHK_Watchdog_Mutex", "ptr")
+    if (hMutex != 0) {
+        DllCall("CloseHandle", "ptr", hMutex)
+        return
+    }
+    try Run('"' A_AhkPath '" "' targetWatchdog '"')
+}
 
 ; ╔══════════════════════════════════════════════════════════════╗
 ; ║  BOTONES LATERALES DEL MOUSE                                   ║
 ; ╚══════════════════════════════════════════════════════════════╝
 XButton1::Send("^j")          ; Ditto - abrir portapapeles
 
-; XButton2: solo = ShareX fijar en pantalla | + click izq = ShareX captura con guardar como
+; XButton2: solo = ShareX fijar en pantalla (^!j) | + click izq = Captura directa de la pantalla actual
 xb2Combo := false
 
 XButton2:: {
     global xb2Combo := false
-    SetTimer(CheckComboXB2, 10)
 }
 
 XButton2 up:: {
-    SetTimer(CheckComboXB2, 0)
     global xb2Combo
     if (!xb2Combo)
         Send("^!j")
 }
 
-CheckComboXB2() {
-    global xb2Combo
-    if (GetKeyState("LButton", "P") && !xb2Combo) {
-        xb2Combo := true
-        Send("+a")
-        SetTimer(CheckComboXB2, 0)
-    }
+; Al mantener XButton2 y hacer click izquierdo, AHK intercepta el click para no cerrar menús abiertos
+#HotIf GetKeyState("XButton2", "P")
+*LButton:: {
+    global xb2Combo := true
+    _CapturaPantallaActual()
 }
+#HotIf
 
 ; ╔══════════════════════════════════════════════════════════════╗
 ; ║  WINDOWTOP                                                     ║
@@ -102,19 +119,88 @@ NumpadDiv::Send("{Delete}")          ; / del numpad → Supr
 F12::Send("{Delete}")                ; F12 → Supr en todo Windows, excepto Clip Studio Paint
 #HotIf
 
-; --- Impr Pant ---
-; La tecla "." y "Del" del numpad son la misma tecla física: AHK la ve como
-; NumpadDot con Bloq Num activo y NumpadDel con Bloq Num apagado. Se cubren ambas.
-NumpadDot::Send("{PrintScreen}")
-NumpadDel::Send("{PrintScreen}")
-Numpad0::Send("{PrintScreen}")
-NumpadIns::Send("{PrintScreen}")
-
 ; ╔══════════════════════════════════════════════════════════════╗
-; ║  XPPEN                                                         ║
+; ║  CAPTURAS DE PANTALLA (Inmunes a menús de tray/modales)        ║
 ; ╚══════════════════════════════════════════════════════════════╝
-^+!h:: {
-    Send("{Ctrl up}{Shift up}{Alt up}")
-    Send("^{Escape}")
+
+; Ctrl + NumpadDel/Dot = Captura directa de la pantalla actual vía GDI (BitBlt)
+; Captura solo el monitor bajo el cursor, pasando por encima de menús abiertos,
+; modales o interfaces, directo al portapapeles sin cerrar nada.
+^NumpadDot::_CapturaPantallaActual()
+^NumpadDel::_CapturaPantallaActual()
+
+_CapturaDirecta() => _CapturaPantallaActual()
+
+_CapturaPantallaActual() {
+    ; Determinar el monitor actual bajo el cursor del mouse
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(&mx, &my)
+
+    x := 0, y := 0, w := A_ScreenWidth, h := A_ScreenHeight
+    Loop MonitorGetCount() {
+        MonitorGet(A_Index, &mL, &mT, &mR, &mB)
+        if (mx >= mL && mx < mR && my >= mT && my < mB) {
+            x := mL, y := mT, w := mR - mL, h := mB - mT
+            break
+        }
+    }
+
+    ; Captura directa GDI (BitBlt) del monitor activo sin alterar foco ni cerrar menús
+    hScrDC := DllCall("GetDC", "ptr", 0, "ptr")
+    hMemDC := DllCall("CreateCompatibleDC", "ptr", hScrDC, "ptr")
+    hBmp   := DllCall("CreateCompatibleBitmap", "ptr", hScrDC, "int", w, "int", h, "ptr")
+    hOld   := DllCall("SelectObject", "ptr", hMemDC, "ptr", hBmp, "ptr")
+
+    DllCall("BitBlt", "ptr", hMemDC, "int", 0, "int", 0, "int", w, "int", h
+          , "ptr", hScrDC, "int", x, "int", y, "uint", 0x00CC0020)  ; SRCCOPY
+
+    DllCall("SelectObject", "ptr", hMemDC, "ptr", hOld)
+
+    ; Copiar al portapapeles como bitmap
+    if DllCall("OpenClipboard", "ptr", 0) {
+        DllCall("EmptyClipboard")
+        DllCall("SetClipboardData", "uint", 2, "ptr", hBmp)  ; CF_BITMAP
+        DllCall("CloseClipboard")
+    }
+
+    DllCall("DeleteDC", "ptr", hMemDC)
+    DllCall("ReleaseDC", "ptr", 0, "ptr", hScrDC)
+    ; No borrar hBmp — el clipboard es dueño ahora
+
+    ToolTip("📸 Pantalla actual copiada al portapapeles")
+    SetTimer(() => ToolTip(), -1500)
 }
 
+_ShareXCaptura(modo := "-PrintScreen") {
+    static exe := ""
+    if (exe = "") {
+        ; Buscar ShareX: primero proceso activo vía WMI
+        try {
+            for proc in ComObjGet("winmgmts:").ExecQuery("SELECT ExecutablePath FROM Win32_Process WHERE Name='ShareX.exe'") {
+                if (proc.ExecutablePath != "") {
+                    exe := proc.ExecutablePath
+                    break
+                }
+            }
+        }
+        if (exe = "") {
+            ; Rutas de fallback conocidas (Windows Store y clásica)
+            for path in [
+                "C:\Program Files\WindowsApps\19568ShareX.ShareX_21.0.0.0_x64__egrzcvs15399j\ShareX.exe",
+                "C:\Program Files\ShareX\ShareX.exe",
+                A_AppData "\..\Local\ShareX\ShareX.exe"
+            ] {
+                if FileExist(path) {
+                    exe := path
+                    break
+                }
+            }
+        }
+        if (exe = "") {
+            ; Último recurso si no se encuentra ShareX
+            Send("{PrintScreen}")
+            return
+        }
+    }
+    try Run('"' exe '" ' modo,, "Hide")
+}
