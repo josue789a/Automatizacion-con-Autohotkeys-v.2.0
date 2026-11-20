@@ -5,6 +5,9 @@ from tkinter import colorchooser
 import customtkinter as ctk
 from . import theme as T
 
+PEN_GRACIA_MS = 1500   # tras un RButton solo, tiempo para pulsar la tecla del acorde
+PEN_LATCH_MS = 4000    # tras tocar el botón RB de la UI
+
 
 def lbl(parent, text="", size=12, color=T.TXT, bold=False, wrap=0, anchor="w", **kw):
     kw.setdefault("height", 0)
@@ -49,6 +52,27 @@ KEY_W = 90    # ancho estándar de las cajas de atajo (f_key_entry)
 KEY_H = 24    # alto estándar: Entry y dúo ✓/✕ (si el dúo queda 1 px distinto, cambiar SOLO esto a 25 o 26)
 
 
+def rb_button(parent, host, width=22, height=KEY_H):
+    """Botón compacto 'RB': un toque con la punta arma RButton como prefijo del acorde."""
+    color = "#6B6585"
+    lb = ctk.CTkLabel(parent, text="RB", text_color=color, font=T.font(9, True),
+                      fg_color="transparent", corner_radius=2, width=width, height=height)
+
+    def _go(_e=None):
+        fn = getattr(host, "_kc_rbutton", None)
+        if fn:
+            fn()
+
+    lb.bind("<Enter>", lambda _e: lb.configure(fg_color=T.SOFT, text_color="#1F1B2E"))
+    lb.bind("<Leave>", lambda _e: lb.configure(fg_color="transparent", text_color=color))
+    lb.bind("<Button-1>", _go)
+    try:
+        lb.configure(cursor="hand2")
+    except Exception:
+        pass
+    return lb
+
+
 def duo_ok_clear(parent, on_ok, on_clear, width=16, height=KEY_H):
     """Dúo ✓/✕ apilado, sin márgenes internos. Cada mitad ocupa relheight=0.5,
     por lo que el alto total == height y calza con el Entry en cualquier escala DPI."""
@@ -74,6 +98,61 @@ def duo_ok_clear(parent, on_ok, on_clear, width=16, height=KEY_H):
     _mk("✓", CLR_OK, on_ok, 0.0)
     _mk("✕", CLR_DEL, on_clear, 0.5)
     return box
+
+
+class KeyHistory:
+    """Historial LIFO en memoria de sesión para un campo de tecla (Undo + lista)."""
+    MAX = 20
+
+    def __init__(self, get_value, set_value):
+        self._get = get_value
+        self._set = set_value
+        self._busy = False
+        self._stack = []
+        self.seed()
+
+    def _safe_get(self):
+        try:
+            return self._get()
+        except Exception:
+            return ""
+
+    def seed(self):
+        self._stack = [self._safe_get()]
+
+    def push(self):
+        if self._busy:
+            return
+        v = self._safe_get()
+        if not self._stack or self._stack[-1] != v:
+            self._stack.append(v)
+            del self._stack[:-self.MAX]
+
+    def can_undo(self):
+        return len(self._stack) > 1
+
+    def undo(self):
+        if not self.can_undo():
+            return None
+        self._stack.pop()
+        v = self._stack[-1]
+        self.apply(v, record=False)
+        return v
+
+    def items(self):
+        seen, out = set(), []
+        for v in reversed(self._stack):
+            if v and v not in seen:
+                seen.add(v)
+                out.append(v)
+        return out
+
+    def apply(self, value, record=True):
+        self._busy = not record
+        try:
+            self._set(value)
+        finally:
+            self._busy = False
 
 
 def entry(parent, width=140, placeholder=""):
@@ -583,6 +662,8 @@ _MOD_ORDER = tuple(m[0] for m in _TOK_MODS)
 
 def _tok_de(ev):
     """Token canónico de una tecla: modificador, nombre (VK en letras y dígitos) o ''."""
+    if ev.keycode in (0xE8, 232) or ev.keysym in ("??", "vkE8"):
+        return ""
     for nom, kss, kcs in _TOK_MODS:
         if ev.keysym in kss or ev.keycode in kcs:
             return nom
@@ -613,7 +694,7 @@ def _cap_send(cmd):
             pass
 
 
-def attach_keycapture(host, on_clear=None):
+def attach_keycapture(host, on_clear=None, on_commit=None):
     """El Entry captura combinaciones (Ctrl+Alt+Shift+Win + tecla).
     Supr/Retroceso solos = on_clear(). Doble clic = escritura manual."""
     ent = _find_entry(host)
@@ -668,7 +749,25 @@ def attach_keycapture(host, on_clear=None):
         st["down"].discard(tok)
         if not st["down"]:
             cancel_job()
-            st["job"] = inner.after(80, lambda: st.update(cerrado=True, job=None))
+            _gracia = st.pop("gracia_once", None) or (PEN_GRACIA_MS if st["pico"] == ["RButton"] else 200)
+            st["job"] = inner.after(_gracia, lambda: st.update(cerrado=True, job=None))
+
+    # Botón "RB" de la UI: un toque arma RButton como prefijo del acorde.
+    def tap_rbutton():
+        if st["manual"]:
+            return
+        try:
+            inner.focus_set()
+        except Exception:
+            return
+        st["gracia_once"] = PEN_LATCH_MS
+        try:
+            press("RButton")
+            release("RButton")
+        finally:
+            st.pop("gracia_once", None)
+
+    host._kc_rbutton = tap_rbutton
 
     def kdown(ev):
         if st["manual"]:
@@ -690,51 +789,188 @@ def attach_keycapture(host, on_clear=None):
         if st["manual"]:
             return None
         inner.focus_set()
+        try:
+            inner.select_clear()
+        except Exception:
+            pass
         press("RButton")
         return "break"
 
     def mup(ev):
         if st["manual"]:
             return None
+        try:
+            inner.select_clear()
+        except Exception:
+            pass
         release("RButton")
         return "break"
 
+    def mmotion(ev):
+        if not st["manual"]:
+            return "break"
+
     for _ev, _fn in (("<KeyPress>", kdown), ("<Alt-KeyPress>", kdown),
                      ("<KeyRelease>", kup), ("<Alt-KeyRelease>", kup),
-                     ("<ButtonPress-3>", mdown), ("<ButtonRelease-3>", mup)):
+                     ("<B3-Motion>", mmotion)):
         inner.bind(_ev, _fn, add="+")
 
-    def beat():
-        st["beat"] = None
-        if st["armed"]:
-            _cap_send("CAPTURE_PING")
-            st["beat"] = inner.after(1000, beat)
+    # Puente AHK: F24 = RButton del stylus/ratón mientras CAPTURE_ON.
+    # Un binding con keysym concreto es más específico que <KeyPress> y lo reemplaza.
+    def _f24_down(_e):
+        press("RButton")
+        return "break"
+
+    def _f24_up(_e):
+        release("RButton")
+        return "break"
+
+    inner.bind("<KeyPress-F24>", _f24_down, add="+")
+    inner.bind("<KeyRelease-F24>", _f24_up, add="+")
+
+    canvas = getattr(ent, "_canvas", None)
+    def btn_press(ev):
+        if getattr(ev, "num", None) == 3:
+            return mdown(ev)
+
+    def btn_release(ev):
+        if getattr(ev, "num", None) == 3:
+            return mup(ev)
+
+    last_click_t = [0.0]
+    last_ev_sig = [None]
+
+    def _same_physical_click(ev):
+        # Un clic físico se propaga a inner/ent/canvas con el mismo time y coords.
+        t = getattr(ev, "time", None)
+        if t is None:
+            return False
+        sig = (t, getattr(ev, "x_root", None), getattr(ev, "y_root", None))
+        if sig == last_ev_sig[0]:
+            return True
+        last_ev_sig[0] = sig
+        return False
+
+    def _is_empty():
+        try:
+            return not bool(ent.get().strip())
+        except Exception:
+            return True
+
+    def arm_capture():
+        if st.get("armed"):
+            return
+        st["armed"] = True
+        st["manual"] = False
+        try:
+            _res_file.unlink(missing_ok=True)
+        except Exception:
+            pass
+        st["arm_deadline"] = _mono() + _ARM_MAX_S
+        st["handoff_until"] = _mono() + _HANDOFF_S
+        _cap_send("CAP_ARM")
+        _poll_ahk()
+
+    def on_click(ev=None):
+        if getattr(ev, "num", None) == 3:
+            return
+        if _same_physical_click(ev):
+            return
+        now = _mono()
+        dt = now - last_click_t[0]
+        last_click_t[0] = now
+        if _is_empty():
+            inner.after(30, lambda: _is_empty() and arm_capture())
+        else:
+            if dt < 0.6:
+                arm_capture()
+
+    def on_double_click(ev=None):
+        arm_capture()
+
+    for _w in ([w for w in (inner, ent, canvas) if w is not None]):
+        _w.bind("<ButtonPress>", btn_press, add="+")
+        _w.bind("<ButtonRelease>", btn_release, add="+")
+        _w.bind("<ButtonPress-3>", mdown, add="+")
+        _w.bind("<ButtonRelease-3>", mup, add="+")
+        _w.bind("<Button-3>", mdown, add="+")
+        _w.bind("<Button-1>", on_click, add="+")
+        _w.bind("<Double-Button-1>", on_double_click, add="+")
+
+    import tempfile
+    from pathlib import Path
+    _res_file = Path(tempfile.gettempdir()) / "_ahk_cap_result.txt"
+    from time import monotonic as _mono
+    _HANDOFF_S = 1.5   # ventana en que un FocusOut es consecuencia de CAP_ARM
+    _ARM_MAX_S = 7.0   # 5 s de timeout AHK + margen: evita armed colgado
+
+    def _poll_ahk():
+        if not st.get("armed"):
+            return
+        st["poll_job"] = None
+        try:
+            if _res_file.exists():
+                content = _res_file.read_text(encoding="utf-8-sig").strip()
+                try:
+                    _res_file.unlink(missing_ok=True)
+                except Exception:
+                    pass
+                parts = content.split("|")
+                estado = (parts[0] if parts else "").strip().lstrip("\ufeff")
+                combo = (parts[1] if len(parts) > 1 else "").strip()
+                # 1) Cerrar el estado ANTES de tocar el Entry: así el FocusOut
+                #    sintético ya no ve armed=True ni envía CAP_CANCEL.
+                st["armed"] = False
+                st["handoff_until"] = 0.0
+                if estado == "ok" and combo:
+                    put(combo)
+                    if callable(on_commit):
+                        try:
+                            on_commit()
+                        except Exception:
+                            pass
+                    try:
+                        inner.event_generate("<FocusOut>")  # commit al Draft
+                    except Exception:
+                        pass
+                accent(False)
+                return
+        except Exception:
+            pass
+        if _mono() > st.get("arm_deadline", 0.0):
+            st["armed"] = False
+            st["handoff_until"] = 0.0
+            accent(False)
+            return
+        st["poll_job"] = inner.after(60, _poll_ahk)
 
     def focus_in(_e=None):
         accent(True)
-        if not st["armed"]:
-            st["armed"] = True
-            _cap_send("CAPTURE_ON")
-            st["beat"] = inner.after(1000, beat)
+        if _is_empty() and not st.get("armed") and not st.get("manual"):
+            arm_capture()
 
-    def focus_out(_e=None):
+    def focus_out(_e=None, force=False):
+        if (not force and st.get("armed")
+                and _mono() < st.get("handoff_until", 0.0)):
+            return  # FocusOut esperado: AHK está devolviendo el foco a CSP
+        st["handoff_until"] = 0.0
         st["manual"] = False
         reset_state()
         accent(False)
         if st["armed"]:
             st["armed"] = False
-            if st["beat"] is not None:
+            if st.get("poll_job") is not None:
                 try:
-                    inner.after_cancel(st["beat"])
+                    inner.after_cancel(st["poll_job"])
                 except Exception:
                     pass
-                st["beat"] = None
-            _cap_send("CAPTURE_OFF")
+                st["poll_job"] = None
+            _cap_send("CAP_CANCEL|focus_out")
 
     inner.bind("<FocusIn>", focus_in, add="+")
     inner.bind("<FocusOut>", focus_out, add="+")
-    inner.bind("<Destroy>", focus_out, add="+")
-    inner.bind("<Double-Button-1>", lambda e: st.update(manual=True), add="+")
+    inner.bind("<Destroy>", lambda e: focus_out(e, force=True), add="+")
+
     return ent
 
 

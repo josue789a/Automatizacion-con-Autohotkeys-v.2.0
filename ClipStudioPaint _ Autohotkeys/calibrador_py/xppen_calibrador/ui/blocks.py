@@ -90,9 +90,18 @@ class Block(ctk.CTkFrame):
             self.m_chk.grid(row=0, column=2, rowspan=2, padx=(8, 6), sticky="")
         self.chev = lbl(h, "⌄", 16, T.TXT2, anchor="center", width=22)
         self.chev.grid(row=0, column=3, rowspan=2, sticky="")
-        for w in (h, self.num_badge, self.l_num, self.l_title, self.l_sub, self.chev):
-            w.bind("<Button-1>", lambda _e: self.toggle())
-            w.configure(cursor="hand2")
+
+        toggle_blk = lambda _e: self.toggle()
+        for w in (h, self.title_row, self.l_title, self.l_sub, self.num_badge, self.l_num, self.chev):
+            w.bind("<Button-1>", toggle_blk)
+            if hasattr(w, "_canvas") and w._canvas:
+                w._canvas.bind("<Button-1>", toggle_blk)
+            if hasattr(w, "_label") and w._label:
+                w._label.bind("<Button-1>", toggle_blk)
+            try:
+                w.configure(cursor="hand2")
+            except Exception:
+                pass
 
     def toggle(self):
         if not self.available:
@@ -147,6 +156,10 @@ class Block(ctk.CTkFrame):
         nv = 1 if self.master_on() else 0
         if self.m_var.get() != nv:
             self.m_var.set(nv)
+        try:
+            (self.m_chk.select if nv else self.m_chk.deselect)()
+        except Exception:
+            pass
 
     # ── refresco ───────────────────────────────────────────
     def refresh(self):
@@ -192,7 +205,15 @@ class Block(ctk.CTkFrame):
     def f_check(self, parent, name, text):
         var = tk.IntVar(value=0)
         w = check(parent, text, var, lambda: self._commit(name, var.get()))
-        self._loaders.append(lambda: var.set(self.ctx.get(name)))
+        w._var = var
+        def _load_chk():
+            v = int(bool(self.ctx.get(name)))
+            var.set(v)
+            try:
+                (w.select if v else w.deselect)()
+            except Exception:
+                pass
+        self._loaders.append(_load_chk)
         return w
 
     def f_switch(self, parent, name):
@@ -201,11 +222,17 @@ class Block(ctk.CTkFrame):
         self._loaders.append(lambda: var.set(self.ctx.get(name)))
         return w
 
-    def f_menu(self, parent, name, items, width=130):
+    def f_menu(self, parent, name, items, width=130, on_change=None):
         """items: [(etiqueta, valor_ini)]"""
         l2v, v2l = dict(items), {str(v).lower(): l for l, v in items}
-        w = combo(parent, [l for l, _ in items], width=width,
-                  command=lambda lab: self._commit(name, l2v[lab]))
+
+        def _on_sel(lab):
+            val = l2v[lab]
+            self._commit(name, val)
+            if on_change:
+                on_change(val)
+
+        w = combo(parent, [l for l, _ in items], width=width, command=_on_sel)
 
         def load():
             cur = str(self.ctx.get(name))
@@ -256,8 +283,11 @@ class Block(ctk.CTkFrame):
 
         Reutilizable en cualquier bloque; A02Hud lo usa para la duración.
         """
+        def _get_def():
+            return str(defecto() if callable(defecto) else defecto)
+
         w = entry(parent, width)
-        w.configure(placeholder_text=str(defecto), placeholder_text_color=T.TXT3)
+        w.configure(placeholder_text=_get_def(), placeholder_text_color=T.TXT3)
 
         def commit(_e=None):
             raw = w.get().strip()
@@ -267,6 +297,8 @@ class Block(ctk.CTkFrame):
         w.bind("<Return>", commit)
 
         def load():
+            cur_def = _get_def()
+            w.configure(placeholder_text=cur_def)
             cur = str(self.ctx.get(name) or "").strip()
             w.delete(0, "end")
             if cur and cur.lower() != str(vacio).lower():
@@ -318,32 +350,176 @@ class Block(ctk.CTkFrame):
             w.set_default(self.ctx.get(name))
         return True
 
-    def f_key_entry(self, parent, name, width=90, on_clear=None):
+    def f_key_entry(self, parent, name, width=90, on_clear=None, defecto=None):
         """Campo estándar para captura de atajos de teclado (hasta 4 teclas).
-        Incluye Entry con fuente condensada, attach_keycapture y dúo compacto ✓/✕."""
-        from .widgets import KEY_W, duo_ok_clear
+        Incluye Entry con fuente condensada, attach_keycapture y dúo compacto ✓/✕.
+
+        Si defecto está definido (str o callable):
+        - Muestra el atajo por defecto en gris (placeholder).
+        - Si el valor coincide con el defecto o está vacío, no escribe nada al INI ("").
+        - Si se borra o se vacía, restaura el atajo por defecto en gris.
+        """
+        from .widgets import KEY_W, duo_ok_clear, rb_button, _find_entry, attach_keycapture, KeyHistory, icon_btn
         width = max(width, KEY_W)
         c = ctk.CTkFrame(parent, fg_color="transparent")
-        e = self.f_entry(c, name, width)
-        e.pack(side="left", padx=(0, 2))
 
-        from .widgets import _find_entry, attach_keycapture
+        def _get_def():
+            if callable(defecto):
+                return str(defecto() or "")
+            return str(defecto or "") if defecto is not None else ""
+
+        def _notify(value):
+            hook = getattr(self, "_on_key_commit", None)
+            if callable(hook):
+                hook(name, value)
+
+        if defecto is not None:
+            w = entry(c, width)
+            w.configure(placeholder_text=_get_def(), placeholder_text_color=T.TXT3)
+
+            def commit(_e=None):
+                cur_def = _get_def()
+                raw = w.get().strip()
+                val_to_commit = "" if (not raw or (cur_def and raw.lower() == cur_def.lower())) else raw
+                ok = self._commit(name, val_to_commit)
+                w.configure(border_color=T.FIELD_BORDER if ok else T.DANGER)
+                if val_to_commit == "":
+                    w.delete(0, "end")
+                    try:
+                        w._activate_placeholder()
+                    except Exception:
+                        pass
+                _notify(val_to_commit)
+
+            w.bind("<FocusOut>", commit)
+            w.bind("<Return>", commit)
+
+            def clear():
+                if on_clear:
+                    on_clear()
+                else:
+                    w.delete(0, "end")
+                    self._commit(name, "")
+                    try:
+                        w._activate_placeholder()
+                    except Exception:
+                        pass
+                _notify("")
+
+            def ok():
+                commit()
+
+            def load():
+                cur_def = _get_def()
+                w.configure(placeholder_text=cur_def, placeholder_text_color=T.TXT3)
+                cur = str(self.ctx.get(name) or "").strip()
+                w.delete(0, "end")
+                if cur and (not cur_def or cur.lower() != cur_def.lower()):
+                    w.insert(0, cur)
+                else:
+                    try:
+                        w._activate_placeholder()
+                    except Exception:
+                        pass
+                w.configure(border_color=T.FIELD_BORDER)
+
+            self._loaders.append(load)
+            e = w
+        else:
+            w = entry(c, width)
+
+            def commit(_e=None):
+                val = w.get()
+                ok = self._commit(name, val)
+                w.configure(border_color=T.FIELD_BORDER if ok else T.DANGER)
+                _notify(val)
+
+            w.bind("<FocusOut>", commit)
+            w.bind("<Return>", commit)
+
+            def load():
+                w.delete(0, "end")
+                w.insert(0, str(self.ctx.get(name) or ""))
+                w.configure(border_color=T.FIELD_BORDER)
+
+            self._loaders.append(load)
+
+            def clear():
+                if on_clear:
+                    on_clear()
+                else:
+                    w.delete(0, "end")
+                    self._commit(name, "")
+                _notify("")
+
+            def ok():
+                commit()
+
+            e = w
+
+        e.pack(side="left", padx=(0, 2))
         _en = _find_entry(e)
         if _en is not None:
             _en.configure(font=T.font_cap(11))
 
-        def clear():
-            if on_clear:
-                on_clear()
-            else:
-                e.delete(0, "end")
-                self._commit(name, "")
+        def _get_key():
+            return _en.get() if _en is not None else ""
 
-        attach_keycapture(e, on_clear=clear)
+        def _set_key(v):
+            if _en is None:
+                return
+            st0 = None
+            try:
+                st0 = _en.cget("state")
+                _en.configure(state="normal")
+            except Exception:
+                pass
+            try:
+                _en.delete(0, "end")
+                _en.insert(0, v)
+            finally:
+                if st0 is not None:
+                    try:
+                        _en.configure(state=st0)
+                    except Exception:
+                        pass
+            commit()
 
-        # Dúo ✓ / ✕ apilado: alto == KEY_H, sin márgenes internos
-        duo_ok_clear(c, on_ok=lambda: self._commit(name, e.get()),
-                     on_clear=clear).pack(side="left", padx=(1, 0))
+        hist = KeyHistory(_get_key, _set_key)
+        self._loaders.append(hist.seed)
+
+        def commit_h():
+            commit()
+            hist.push()
+
+        def clear_h():
+            clear()
+            hist.push()
+
+        def undo_h():
+            hist.undo()
+
+        def menu_h():
+            import tkinter as tk
+            items = hist.items()
+            m = tk.Menu(c, tearoff=0)
+            if not items:
+                m.add_command(label="(sin historial)", state="disabled")
+            for v in items:
+                m.add_command(label=v, command=lambda _v=v: hist.apply(_v, record=True))
+            try:
+                m.tk_popup(b_hist.winfo_rootx(),
+                           b_hist.winfo_rooty() + b_hist.winfo_height())
+            finally:
+                m.grab_release()
+
+        attach_keycapture(e, on_clear=clear_h, on_commit=commit_h)
+        rb_button(c, e).pack(side="left", padx=(0, 1))
+        b_undo = icon_btn(c, "↺", undo_h, size=20, tip="Deshacer (valor anterior)")
+        b_undo.pack(side="left", padx=(0, 1))
+        b_hist = icon_btn(c, "▾", menu_h, size=20, tip="Historial de teclas")
+        b_hist.pack(side="left", padx=(0, 1))
+        duo_ok_clear(c, on_ok=lambda: commit_h(), on_clear=clear_h).pack(side="left", padx=(1, 0))
         return c, e
 
     def row(self, parent, r, label, widget, label_w=120):
@@ -470,10 +646,29 @@ class A02Hud(Block):
         lbl(cf, "Formato", 11, T.TXT2).pack(side="left", padx=(0, 8))
         self.f_menu(cf, "hud_formato", [("Moderno", "moderno"), ("Bruto", "bruto"), ("Desactivado", "desactivado")], 106).pack(side="left")
 
+        def _dur_defecto():
+            z = str(self.ctx.get("hud_zona") or "baja").strip().lower()
+            if z in ("1", "alta"):
+                return "300"
+            elif z in ("2", "media"):
+                return "500"
+            return "400"
+
         cz = ctk.CTkFrame(f1, fg_color="transparent")
         cz.pack(side="left", padx=(0, 36))
         lbl(cz, "Zona", 11, T.TXT2).pack(side="left", padx=(0, 8))
-        self.f_menu(cz, "hud_zona", [("Baja", "baja"), ("Media", "media"), ("Alta", "alta")], 92).pack(side="left")
+
+        def _on_zona_change(_val):
+            new_def = _dur_defecto()
+            d.configure(placeholder_text=new_def)
+            cur = str(self.ctx.get("hud_dur") or "").strip()
+            if not cur or cur.lower() == "auto":
+                try:
+                    d._activate_placeholder()
+                except Exception:
+                    pass
+
+        self.f_menu(cz, "hud_zona", [("Baja", "baja"), ("Media", "media"), ("Alta", "alta")], 92, on_change=_on_zona_change).pack(side="left")
 
         co = ctk.CTkFrame(f1, fg_color="transparent")
         co.pack(side="left")
@@ -488,7 +683,7 @@ class A02Hud(Block):
         t_entry.pack(side="left", padx=(0, 18))
 
         lbl(f2, "Duración", 11, T.TXT2).pack(side="left", padx=(0, 6))
-        d = self.f_entry_default(f2, "hud_dur", 56, "1000")
+        d = self.f_entry_default(f2, "hud_dur", 56, _dur_defecto)
         d.pack(side="left", padx=(0, 4))
         lbl(f2, "ms", 11, T.TXT2).pack(side="left")
 
@@ -622,6 +817,25 @@ class B02Disparador(Block):
     NUM, TITLE, SUB = "02", "Disparador Espacial", "Activación geométrica por paso del lápiz, autoclick y remapeo de atajo."
     MASTER, MASTER_DEFAULT = ("cruzar", "auto"), "cruzar"
 
+    def refresh(self):
+        if self.ctx.event_id:
+            try:
+                from ..core import zonas as Z
+                sec = Z.seccion(1, getattr(self.ctx.draft, "perfil", "1"))
+                has_zona = self.ctx.draft.get_key(sec, f"{self.ctx.event_id}_x", None) is not None
+                if has_zona and not self.ctx.get("cruzar") and not self.ctx.get("auto"):
+                    self.ctx.set("cruzar", 1)
+            except Exception:
+                pass
+        super().refresh()
+
+    def _on_dibujar(self):
+        if not self.ctx.get("cruzar") and not self.ctx.get("auto"):
+            self.ctx.set("cruzar", 1)
+            self.after_change("cruzar")
+        modo = "cruzar" if self.ctx.get("cruzar") else "auto"
+        self.ctx.bridge.send("CAL_ZONE", self.ctx.event_id, "panel", modo)
+
     def build(self, p):
         p.grid_columnconfigure(0, weight=1)
         # Fila única: 3 celdas con huecos iguales y elásticos
@@ -629,9 +843,7 @@ class B02Disparador(Block):
         fr.grid(row=0, column=0, sticky="ew")
 
         g0 = ctk.CTkFrame(fr, fg_color="transparent")
-        btn(g0, "✎  Dibujar zona",
-            lambda: self.ctx.bridge.send("CAL_ZONE", self.ctx.event_id, "panel", "cruzar" if self.ctx.get("cruzar") else "auto"),
-            height=26, width=120).pack(side="left")
+        btn(g0, "✎  Dibujar zona", self._on_dibujar, height=26, width=120).pack(side="left")
         fr.add(g0)
 
         g1 = ctk.CTkFrame(fr, fg_color="transparent")
@@ -655,6 +867,41 @@ class B02Disparador(Block):
 class B03Modulacion(Block):
     NUM, TITLE, SUB = "03", "Modulación de Tecla", "Pulsación rápida (toque corto/largo) y alternancia bi-estado A ⇄ B."
     MASTER, MASTER_DEFAULT = ("quick", "toggle"), "quick"
+    _B_LINKS = {"quick_b": "quick", "toggle_b": "toggle"}
+
+    def _tecla_base(self):
+        if not self.ctx.event_id:
+            return ""
+        from ..core.particularidades_defaults import particularidad_default
+        cur_a = str(self.ctx.get("atajo") or "").strip()
+        def_qa = particularidad_default(self.ctx.event_id, "quick_a", None)
+        if def_qa and (not cur_a or cur_a == "—" or (self.ctx.event_id in ("borrador_suave", "aerografo_alpha", "color_secundario") and cur_a.lower() != str(def_qa).lower())):
+            return str(def_qa)
+        if cur_a and cur_a != "—":
+            return cur_a
+        if def_qa:
+            return str(def_qa)
+        ev = self.ctx.catalogo.por_id(self.ctx.event_id)
+        if ev and ev.atajo_def and ev.atajo_def != "—":
+            return ev.atajo_def
+        return ""
+
+    def master_on(self) -> bool:
+        q_on = bool(self.ctx.get("quick")) and bool(str(self.ctx.get("quick_b") or "").strip())
+        t_on = bool(self.ctx.get("toggle")) and bool(str(self.ctx.get("toggle_b") or "").strip())
+        return q_on or t_on
+
+    def master_apply(self, on: bool):
+        if on:
+            qb = str(self.ctx.get("quick_b") or "").strip()
+            tb = str(self.ctx.get("toggle_b") or "").strip()
+            if tb and not qb:
+                self.ctx.set("toggle", 1)
+            else:
+                self.ctx.set("quick", 1)
+        else:
+            self.ctx.set("quick", 0)
+            self.ctx.set("toggle", 0)
 
     def build(self, p):
         p.grid_columnconfigure(0, weight=1)
@@ -664,11 +911,15 @@ class B03Modulacion(Block):
         a = ctk.CTkFrame(p, fg_color="transparent")
         a.grid(row=0, column=0, sticky="nsew", padx=(0, 12))
 
+        # Checkbox gobernado por cada campo B (vacío => desmarcar).
+        self._chk_widgets = {}
+        self._B_LINKS = {"quick_b": "quick", "toggle_b": "toggle"}
+
         # 1) Renglón A/B: fija la referencia de ancho de la columna.
         ra2 = ctk.CTkFrame(a, fg_color="transparent")
         ra2.grid(row=1, column=0, sticky="w")
         lbl(ra2, "A:", 11, T.TXT2).pack(side="left", padx=(0, 4))
-        c_qa, _ = self.f_key_entry(ra2, "quick_a", 90)
+        c_qa, _ = self.f_key_entry(ra2, "quick_a", 90, defecto=self._tecla_base)
         c_qa.pack(side="left", padx=(0, 8))
         lbl(ra2, "B:", 11, T.TXT2).pack(side="left", padx=(0, 4))
         c_qb, e_qb = self.f_key_entry(ra2, "quick_b", 90)
@@ -680,6 +931,7 @@ class B03Modulacion(Block):
         ra1.grid(row=0, column=0, sticky="w", pady=(0, 4))
         chk = self.f_check(ra1, "quick", "Pulsación rápida")
         chk.pack(side="left")
+        self._chk_widgets["quick"] = chk
         self._gap = ctk.CTkFrame(ra1, fg_color="transparent", width=8, height=1)
         self._gap.pack(side="left")
         mun = ctk.CTkFrame(ra1, fg_color="transparent")
@@ -710,13 +962,15 @@ class B03Modulacion(Block):
         b.grid(row=0, column=1, sticky="nsew")
         rb1 = ctk.CTkFrame(b, fg_color="transparent")
         rb1.pack(fill="x", pady=(0, 4))
-        self.f_check(rb1, "toggle", "Alternador A ⇄ B").pack(side="left", padx=(0, 10))
+        chk_t = self.f_check(rb1, "toggle", "Alternador A ⇄ B")
+        chk_t.pack(side="left", padx=(0, 10))
+        self._chk_widgets["toggle"] = chk_t
         lbl(rb1, "Bi-estado cíclico", 10, T.TXT3).pack(side="left")
 
         rb2 = ctk.CTkFrame(b, fg_color="transparent")
         rb2.pack(fill="x")
         lbl(rb2, "A:", 11, T.TXT2).pack(side="left", padx=(0, 4))
-        c_ta, _ = self.f_key_entry(rb2, "toggle_a", 90)
+        c_ta, _ = self.f_key_entry(rb2, "toggle_a", 90, defecto=self._tecla_base)
         c_ta.pack(side="left", padx=(0, 8))
         lbl(rb2, "B:", 11, T.TXT2).pack(side="left", padx=(0, 4))
         c_tb, _ = self.f_key_entry(rb2, "toggle_b", 90)
@@ -725,8 +979,17 @@ class B03Modulacion(Block):
         self.warn.pack(side="left", padx=(6, 0))
         self._loaders.append(self._warn)
 
+        def _sync_b_vacios():
+            qb = str(self.ctx.get("quick_b") or "").strip()
+            if not qb and self.ctx.get("quick"):
+                self._uncheck("quick")
+            tb = str(self.ctx.get("toggle_b") or "").strip()
+            if not tb and self.ctx.get("toggle"):
+                self._uncheck("toggle")
+        self._loaders.append(_sync_b_vacios)
+
     def _warn(self):
-        bad = self.ctx.get("toggle") and not str(self.ctx.get("toggle_b")).strip()
+        bad = self.ctx.get("toggle") and not str(self.ctx.get("toggle_b") or "").strip()
         self.warn.configure(text="⚠ Requiere Tecla B" if bad else "")
 
     def after_change(self, name):
@@ -734,9 +997,27 @@ class B03Modulacion(Block):
         if self._built:
             self._warn()
 
+    def _on_key_commit(self, name, value):
+        """B vacío => desmarca el checkbox asociado y lo compromete al draft."""
+        chk_name = getattr(self, "_B_LINKS", {}).get(name)
+        if chk_name and not str(value or "").strip():
+            self._uncheck(chk_name)
+
+    def _uncheck(self, chk_name):
+        w = getattr(self, "_chk_widgets", {}).get(chk_name)
+        if w is not None:
+            if hasattr(w, "_var"):
+                w._var.set(0)
+            try:
+                w.deselect()
+            except Exception:
+                pass
+        self._commit(chk_name, 0)
+        self._sync_master()
+
 
 class B04Deslizador(Block):
-    NUM, TITLE, SUB, CAP = "04", "Deslizador Virtual", "Control analógico continuo, escalonamiento por pasos y puntos Snap (P1-P5).", "slider"
+    NUM, TITLE, SUB, CAP = "04", "Deslizador Virtual", "Control analógico continuo, escalonamiento por pasos y puntos Snap (P1-P5).", ""
 
     def build(self, p):
         p.grid_columnconfigure(0, weight=1)

@@ -1,0 +1,60 @@
+﻿        lbl(ca, "Atajo CSP", 11, T.TXT2).pack(side="left", padx=(0, 6))
+        e1 = self.f_entry(ca, "atajo", 110, "Requerido")
+        e1.pack(side="left", padx=(0, 2))
+        ctk.CTkButton(ca, text="✓", width=18, height=18, corner_radius=4,
+                      fg_color="#2F855A", hover_color="#276749", text_color="#FFFFFF",
+                      font=T.font(10, True),
+                      command=lambda: self._commit("atajo", e1.get())).pack(side="left", padx=(0, 2))
+        ctk.CTkButton(ca, text="✕", width=18, height=18, corner_radius=4,
+                      fg_color="#C53030", hover_color="#9B2C2C", text_color="#FFFFFF",
+                      font=T.font(10, True),
+                      command=lambda: self._reset("atajo", e1)).pack(side="left")
+
+        cr = ctk.CTkFrame(fr, fg_color="transparent")
+        cr.pack(side="left", padx=(0, 16))
+        lbl(cr, "Remapeo Companion", 11, T.TXT2).pack(side="left", padx=(0, 6))
+        e2 = self.f_entry(cr, "remap", 150, "Opcional")
+        e2.pack(side="left", padx=(0, 2))
+        ctk.CTkButton(cr, text="✓", width=18, height=18, corner_radius=4,
+                      fg_color="#2F855A", hover_color="#276749", text_color="#FFFFFF",
+                      font=T.font(10, True),
+                      command=lambda: self._commit("remap", e2.get())).pack(side="left", padx=(0, 2))
+        ctk.CTkButton(cr, text="✕", width=18, height=18, corner_radius=4,
+                      fg_color="#C53030", hover_color="#9B2C2C", text_color="#FFFFFF",
+                      font=T.font(10, True),
+                      command=lambda: self._reset("remap", e2)).pack(side="left")
+
+        from .widgets import attach_keycapture
+        attach_keycapture(e1, on_clear=lambda: self._reset("atajo", e1))   # Supr = restablecer
+        attach_keycapture(e2, on_clear=lambda: self._reset("remap", e2))   # Supr = quitar
+        self.aviso = lbl(fr, "", 10, T.WARN)
+        self.aviso.pack(side="left")
+
+        def load_base():
+            ev = self.ctx.catalogo.por_id(self.ctx.event_id)
+            cur_a = self.ctx.get("atajo")
+            cur_r = self.ctx.get("remap")
+            val_a = cur_a if (cur_a and cur_a != "—") else (ev.atajo_def if ev and ev.atajo_def != "—" else "")
+            val_r = cur_r if (cur_r and cur_r != "—") else (ev.remap_def if ev and ev.remap_def != "—" else "")
+            e1.delete(0, "end")
+            e1.insert(0, str(val_a))
+            e2.delete(0, "end")
+            e2.insert(0, str(val_r))
+        self._loaders.append(load_base)
+        self._loaders.append(self._check_dup)
+        e1.bind("<KeyRelease>", lambda _e: self._check_dup(e1.get()), add="+")
+
+    def _reset(self, name, ent):
+        ev = self.ctx.catalogo.por_id(self.ctx.event_id)
+        def_val = (ev.atajo_def if name == "atajo" else ev.remap_def) if ev else ""
+        def_val = "" if def_val == "—" else def_val
+        ent.delete(0, "end")
+        ent.insert(0, def_val)
+        self._commit(name, "")
+        self._check_dup()
+
+    def _check_dup(self, typed=None):
+        mine = (typed if isinstance(typed, str) else self.ctx.get("atajo")).strip().lower()
+        txt = ""
+        if mine:
+            for ev in self.ctx.catalogo.eventos:

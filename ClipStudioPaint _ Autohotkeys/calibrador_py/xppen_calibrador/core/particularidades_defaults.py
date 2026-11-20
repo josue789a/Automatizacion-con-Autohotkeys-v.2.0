@@ -22,17 +22,17 @@ PARTICULARIDADES_DEFAULTS: dict[str, dict[str, object]] = {
     "color_mix":       {"quick": 1, "quick_a": "b", "quick_b": "d", "quick_ms": _QUICK_MS},
 
     # ── Pinceles y Trazos ──
-    "pluma":           {"quick": 1, "quick_a": "q", "quick_b": "k", "quick_ms": _QUICK_MS},
+    "pluma":           {"quick": 1, "quick_a": "q", "quick_b": "Ctrl+2", "quick_ms": _QUICK_MS},
     "aerografo":       {"quick": 1, "quick_a": "w", "quick_b": "k", "quick_ms": _QUICK_MS},
     "aerografo_alpha": {"quick": 1, "quick_a": "w", "quick_b": "k", "quick_ms": _QUICK_MS},
 
     # ── Color y Paleta ──
-    "color_primario":   {"quick": 1, "quick_a": "q", "quick_b": "k", "quick_ms": _QUICK_MS},
-    "color_secundario": {"quick": 1, "quick_a": "q", "quick_b": "k", "quick_ms": _QUICK_MS},
-    "area_color":       {"quick": 1, "quick_a": "s", "quick_b": "^x", "quick_ms": 400},
+    "color_primario":   {"quick": 1, "quick_a": "q", "quick_b": "Ctrl+2", "quick_ms": _QUICK_MS},
+    "color_secundario": {"quick": 1, "quick_a": "q", "quick_b": "Ctrl+2", "quick_ms": _QUICK_MS},
+    "area_color":       {"quick": 1, "quick_a": "s", "quick_b": "Ctrl+X", "quick_ms": 400},
 
     # ── Selección ──
-    "lazo":            {"quick": 1, "quick_a": "s", "quick_b": "^x", "quick_ms": 400},
+    "lazo":            {"quick": 1, "quick_a": "s", "quick_b": "Ctrl+X", "quick_ms": 400},
     "deseleccion":     {"toggle": 1, "toggle_a": "x", "toggle_b": "F10"},
     "reseleccion":     {"toggle": 1, "toggle_a": "x", "toggle_b": "F10"},
 

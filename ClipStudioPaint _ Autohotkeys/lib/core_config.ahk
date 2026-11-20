@@ -3,22 +3,10 @@
 _gDurCache := Map()
 
 ObtenerMonitorCSP() {
-    global colorV
-    if (IsSet(colorV) && IsObject(colorV) && HasProp(colorV, "cspHwnd") && colorV.cspHwnd) {
-        try {
-            WinGetPos(&wx,&wy,&ww,&wh,"ahk_id " colorV.cspHwnd)
-            cx := wx + ww // 2
-            cy := wy + wh // 2
-            loop MonitorGetCount() {
-                MonitorGet(A_Index,&mL,&mT,&mR,&mB)
-                if (cx >= mL && cx < mR && cy >= mT && cy < mB)
-                    return {x:mL,y:mT,w:mR - mL,h:mB - mT}
-            }
-        }
-    }
-    pri := MonitorGetPrimary()
-    MonitorGet(pri,&mL,&mT,&mR,&mB)
-    return {x:mL,y:mT,w:mR - mL,h:mB - mT}
+    ; Regla forzada: >1 monitor -> siempre la tableta; 1 monitor -> el único (primario)
+    mon := (MonitorGetCount() > 1) ? CmpMonitorTableta() : MonitorGetPrimary()
+    MonitorGet(mon, &mL, &mT, &mR, &mB)
+    return {x:mL, y:mT, w:mR - mL, h:mB - mT}
 }
 _PosGuiIniPath() => A_ScriptDir "\posiciones_gui.ini"
 GuardarPosicionGUI(nombre,hwnd) {
@@ -111,7 +99,7 @@ _AnclaBloquePaneles() {
     if IsObject(ancla)
         return ancla
     mon := ObtenerMonitorCSP()
-    anchoBloque := _E(104) + PANEL_GAP + _E(104) + PANEL_GAP + _E(104)
+    anchoBloque := _AnchoBtn("SLIDER") + PANEL_GAP + _AnchoBtn("CIRCLE") + PANEL_GAP + _AnchoBtn("QUICK")
     defX := mon.x + (mon.w - anchoBloque) // 2
     defY := mon.y + Round(mon.h * 0.02) + 42 + 4
     guardada := LeerPosicionGUI("PanelBlock")
@@ -127,6 +115,39 @@ _AnclaBloquePaneles() {
     ancla := {x:defX,y:defY}
     return ancla
 }
+
+; ── Ancho dinámico de pills (icono + texto + margen derecho) ──
+_AnchoTextoPill(txt) {
+    static cache := Map()
+    if cache.Has(txt)
+        return cache[txt]
+    gm := Gui("-Caption +ToolWindow")
+    gm.MarginX := 0
+    gm.MarginY := 0
+    gm.SetFont("s" _FS(9) " bold", "Segoe UI")
+    t := gm.Add("Text", "x0 y0", txt)
+    t.GetPos(, , &tw)
+    gm.Destroy()
+    cache[txt] := tw
+    return tw
+}
+
+_PillAnchoPara(txt, xTexto := 26, margenDer := 8) {
+    return _E(xTexto) + _AnchoTextoPill(txt) + _E(margenDer)
+}
+
+_AnchoBtn(clave) {
+    static cache := Map()
+    if cache.Has(clave)
+        return cache[clave]
+    if (clave = "ESTAB")
+        w := Max(_PillAnchoPara("STAB ON"), _PillAnchoPara("STAB OFF"))   ; el más ancho de sus dos estados
+    else
+        w := _PillAnchoPara(clave)   ; "SLIDER" | "CIRCLE" | "QUICK" | "HC"
+    cache[clave] := w
+    return w
+}
+
 GuardarIniDiferido(archivo, seccion, clave, valor) {
     global _iniPend
     _iniPend[archivo "|" seccion "|" clave] := valor
@@ -168,6 +189,12 @@ _ZonaSec(base, modo := 0) {
     global PERFIL
     return base . PERFIL . _ZonaSuf(modo)
 }
+_PtsCache(reset := false) {
+    static m := Map()
+    if (reset)
+        m.Clear()
+    return m
+}
 CargarPuntos(modo := 0) {
     global PUNTOS,HIST_ALTO,PERFIL,PUNTOS_DEF
     ini := _PosGuiIniPath()
@@ -176,28 +203,40 @@ CargarPuntos(modo := 0) {
     PUNTOS := []
     if (!IsSet(PUNTOS_DEF) || !IsObject(PUNTOS_DEF))
         return
+    cache := _PtsCache()
+    key := ini "|" sec "|" PUNTOS_DEF.Length    ; sec ya incluye PERFIL y sufijo de modo
+    if (!cache.Has(key)) {
+        c := {xy: [], h: ""}
+        for i,p in PUNTOS_DEF {
+            x := IniRead(ini,sec,"P" i "x","")
+            y := IniRead(ini,sec,"P" i "y","")
+            if ((x = "" || y = "") && suf != "") {
+                x := IniRead(ini,_ZonaSec("Puntos",1),"P" i "x","")
+                y := IniRead(ini,_ZonaSec("Puntos",1),"P" i "y","")
+            }
+            if ((x = "" || y = "") && PERFIL = 1) {
+                x := IniRead(ini,"Puntos","P" i "x","")
+                y := IniRead(ini,"Puntos","P" i "y","")
+            }
+            c.xy.Push([x,y])
+        }
+        h := IniRead(ini,sec,"HistAlto","")
+        if (h = "" && suf != "")
+            h := IniRead(ini,_ZonaSec("Puntos",1),"HistAlto","")
+        if (h = "" && PERFIL = 1)
+            h := IniRead(ini,"Puntos","HistAlto","")
+        c.h := h
+        cache[key] := c
+    }
+    c := cache[key]
     for i,p in PUNTOS_DEF {
-        x := IniRead(ini,sec,"P" i "x","")
-        y := IniRead(ini,sec,"P" i "y","")
-        if ((x = "" || y = "") && suf != "") {
-            x := IniRead(ini,_ZonaSec("Puntos",1),"P" i "x","")
-            y := IniRead(ini,_ZonaSec("Puntos",1),"P" i "y","")
-        }
-        if ((x = "" || y = "") && PERFIL = 1) {
-            x := IniRead(ini,"Puntos","P" i "x","")
-            y := IniRead(ini,"Puntos","P" i "y","")
-        }
+        x := c.xy[i][1], y := c.xy[i][2]
         if (IsInteger(x) && IsInteger(y))
             PUNTOS.Push([Integer(x),Integer(y)])
         else
             PUNTOS.Push([p[1],p[2]])
     }
-    h := IniRead(ini,sec,"HistAlto","")
-    if (h = "" && suf != "")
-        h := IniRead(ini,_ZonaSec("Puntos",1),"HistAlto","")
-    if (h = "" && PERFIL = 1)
-        h := IniRead(ini,"Puntos","HistAlto","")
-    HIST_ALTO := IsInteger(h) ? Integer(h) : 104
+    HIST_ALTO := IsInteger(c.h) ? Integer(c.h) : 104
     RecalcularZonas()
 }
 GuardarPuntos(conFirma := true) {
@@ -211,6 +250,7 @@ GuardarPuntos(conFirma := true) {
     IniWrite(HIST_ALTO,ini,sec,"HistAlto")
     if (conFirma)
         IniWrite(_FirmaMonitores(),ini,sec,"firma")
+    _PtsCache(true)
 }
 CargarEscala() {
     global ESC,PERFIL
@@ -237,14 +277,67 @@ _FirmaMonitores() {
     f := Sort(f,"D;")
     return f
 }
+_DetectarMonitoresHardware() {
+    try {
+        wmi := ComObjGet("winmgmts:\\.\root\wmi")
+        col := wmi.ExecQuery("SELECT MaxHorizontalImageSize, InstanceName FROM WmiMonitorBasicDisplayParams WHERE Active=True")
+        tieneMonitorGrande := false
+        tieneLaptop := false
+        tieneTableta := false
+        nMon := 0
+        for item in col {
+            nMon++
+            w := item.MaxHorizontalImageSize
+            inst := StrUpper(item.InstanceName)
+            if (InStr(inst, "UGD") || InStr(inst, "XP-PEN") || (w >= 33 && w <= 38))
+                tieneTableta := true
+            else if (w >= 45)             ; Pantalla externa >= 21" (ej: Teros 24" mide 53 cm)
+                tieneMonitorGrande := true
+            else if (w > 0 && w < 40)      ; Pantalla compacta (laptop 14" mide ~31 cm)
+                tieneLaptop := true
+        }
+        if (nMon = 1)
+            return 3  ; PC (1 monitor)
+        if (tieneMonitorGrande)
+            return 2  ; Monitor + tableta
+        if (tieneLaptop && tieneTableta)
+            return 1  ; Laptop + tableta
+    } catch {
+    }
+    return 0
+}
+
 ElegirPerfil() {
     global PERFIL,PERFILES
     if (!IsSet(PERFILES) || !IsObject(PERFILES))
         return
     ini := _PosGuiIniPath()
+
+    ; 1. Prioridad Absoluta: Perfil forzado por el usuario
+    forzar := IniRead(ini,"Perfil","forzar","")
+    if (IsInteger(forzar) && Integer(forzar) >= 1 && Integer(forzar) <= PERFILES.Length) {
+        PERFIL := Integer(forzar)
+        IniWrite(PERFIL,ini,"Perfil","actual")
+        return
+    }
+
+    ; 2. Detección Inteligente por Hardware (EDID / Dimensiones físicas reales en cm)
+    hw := _DetectarMonitoresHardware()
+    if (hw >= 1 && hw <= PERFILES.Length) {
+        PERFIL := hw
+        IniWrite(PERFIL,ini,"Perfil","actual")
+        return
+    }
+
+    ; 3. Fallback por coincidencia de firma de coordenadas
     act := IniRead(ini,"Perfil","actual","1")
     PERFIL := (IsInteger(act) && Integer(act) >= 1 && Integer(act) <= PERFILES.Length) ? Integer(act) : 1
     firma := _FirmaMonitores()
+    manual := IniRead(ini,"Perfil","firmaManual","")
+    if (manual != "" && manual = firma) {
+        IniWrite(firma,ini,"Perfil","ultimaFirma")
+        return
+    }
     previa := IniRead(ini,"Perfil","ultimaFirma","")
     if (previa = firma)
         return
@@ -254,16 +347,80 @@ ElegirPerfil() {
         if (IniRead(ini,"Puntos" i,"firma","") = firma) {
             PERFIL := i
             IniWrite(i,ini,"Perfil","actual")
+            try IniDelete(ini,"Perfil","firmaManual")
             msg := "PERFIL AUTO: " nombre
             try SetTimer(() => %'MostrarHUD'%(msg,"9AA7C7",2500),-1800)
             return
         }
+    }
+    ; --- Perfil 3 "PC": un solo monitor => selección automática ---
+    if (MonitorGetCount() = 1 && PERFILES.Length >= 3) {
+        PERFIL := 3
+        IniWrite(3,ini,"Perfil","actual")
+        if (IniRead(ini,"Puntos3","firma","") = "")
+            IniWrite(firma,ini,"Puntos3","firma")
+        OutputDebug("ElegirPerfil: 1 monitor -> PERFIL 3")
+        msg := "PERFIL AUTO: " PERFILES[3]
+        try SetTimer(() => %'MostrarHUD'%(msg,"9AA7C7",2500),-1800)
+        return
     }
     if (primera)
         return
     msg := "MONITORES CAMBIARON — elige perfil en 📍 (actual: " PERFILES[PERFIL] ")"
     try SetTimer(() => %'MostrarHUD'%(msg,"9AA7C7",3500),-1800)
 }
+
+; --- Helpers para Perfil 3 "PC (1 monitor)" ---
+PerfilEsPC() => (PERFIL = 3)
+
+ClampPrimario(&x, &y, w := 0, h := 0) {
+    if (!PerfilEsPC())
+        return
+    pri := MonitorGetPrimary()
+    MonitorGetWorkArea(pri, &L, &T, &R, &B)
+    if (w > 0)
+        x := Max(L, Min(x, R - w))
+    else
+        x := Max(L, Min(x, R))
+    if (h > 0)
+        y := Max(T, Min(y, B - h))
+    else
+        y := Max(T, Min(y, B))
+}
+
+CambiarPerfil(nuevo) {
+    global PERFIL, PERFILES
+    static enCurso := false
+    if (enCurso || !IsSet(PERFIL) || !IsSet(PERFILES) || !IsObject(PERFILES))
+        return
+    if !IsInteger(nuevo)
+        return
+    nuevo := Integer(nuevo)
+    if (nuevo < 1 || nuevo > PERFILES.Length || nuevo = PERFIL)
+        return
+    enCurso := true
+    Critical("On")
+    try GuardarPuntos(false)
+    try _RgGuardarMirror()
+    ini := _PosGuiIniPath()
+    firma := _FirmaMonitores()
+    IniWrite(nuevo, ini, "Perfil", "actual")
+    IniWrite(nuevo, ini, "Perfil", "forzar")
+    IniWrite(firma, ini, "Perfil", "ultimaFirma")
+    IniWrite(firma, ini, "Perfil", "firmaManual")
+    IniWrite(firma, ini, "Puntos" nuevo, "firma")
+    for i in [1, 2, 3] {
+        if (i != nuevo && IniRead(ini, "Puntos" i, "firma", "") = firma)
+            try IniDelete(ini, "Puntos" i, "firma")
+    }
+    try OcultarZonasCalibracion()
+    Reload()
+    Critical("Off")
+    Sleep(2000)
+    OutputDebug("CambiarPerfil: Reload no reinicio el script; se libera enCurso")
+    enCurso := false
+}
+_AplicarCambioPerfil(nuevo) => CambiarPerfil(nuevo)
 _ZonaDePuntos(desde,n) {
     global PUNTOS
     x1 := PUNTOS[desde][1]
@@ -313,8 +470,10 @@ _NombrePunto(i) {
 }
 
 ; ===== API pública para el motor de avisos (Claude 2 puede adoptarla sin tocar esta zona) =====
-ObtenerRango(nombre, modo := 0) {
+ObtenerRango(nombre, modo := 0, ignorarPausa := false) {
     global PERFIL
+    if (!ignorarPausa && SubStr(nombre, 1, 4) = "HUD_" && ZonaPausada(nombre))
+        return 0                                      ; HUD pausada: los consumidores caen a su fallback existente
     v := IniRead(_PosGuiIniPath(),_ZonaSec("Rangos",modo),nombre,"")
     if (v = "" && _ZonaSuf(modo) != "")
         v := IniRead(_PosGuiIniPath(),_ZonaSec("Rangos",1),nombre,"")
@@ -322,6 +481,47 @@ ObtenerRango(nombre, modo := 0) {
     if (v != "" && RegExMatch(v,"^\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*$",&m))
         return {x:Integer(m[1]),y:Integer(m[2]),w:Integer(m[3]),h:Integer(m[4])}
     return 0
+}
+
+; ===== Pausa de zonas (Paquete 2) =====
+; Estado en [ZonasEstado<PERFIL>]  clave=pausada  (se borra la clave al reanudar).
+; La zona conserva todos sus valores: solo sus consumidores la ignoran.
+_ZonasPausadasMapa() {
+    global PERFIL
+    static m := 0, perfilCache := ""
+    if (!IsObject(m) || perfilCache != PERFIL) {
+        m := Map()
+        m.CaseSense := "Off"
+        perfilCache := PERFIL
+        txt := ""
+        try txt := IniRead(_PosGuiIniPath(), "ZonasEstado" PERFIL)
+        for linea in StrSplit(txt, "`n", "`r") {
+            p := InStr(linea, "=")
+            if (p && SubStr(linea, p + 1) = "pausada")
+                m[SubStr(linea, 1, p - 1)] := true
+        }
+    }
+    return m
+}
+
+ZonaPausada(clave) {
+    return _ZonasPausadasMapa().Has(clave)
+}
+
+ZonaPausar(clave, pausar := true) {
+    global PERFIL
+    m := _ZonasPausadasMapa()
+    ini := _PosGuiIniPath()
+    try {
+        if (pausar) {
+            IniWrite("pausada", ini, "ZonasEstado" PERFIL, clave)
+            m[clave] := true
+        } else {
+            IniDelete(ini, "ZonasEstado" PERFIL, clave)
+            if m.Has(clave)
+                m.Delete(clave)
+        }
+    }
 }
 HudConfigEvento(ev) {
     global PERFIL
@@ -378,11 +578,20 @@ HudDuracionDe(id) {
         if (val > 0)
             return _gDurCache[id] := val
     }
+    ; 1.5 Buscar en [Duraciones] si existe dur_<id> calibrado
+    d := Trim(IniRead(ini, "Duraciones", "dur_" id, ""))
+    if (d != "" && IsNumber(d)) {
+        val := d * 1
+        if (val > 0)
+            return _gDurCache[id] := val
+    }
     ; 2. [HudDuracion] por zona del evento (alta/media/baja)
     z := _HudDuracionZonaDeId(id)
     if (z != 0) {
         clave := (z = 1) ? "alta" : (z = 2) ? "media" : "baja"
         d := Trim(IniRead(ini, "HudDuracion" PERFIL, clave, ""))
+        if (d = "")
+            d := Trim(IniRead(ini, "HudDuraciones" PERFIL, "duracion_" clave, ""))
         if (d = "")
             d := Trim(IniRead(ini, "HudDuracion", clave, ""))
         if (d != "" && IsNumber(d)) {

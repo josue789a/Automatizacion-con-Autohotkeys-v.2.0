@@ -1,0 +1,682 @@
+﻿
+=== comportamientos.ahk L90 ===
+90: _CompAplicarVivo(key, idEv) {
+91:     global dsGui, colorV, ccGui, colorCC, lockGui, hist, frenteGui, estabBtnGui, reloadGui
+92:     _CompIni("", "", "", true)                        ; invalida la caché
+93:     if (idEv = "panel_ds") {
+94:         if (key = "pildora") {
+95:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), dsGui.g)
+96:         } else if (key = "hover") {
+97:             act := colorV.dsVis
+98:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+99:         }
+100:     } else if (idEv = "panel_cc") {
+101:         if (key = "pildora") {
+102:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), ccGui.g)
+103:         } else if (key = "hover") {
+104:             act := colorCC.dsVis
+105:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+106:         }
+107:     } else if (idEv = "history_lock") {
+108:         if (key = "pildora") {
+109:             act := (IsSet(hist) && HasProp(hist, "abierto") && hist.abierto)
+110:             try WinSetTransparent(_CompOp("pildora", act ? "op_act" : "op_rep", idEv, _AlphaTema("pill", 235)), lockGui.g)
+111:         }
+112:     } else if (idEv = "gui_frente") {
+113:         if (key = "pildora") {
+114:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), frenteGui.g)
+115:         }
+116:     } else if (idEv = "estab_slider") {
+117:         if (key = "pildora") {
+118:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), estabBtnGui.g)
+119:         }
+120:     } else if (idEv = "reload") {
+121:         if (key = "pildora") {
+122:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), reloadGui.g)
+123:         }
+124:     }
+125: }
+=== comportamientos_20261115_015808.bak.ahk L79 ===
+79: _CompAplicarVivo(key, idEv) {
+80:     global dsGui, colorV, ccGui, colorCC, lockGui, hist, frenteGui, estabBtnGui, reloadGui
+81:     _CompIni("", "", "", true)                        ; invalida la caché
+82:     if (idEv = "panel_ds") {
+83:         if (key = "pildora") {
+84:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), dsGui.g)
+85:         } else if (key = "hover") {
+86:             act := colorV.dsVis
+87:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+88:         }
+89:     } else if (idEv = "panel_cc") {
+90:         if (key = "pildora") {
+91:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), ccGui.g)
+92:         } else if (key = "hover") {
+93:             act := colorCC.dsVis
+94:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+95:         }
+96:     } else if (idEv = "history_lock") {
+97:         if (key = "pildora") {
+98:             act := (IsSet(hist) && HasProp(hist, "abierto") && hist.abierto)
+99:             try WinSetTransparent(_CompOp("pildora", act ? "op_act" : "op_rep", idEv, _AlphaTema("pill", 235)), lockGui.g)
+100:         }
+101:     } else if (idEv = "gui_frente") {
+102:         if (key = "pildora") {
+103:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), frenteGui.g)
+104:         }
+105:     } else if (idEv = "estab_slider") {
+106:         if (key = "pildora") {
+107:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), estabBtnGui.g)
+108:         }
+109:     } else if (idEv = "reload") {
+110:         if (key = "pildora") {
+111:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), reloadGui.g)
+112:         }
+113:     }
+114: }
+=== comportamientos_20261115_024309.bak.ahk L90 ===
+90: _CompAplicarVivo(key, idEv) {
+91:     global dsGui, colorV, ccGui, colorCC, lockGui, hist, frenteGui, estabBtnGui, reloadGui
+92:     _CompIni("", "", "", true)                        ; invalida la caché
+93:     if (idEv = "panel_ds") {
+94:         if (key = "pildora") {
+95:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), dsGui.g)
+96:         } else if (key = "hover") {
+97:             act := colorV.dsVis
+98:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+99:         }
+100:     } else if (idEv = "panel_cc") {
+101:         if (key = "pildora") {
+102:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), ccGui.g)
+103:         } else if (key = "hover") {
+104:             act := colorCC.dsVis
+105:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+106:         }
+107:     } else if (idEv = "history_lock") {
+108:         if (key = "pildora") {
+109:             act := (IsSet(hist) && HasProp(hist, "abierto") && hist.abierto)
+110:             try WinSetTransparent(_CompOp("pildora", act ? "op_act" : "op_rep", idEv, _AlphaTema("pill", 235)), lockGui.g)
+111:         }
+112:     } else if (idEv = "gui_frente") {
+113:         if (key = "pildora") {
+114:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), frenteGui.g)
+115:         }
+116:     } else if (idEv = "estab_slider") {
+117:         if (key = "pildora") {
+118:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), estabBtnGui.g)
+119:         }
+120:     } else if (idEv = "reload") {
+121:         if (key = "pildora") {
+122:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), reloadGui.g)
+123:         }
+124:     }
+125: }
+=== comportamientos_20261115_135944.bak.ahk L90 ===
+90: _CompAplicarVivo(key, idEv) {
+91:     global dsGui, colorV, ccGui, colorCC, lockGui, hist, frenteGui, estabBtnGui, reloadGui
+92:     _CompIni("", "", "", true)                        ; invalida la caché
+93:     if (idEv = "panel_ds") {
+94:         if (key = "pildora") {
+95:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), dsGui.g)
+96:         } else if (key = "hover") {
+97:             act := colorV.dsVis
+98:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+99:         }
+100:     } else if (idEv = "panel_cc") {
+101:         if (key = "pildora") {
+102:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), ccGui.g)
+103:         } else if (key = "hover") {
+104:             act := colorCC.dsVis
+105:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+106:         }
+107:     } else if (idEv = "history_lock") {
+108:         if (key = "pildora") {
+109:             act := (IsSet(hist) && HasProp(hist, "abierto") && hist.abierto)
+110:             try WinSetTransparent(_CompOp("pildora", act ? "op_act" : "op_rep", idEv, _AlphaTema("pill", 235)), lockGui.g)
+111:         }
+112:     } else if (idEv = "gui_frente") {
+113:         if (key = "pildora") {
+114:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), frenteGui.g)
+115:         }
+116:     } else if (idEv = "estab_slider") {
+117:         if (key = "pildora") {
+118:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), estabBtnGui.g)
+119:         }
+120:     } else if (idEv = "reload") {
+121:         if (key = "pildora") {
+122:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), reloadGui.g)
+123:         }
+124:     }
+125: }
+=== comportamientos_antes_p3.bak.ahk L90 ===
+90: _CompAplicarVivo(key, idEv) {
+91:     global dsGui, colorV, ccGui, colorCC, lockGui, hist, frenteGui, estabBtnGui, reloadGui
+92:     _CompIni("", "", "", true)                        ; invalida la caché
+93:     if (idEv = "panel_ds") {
+94:         if (key = "pildora") {
+95:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), dsGui.g)
+96:         } else if (key = "hover") {
+97:             act := colorV.dsVis
+98:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+99:         }
+100:     } else if (idEv = "panel_cc") {
+101:         if (key = "pildora") {
+102:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), ccGui.g)
+103:         } else if (key = "hover") {
+104:             act := colorCC.dsVis
+105:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+106:         }
+107:     } else if (idEv = "history_lock") {
+108:         if (key = "pildora") {
+109:             act := (IsSet(hist) && HasProp(hist, "abierto") && hist.abierto)
+110:             try WinSetTransparent(_CompOp("pildora", act ? "op_act" : "op_rep", idEv, _AlphaTema("pill", 235)), lockGui.g)
+111:         }
+112:     } else if (idEv = "gui_frente") {
+113:         if (key = "pildora") {
+114:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), frenteGui.g)
+115:         }
+116:     } else if (idEv = "estab_slider") {
+117:         if (key = "pildora") {
+118:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), estabBtnGui.g)
+119:         }
+120:     } else if (idEv = "reload") {
+121:         if (key = "pildora") {
+122:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), reloadGui.g)
+123:         }
+124:     }
+125: }
+=== comportamientos.ahk L281 ===
+281: _CompCargarCampos(idEv) {                             ; se llama al seleccionar evento
+282:     global COMP
+283:     if (!IsSet(COMP) || !IsObject(COMP) || !HasProp(COMP, "filas"))
+284:         return
+285:     COMP.cargando := true
+286:     try {
+287:         for f in COMP.filas {
+288:             c := f.campos
+289:             if (!IsObject(c))
+290:                 continue
+291:             if (HasProp(c, "sld")) {                          ; E4
+292:                 on := (idEv != "" && f.cb.Enabled)
+293:                 c.eBajar.Enabled := on
+294:                 c.eBajar.Value := on ? _CompSliderLeer("tecla_bajar") : ""
+295:                 c.eSubir.Enabled := on
+296:                 c.eSubir.Value := on ? _CompSliderLeer("tecla_subir") : ""
+297:                 rawSnaps := _CompSliderLeer("snaps")
+298:                 p := StrSplit(rawSnaps, ",")
+299:                 if (c.HasProp("eSnaps")) {
+300:                     for i, esn in c.eSnaps {
+301:                         esn.Value := (on && i <= p.Length) ? p[i] : ""
+302:                     }
+303:                 }
+304:                 c.eAH.Value := on ? _CompSliderLeer("alphaH") : ""
+305:                 c.eAF.Value := on ? _CompSliderLeer("alphaF") : ""
+306:                 _CompSliderVerificarTeclas(c)
+307:                 continue
+308:             }
+309:             if (HasProp(c, "mod")) {                      ; E3
+310:                 on := (idEv != "" && f.cb.Enabled)
+311:                 c.eA.Enabled := on
+312:                 valA := _CompIni(f.key, "a", idEv)
+313:                 baseA := ""
+314:                 if (idEv != "") {
+315:                     baseA := IniRead(_PosGuiIniPath(), "Remapeos", "atajo_" idEv, _PtsEvAtajoDefault(idEv))
+316:                     if (baseA = "—")
+317:                         baseA := ""
+318:                 }
+319:                 if (valA = "" && idEv != "")
+320:                     valA := baseA
+321:                 c.baseA := on ? baseA : ""
+322:                 c.eA.Value := on ? valA : ""
+323:                 _CompHeredadoPintar(c)
+324:                 c.eB.Enabled := on
+325:                 valB := _CompIni(f.key, "b", idEv)
+326:                 c.eB.Value := on ? valB : ""
+327:                 if (c.HasProp("lblReqB") && IsObject(c.lblReqB))
+328:                     c.lblReqB.Visible := (on && f.key = "toggle" && valB = "")
+329:                 if (IsObject(c.eMs)) {
+330:                     c.eMs.Enabled := on
+331:                     ms := on ? _CompIni(f.key, "ms", idEv) : ""
+332:                     c.eMs.Value := on ? (ms = "" ? "250" : ms) : ""
+333:                     _CompMsIcono(c)
+334:                 }
+335:                 continue
+336:             }
+337:             if (HasProp(c, "stZonas") && IsObject(c.stZonas)) {
+338:                 c.stZonas.Text := _NvPanTexto()
+339:                 continue
+340:             }
+341:             if (!HasProp(c, "eRep") || !IsObject(c.eRep))
+342:                 continue
+343:             on := (idEv != "" && (_CompE2Activo(idEv) || _PtsEvEsCustom(_PosGuiIniPath(), idEv)) && f.cb.Enabled)
+344:             c.eRep.Enabled := on
+345:             c.eRep.Value := on ? Round(_CompOp(f.key, "op_rep", idEv, _CompDefOp(f.key, "op_rep")) / 2.55) : ""
+346:             if (IsObject(c.eAct)) {
+347:                 c.eAct.Enabled := on
+348:                 c.eAct.Value := on ? Round(_CompOp(f.key, "op_act", idEv, _CompDefOp(f.key, "op_act")) / 2.55) : ""
+349:             }
+350:             if (IsObject(c.cbB)) {
+351:                 c.cbB.Enabled := on
+352:                 c.cbB.Value := (on && _CompBorde(f.key, idEv, true)) ? 1 : 0
+353:             }
+354:         }
+355:     } finally {
+356:         COMP.cargando := false
+357:     }
+358: }
+=== calibrador.ahk L3968 ===
+3968: _PtsPildoraUbicar(idEv := "", *) {
+3969:     if (idEv = "")
+3970:         idEv := _PtsEvIdSel()
+3971:     if (idEv = "")
+3972:         return
+3973:     _PillSincronizarDinamicas()               ; crea la píldora si pildora_<idEv>=1
+3974:     pd := _PillDin()
+3975:     esRigida := !(pd.Has(idEv))
+3976:     if esRigida {
+3977:         g := _PillGuiRigida(idEv)
+3978:     } else {
+3979:         p := pd[idEv]
+3980:         g := HasProp(p, "g") && (p.g is Gui) ? p.g : _PillGuiDe(p)
+3981:     }
+3982:     if !g {
+3983:         ToolTip("Activa [x] Píldora Táctil para este evento")
+3984:         SetTimer(() => ToolTip(), -1800)
+3985:         return
+3986:     }
+3987:     if esRigida {
+3988:         g.Show("NA")                          ; rígida: solo se muestra/parpadea, no se reubica
+3989:     } else {
+3990:         ; Centro del área de trabajo del monitor bajo el cursor
+3991:         CoordMode("Mouse", "Screen")
+3992:         MouseGetPos(&mx, &my)
+3993:         idx := MonitorGetPrimary()
+3994:         Loop MonitorGetCount() {
+3995:             MonitorGet(A_Index, &l, &t, &r, &b)
+3996:             if (mx >= l && mx < r && my >= t && my < b) {
+3997:                 idx := A_Index
+3998:                 break
+3999:             }
+4000:         }
+4001:         MonitorGetWorkArea(idx, &l, &t, &r, &b)
+4002:         g.GetPos(, , &w, &h)
+4003:         nx := l + (r - l - w) // 2
+4004:         ny := t + (b - t - h) // 2
+4005:         g.Show("NA x" nx " y" ny)
+4006:         try GuardarPosicionGUI("Pildora_" idEv, g.Hwnd)   ; firma (nombre, hwnd)
+4007:     }
+4008:     ; Parpadeo de localización (restaura la opacidad previa; evita 0 para no perder el puntero)
+4009:     hw := g.Hwnd
+4010:     prev := WinGetTransparent("ahk_id " hw)
+4011:     est := {n: 0}
+4012:     Parpadeo() {
+4013:         est.n += 1
+4014:         if (est.n > 6) {
+4015:             SetTimer(Parpadeo, 0)
+4016:             WinSetTransparent(prev = "" ? 255 : prev, "ahk_id " hw)
+4017:             return
+4018:         }
+4019:         WinSetTransparent(Mod(est.n, 2) ? 255 : 70, "ahk_id " hw)
+4020:     }
+4021:     SetTimer(Parpadeo, 120)
+4022: }
+=== calibrador_20261115_135944.bak.ahk L3621 ===
+3621: _PtsPildoraUbicar(idEv := "", *) {
+3622:     if (idEv = "")
+3623:         idEv := _PtsEvIdSel()
+3624:     if (idEv = "")
+3625:         return
+3626:     _PillSincronizarDinamicas()               ; crea la píldora si pildora_<idEv>=1
+3627:     pd := _PillDin()
+3628:     if !pd.Has(idEv) {
+3629:         ToolTip("Activa [x] Píldora Táctil para este evento")
+3630:         SetTimer(() => ToolTip(), -1800)
+3631:         return
+3632:     }
+3633:     p := pd[idEv]
+3634:     g := HasProp(p, "g") && (p.g is Gui) ? p.g : _PillGuiDe(p)
+3635:     if !g
+3636:         return
+3637:     ; Centro del área de trabajo del monitor bajo el cursor
+3638:     CoordMode("Mouse", "Screen")
+3639:     MouseGetPos(&mx, &my)
+3640:     idx := MonitorGetPrimary()
+3641:     Loop MonitorGetCount() {
+3642:         MonitorGet(A_Index, &l, &t, &r, &b)
+3643:         if (mx >= l && mx < r && my >= t && my < b) {
+3644:             idx := A_Index
+3645:             break
+3646:         }
+3647:     }
+3648:     MonitorGetWorkArea(idx, &l, &t, &r, &b)
+3649:     g.GetPos(, , &w, &h)
+3650:     nx := l + (r - l - w) // 2
+3651:     ny := t + (b - t - h) // 2
+3652:     g.Show("NA x" nx " y" ny)
+3653:     try GuardarPosicionGUI("Pildora_" idEv, nx, ny)
+3654:     ; Parpadeo de localización (restaura la opacidad previa; evita 0 para no perder el puntero)
+3655:     hw := g.Hwnd
+3656:     prev := WinGetTransparent("ahk_id " hw)
+3657:     est := {n: 0}
+3658:     Parpadeo() {
+3659:         est.n += 1
+3660:         if (est.n > 6) {
+3661:             SetTimer(Parpadeo, 0)
+3662:             WinSetTransparent(prev = "" ? 255 : prev, "ahk_id " hw)
+3663:             return
+3664:         }
+3665:         WinSetTransparent(Mod(est.n, 2) ? 255 : 70, "ahk_id " hw)
+3666:     }
+3667:     SetTimer(Parpadeo, 120)
+3668: }
+=== calibrador.ahk L4024 ===
+4024: _PtsPildoraBtnAgregar(x, y, w := 210) {
+4025:     if (HasProp(ptsEd, "bPildora") && IsObject(ptsEd.bPildora))
+4026:         return ptsEd.bPildora
+4027:     targetG := (IsSet(ACC) && IsObject(ACC) && HasProp(ACC, "g") && IsObject(ACC.g)) ? ACC.g : ((IsSet(ptsEd) && HasProp(ptsEd, "g") && IsObject(ptsEd.g)) ? ptsEd.g : "")
+4028:     ptsEd.bPildora := targetG.Add("Button", "x" x " y" y " w" w " h26", "[ Mostrar / Ubicar píldora ]")
+4029:     ptsEd.bPildora.OnEvent("Click", (*) => _PtsPildoraUbicar())
+4030:     return ptsEd.bPildora
+4031: }
+=== calibrador_20261115_135944.bak.ahk L3670 ===
+3670: _PtsPildoraBtnAgregar(x, y, w := 210) {
+3671:     if (HasProp(ptsEd, "bPildora") && IsObject(ptsEd.bPildora))
+3672:         return ptsEd.bPildora
+3673:     targetG := (IsSet(ACC) && IsObject(ACC) && HasProp(ACC, "g") && IsObject(ACC.g)) ? ACC.g : ((IsSet(ptsEd) && HasProp(ptsEd, "g") && IsObject(ptsEd.g)) ? ptsEd.g : "")
+3674:     ptsEd.bPildora := targetG.Add("Button", "x" x " y" y " w" w " h26", "[ Mostrar / Ubicar píldora ]")
+3675:     ptsEd.bPildora.OnEvent("Click", (*) => _PtsPildoraUbicar())
+3676:     return ptsEd.bPildora
+3677: }
+=== referencias a píldora ===
+calibrador.ahk:344: cbPill  := _CompFila("pildora", "💊 Píldora Táctil", 612 + 44,
+calibrador.ahk:345: ["Botón táctil en pantalla que dispara este evento con lápiz o dedo."], "b1", false, "pildora")
+calibrador.ahk:346: _PtsPildoraBtnAgregar(x0 + 34, 612 + 68)
+calibrador.ahk:658: cbPill.OnEvent("Click",_PtsEvPartToggle.Bind("pildora"))
+calibrador.ahk:3248: pildora:  true,
+calibrador.ahk:3258: static pildoras := Map("history_lock",1, "panel_ds",1, "panel_cc",1, "gui_frente",1, "estab_slider",1, "reload",1)
+calibrador.ahk:3266: pildora:  pildoras.Has(idEv),
+calibrador.ahk:3285: p := IniRead(ini, sec, "pildora_" idEv, (esCust || !caps.pildora) ? "0" : "1")
+calibrador.ahk:3289: if (caps.pildora && p = "1")
+calibrador.ahk:3361: if (tipo = "pildora") && HasProp(ptsEd, "bPildora")
+calibrador.ahk:3362: ptsEd.bPildora.Enabled := (ctrl.Value = 1)
+calibrador.ahk:3375: if (tipo = "pildora")
+calibrador.ahk:3491: ptsEd.cbPill.Enabled := caps.pildora
+calibrador.ahk:3492: ptsEd.cbPill.Value := caps.pildora ? (IniRead(ini, secPart, "pildora_" idEv, (esCust || !caps.pildora) ? "0" : "1") = "1") : 0
+calibrador.ahk:3494: if HasProp(ptsEd, "bPildora")
+calibrador.ahk:3495: ptsEd.bPildora.Enabled := (HasProp(ptsEd, "cbPill") && IsObject(ptsEd.cbPill) && ptsEd.cbPill.Value = 1)
+calibrador.ahk:3968: _PtsPildoraUbicar(idEv := "", *) {
+calibrador.ahk:3973: _PillSincronizarDinamicas()               ; crea la píldora si pildora_<idEv>=1
+calibrador.ahk:4006: try GuardarPosicionGUI("Pildora_" idEv, g.Hwnd)   ; firma (nombre, hwnd)
+calibrador.ahk:4024: _PtsPildoraBtnAgregar(x, y, w := 210) {
+calibrador.ahk:4025: if (HasProp(ptsEd, "bPildora") && IsObject(ptsEd.bPildora))
+calibrador.ahk:4026: return ptsEd.bPildora
+calibrador.ahk:4028: ptsEd.bPildora := targetG.Add("Button", "x" x " y" y " w" w " h26", "[ Mostrar / Ubicar píldora ]")
+calibrador.ahk:4029: ptsEd.bPildora.OnEvent("Click", (*) => _PtsPildoraUbicar())
+calibrador.ahk:4030: return ptsEd.bPildora
+calibrador.ahk:4641: esPildora := sel ? InStr(ptsEd.lvEv.GetText(sel, 4), "Píldora") : false
+calibrador.ahk:4648: else if (a = "" && !esPildora)
+calibrador_20261115_015808.bak.ahk:313: cbPill  := _CompFila("pildora", "💊 Píldora Táctil", 612 + 44,
+calibrador_20261115_015808.bak.ahk:701: cbPill.OnEvent("Click",_PtsEvPartToggle.Bind("pildora"))
+calibrador_20261115_015808.bak.ahk:3033: static pildoras := Map("history_lock",1, "panel_ds",1, "panel_cc",1, "gui_frente",1, "estab_slider",1, "reload",1)
+calibrador_20261115_015808.bak.ahk:3040: pildora: pildoras.Has(idEv),
+calibrador_20261115_015808.bak.ahk:3056: p := IniRead(ini, sec, "pildora_" idEv, caps.pildora ? "1" : "0")
+calibrador_20261115_015808.bak.ahk:3059: if (caps.pildora && p = "1")
+calibrador_20261115_015808.bak.ahk:3207: ptsEd.cbPill.Enabled := caps.pildora
+calibrador_20261115_015808.bak.ahk:3208: ptsEd.cbPill.Value := caps.pildora ? (IniRead(ini, secPart, "pildora_" idEv, caps.pildora ? "1" : "0") = "1") : 0
+calibrador_20261115_015808.bak.ahk:4187: esPildora := sel ? InStr(ptsEd.lvEv.GetText(sel, 4), "Píldora") : false
+calibrador_20261115_015808.bak.ahk:4191: else if (a = "" && !esPildora)
+calibrador_20261115_024309.bak.ahk:313: cbPill  := _CompFila("pildora", "💊 Píldora Táctil", 612 + 44,
+calibrador_20261115_024309.bak.ahk:703: cbPill.OnEvent("Click",_PtsEvPartToggle.Bind("pildora"))
+calibrador_20261115_024309.bak.ahk:3037: pildora: true,
+calibrador_20261115_024309.bak.ahk:3045: static pildoras := Map("history_lock",1, "panel_ds",1, "panel_cc",1, "gui_frente",1, "estab_slider",1, "reload",1)
+calibrador_20261115_024309.bak.ahk:3052: pildora: pildoras.Has(idEv),
+calibrador_20261115_024309.bak.ahk:3069: p := IniRead(ini, sec, "pildora_" idEv, (esCust || !caps.pildora) ? "0" : "1")
+calibrador_20261115_024309.bak.ahk:3072: if (caps.pildora && p = "1")
+calibrador_20261115_024309.bak.ahk:3230: ptsEd.cbPill.Enabled := caps.pildora
+calibrador_20261115_024309.bak.ahk:3231: ptsEd.cbPill.Value := caps.pildora ? (IniRead(ini, secPart, "pildora_" idEv, (esCust || !caps.pildora) ? "0" : "1") = "1") : 0
+calibrador_20261115_024309.bak.ahk:4210: esPildora := sel ? InStr(ptsEd.lvEv.GetText(sel, 4), "Píldora") : false
+calibrador_20261115_024309.bak.ahk:4214: else if (a = "" && !esPildora)
+calibrador_20261115_135944.bak.ahk:315: cbPill  := _CompFila("pildora", "💊 Píldora Táctil", 612 + 44,
+calibrador_20261115_135944.bak.ahk:316: ["Botón táctil en pantalla que dispara este evento con lápiz o dedo."], "b1", false, "pildora")
+calibrador_20261115_135944.bak.ahk:317: _PtsPildoraBtnAgregar(x0 + 34, 612 + 68)
+calibrador_20261115_135944.bak.ahk:617: cbPill.OnEvent("Click",_PtsEvPartToggle.Bind("pildora"))
+calibrador_20261115_135944.bak.ahk:2927: pildora:  true,
+calibrador_20261115_135944.bak.ahk:2937: static pildoras := Map("history_lock",1, "panel_ds",1, "panel_cc",1, "gui_frente",1, "estab_slider",1, "reload",1)
+calibrador_20261115_135944.bak.ahk:2945: pildora:  pildoras.Has(idEv),
+calibrador_20261115_135944.bak.ahk:2964: p := IniRead(ini, sec, "pildora_" idEv, (esCust || !caps.pildora) ? "0" : "1")
+calibrador_20261115_135944.bak.ahk:2968: if (caps.pildora && p = "1")
+calibrador_20261115_135944.bak.ahk:3040: if (tipo = "pildora") && HasProp(ptsEd, "bPildora")
+calibrador_20261115_135944.bak.ahk:3041: ptsEd.bPildora.Enabled := (ctrl.Value = 1)
+calibrador_20261115_135944.bak.ahk:3054: if (tipo = "pildora")
+calibrador_20261115_135944.bak.ahk:3166: ptsEd.cbPill.Enabled := caps.pildora
+calibrador_20261115_135944.bak.ahk:3167: ptsEd.cbPill.Value := caps.pildora ? (IniRead(ini, secPart, "pildora_" idEv, (esCust || !caps.pildora) ? "0" : "1") = "1") : 0
+calibrador_20261115_135944.bak.ahk:3169: if HasProp(ptsEd, "bPildora")
+calibrador_20261115_135944.bak.ahk:3170: ptsEd.bPildora.Enabled := (HasProp(ptsEd, "cbPill") && IsObject(ptsEd.cbPill) && ptsEd.cbPill.Value = 1)
+calibrador_20261115_135944.bak.ahk:3621: _PtsPildoraUbicar(idEv := "", *) {
+calibrador_20261115_135944.bak.ahk:3626: _PillSincronizarDinamicas()               ; crea la píldora si pildora_<idEv>=1
+calibrador_20261115_135944.bak.ahk:3653: try GuardarPosicionGUI("Pildora_" idEv, nx, ny)
+calibrador_20261115_135944.bak.ahk:3670: _PtsPildoraBtnAgregar(x, y, w := 210) {
+calibrador_20261115_135944.bak.ahk:3671: if (HasProp(ptsEd, "bPildora") && IsObject(ptsEd.bPildora))
+calibrador_20261115_135944.bak.ahk:3672: return ptsEd.bPildora
+=== estab_slider.ahk L424 ===
+424: _EstabMagneto(v, entrada := 3, salida := 6) {
+425:     marcas := _EstabMarcas()   ; mantener igual a puntosCSP
+426:     mejor := marcas[1], dMin := Abs(v - mejor)
+427:     for p in marcas {
+428:         d := Abs(v - p)
+429:         if (d < dMin)
+430:             mejor := p, dMin := d
+431:     }
+432:     ; límite por vecino: evita saltos o solapamientos entre marcas cercanas (7 <-> 15)
+433:     vec := 999
+434:     for p in marcas
+435:         if (p != mejor)
+436:             vec := Min(vec, Abs(p - mejor))
+437:     sal := Min(salida, vec / 2)
+438:     ent := Min(entrada, sal - 0.5)
+439:     if (dMin >= sal)
+440:         return v
+441:     if (dMin <= ent)
+442:         return mejor
+443:     signo := (v > mejor) ? 1 : -1
+444:     return mejor + signo * (sal * (dMin - ent) / (sal - ent))
+445: }
+=== companion_lienzos.ahk L237 ===
+237: NvEstado() {
+238:     static e := {modoGlobal: _NvIniModoGlobal(), fijas: Map(), ventanas: Map()}
+239:     return e
+240: }
+=== companion_lienzos.ahk L306 ===
+306: NvSetModo(m) {
+307:     NvSetGlobal(m = "total" ? "desact_25" : "h_on")
+308: }
+=== calibrador.ahk L1212 ===
+1212: _NvPanTexto() {
+1213:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1214:     pes := IniRead(ini, sec, "NvPestana", "")
+1215:     ; En Enfoque, si no hay franja propia, heredar visualmente la de Modo Normal
+1216:     if (_NvZonaVacia(pes) && _ZonaSuf() != "")
+1217:         pes := IniRead(ini, _ZonaSec("Rangos", 1), "NvPestana", "")
+1218:     avisoPes := _NvZonaVacia(pes)
+1219:         ? "Franja de pestañas: sin calibrar (se usa el cálculo automático del marco)  |  "
+1220:         : "Franja de pestañas ✔  |  "
+1221:     cont := 0, prox := 0
+1222:     Loop 8 {
+1223:         if (!_NvZonaVacia(IniRead(ini, sec, "NvZona" A_Index, "")))
+1224:             cont++
+1225:         else if (!prox)
+1226:             prox := A_Index
+1227:     }
+1228:     sigue := prox ? "Próximo: Nueva ventana " prox : "8/8 ocupadas"
+1229:     return avisoPes "Lienzos: " cont "/8 · " sigue "  (👁 Ver zonas para previsualizar)"
+1230: }
+=== calibrador_20261115_015808.bak.ahk L1277 ===
+1277: _NvPanTexto() {
+1278:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1279:     pes := IniRead(ini, sec, "NvPestana", "")
+1280:     ; En Enfoque, si no hay franja propia, heredar visualmente la de Modo Normal
+1281:     if (_NvZonaVacia(pes) && _ZonaSuf() != "")
+1282:         pes := IniRead(ini, _ZonaSec("Rangos", 1), "NvPestana", "")
+1283:     avisoPes := _NvZonaVacia(pes) ? "⚠️ [CALIBRACIÓN OBLIGATORIA]: Delimita primero la franja de pestañas (Fila 1). | " : "⭐ Franja calibrada ✔ | "
+1284:     lista := ""
+1285:     Loop 8 {
+1286:         if (!_NvZonaVacia(IniRead(ini, sec, "NvZona" A_Index, "")))
+1287:             lista .= (lista = "" ? "" : ", ") A_Index
+1288:     }
+1289:     return avisoPes "Zonas configuradas: " (lista = "" ? "ninguna (se usará la zona segura)" : lista)
+1290: }
+=== calibrador_20261115_024309.bak.ahk L1279 ===
+1279: _NvPanTexto() {
+1280:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1281:     pes := IniRead(ini, sec, "NvPestana", "")
+1282:     ; En Enfoque, si no hay franja propia, heredar visualmente la de Modo Normal
+1283:     if (_NvZonaVacia(pes) && _ZonaSuf() != "")
+1284:         pes := IniRead(ini, _ZonaSec("Rangos", 1), "NvPestana", "")
+1285:     avisoPes := _NvZonaVacia(pes) ? "⚠️ [CALIBRACIÓN OBLIGATORIA]: Delimita primero la franja de pestañas (Fila 1). | " : "⭐ Franja calibrada ✔ | "
+1286:     lista := ""
+1287:     Loop 8 {
+1288:         if (!_NvZonaVacia(IniRead(ini, sec, "NvZona" A_Index, "")))
+1289:             lista .= (lista = "" ? "" : ", ") A_Index
+1290:     }
+1291:     return avisoPes "Zonas configuradas: " (lista = "" ? "ninguna (se usará la zona segura)" : lista)
+1292: }
+=== calibrador_20261115_135944.bak.ahk L1166 ===
+1166: _NvPanTexto() {
+1167:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1168:     pes := IniRead(ini, sec, "NvPestana", "")
+1169:     ; En Enfoque, si no hay franja propia, heredar visualmente la de Modo Normal
+1170:     if (_NvZonaVacia(pes) && _ZonaSuf() != "")
+1171:         pes := IniRead(ini, _ZonaSec("Rangos", 1), "NvPestana", "")
+1172:     avisoPes := _NvZonaVacia(pes)
+1173:         ? "Franja de pestañas: sin calibrar (se usa el cálculo automático del marco)  |  "
+1174:         : "Franja de pestañas ✔  |  "
+1175:     cont := 0, prox := 0
+1176:     Loop 8 {
+1177:         if (!_NvZonaVacia(IniRead(ini, sec, "NvZona" A_Index, "")))
+1178:             cont++
+1179:         else if (!prox)
+1180:             prox := A_Index
+1181:     }
+1182:     sigue := prox ? "Próximo: Nueva ventana " prox : "8/8 ocupadas"
+1183:     return avisoPes "Lienzos: " cont "/8 · " sigue "  (👁 Ver zonas para previsualizar)"
+1184: }
+=== calibrador_antes_p3.bak.ahk L1257 ===
+1257: _NvPanTexto() {
+1258:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1259:     pes := IniRead(ini, sec, "NvPestana", "")
+1260:     ; En Enfoque, si no hay franja propia, heredar visualmente la de Modo Normal
+1261:     if (_NvZonaVacia(pes) && _ZonaSuf() != "")
+1262:         pes := IniRead(ini, _ZonaSec("Rangos", 1), "NvPestana", "")
+1263:     avisoPes := _NvZonaVacia(pes) ? "⚠️ [CALIBRACIÓN OBLIGATORIA]: Delimita primero la franja de pestañas (Fila 1). | " : "⭐ Franja calibrada ✔ | "
+1264:     lista := ""
+1265:     Loop 8 {
+1266:         if (!_NvZonaVacia(IniRead(ini, sec, "NvZona" A_Index, "")))
+1267:             lista .= (lista = "" ? "" : ", ") A_Index
+1268:     }
+1269:     return avisoPes "Zonas configuradas: " (lista = "" ? "ninguna (se usará la zona segura)" : lista)
+1270: }
+=== calibrador.ahk L1468 ===
+1468: _NvPanPestana(st := 0) {
+1469:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1470:     r := _PtsDibujarRango("FRANJA DE PESTAÑAS de CSP (donde aparece la pestaña nueva, 2.ª con 1 sola abierta). NO es un lienzo", "FFD166", false)
+1471:     if (!r)
+1472:         return
+1473:     IniWrite(Format("{},{},{},{}", r.x, r.y, r.w, r.h), ini, sec, "NvPestana")
+1474:     h := WinExist("ahk_class " _NvCfg()["claseMarco"])
+1475:     if h {
+1476:         WinGetPos(&fx, &fy, &fw, &fh, "ahk_id " h)
+1477:         IniWrite(Format("{},{},{},{}", fx, fy, fw, fh), ini, sec, "NvPestanaMarco")
+1478:     }
+1479:     CargarPuntos()
+1480:     _PtsRefrescar()
+1481:     if (IsObject(ptsEd) && HasProp(ptsEd, "lvNv") && IsObject(ptsEd.lvNv))
+1482:         _NvPanRefrescarTabla()
+1483:     if (IsObject(ptsEd) && HasProp(ptsEd, "stNvZonas") && IsObject(ptsEd.stNvZonas))
+1484:         ptsEd.stNvZonas.Text := "✔ Franja de pestañas guardada (no cuenta como lienzo)  |  " _NvPanTexto()
+1485:     if (IsObject(st))
+1486:         st.Text := "Franja de pestañas guardada."
+1487:     if (ptsEd.ovl.Length > 0)
+1488:         MostrarZonasCalibracion(0)
+1489: }
+=== calibrador_20261115_015808.bak.ahk L1533 ===
+1533: _NvPanPestana(st := 0) {
+1534:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1535:     r := _PtsDibujarRango("Marca donde aparecerá la pestaña nueva (2.ª, con 1 sola abierta)", "FFD166", false)
+1536:     if (!r)
+1537:         return
+1538:     IniWrite(Format("{},{},{},{}", r.x, r.y, r.w, r.h), ini, sec, "NvPestana")
+1539:     h := WinExist("ahk_class " _NvCfg()["claseMarco"])
+1540:     if h {
+1541:         WinGetPos(&fx, &fy, &fw, &fh, "ahk_id " h)
+1542:         IniWrite(Format("{},{},{},{}", fx, fy, fw, fh), ini, sec, "NvPestanaMarco")
+1543:     }
+1544:     CargarPuntos()
+1545:     _PtsRefrescar()
+1546:     _NvPanRefrescarTabla()
+1547:     if (IsObject(ptsEd) && HasProp(ptsEd, "stNvZonas") && IsObject(ptsEd.stNvZonas))
+1548:         ptsEd.stNvZonas.Text := "Pestaña calibrada: (" r.x ", " r.y ") " r.w "x" r.h " px"
+1549:     if (ptsEd.ovl.Length > 0)
+1550:         MostrarZonasCalibracion(0)
+1551: }
+=== calibrador_20261115_024309.bak.ahk L1535 ===
+1535: _NvPanPestana(st := 0) {
+1536:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1537:     r := _PtsDibujarRango("Marca donde aparecerá la pestaña nueva (2.ª, con 1 sola abierta)", "FFD166", false)
+1538:     if (!r)
+1539:         return
+1540:     IniWrite(Format("{},{},{},{}", r.x, r.y, r.w, r.h), ini, sec, "NvPestana")
+1541:     h := WinExist("ahk_class " _NvCfg()["claseMarco"])
+1542:     if h {
+1543:         WinGetPos(&fx, &fy, &fw, &fh, "ahk_id " h)
+1544:         IniWrite(Format("{},{},{},{}", fx, fy, fw, fh), ini, sec, "NvPestanaMarco")
+1545:     }
+1546:     CargarPuntos()
+1547:     _PtsRefrescar()
+1548:     _NvPanRefrescarTabla()
+1549:     if (IsObject(ptsEd) && HasProp(ptsEd, "stNvZonas") && IsObject(ptsEd.stNvZonas))
+1550:         ptsEd.stNvZonas.Text := "Pestaña calibrada: (" r.x ", " r.y ") " r.w "x" r.h " px"
+1551:     if (ptsEd.ovl.Length > 0)
+1552:         MostrarZonasCalibracion(0)
+1553: }
+=== calibrador_20261115_135944.bak.ahk L1422 ===
+1422: _NvPanPestana(st := 0) {
+1423:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1424:     r := _PtsDibujarRango("FRANJA DE PESTAÑAS de CSP (donde aparece la pestaña nueva, 2.ª con 1 sola abierta). NO es un lienzo", "FFD166", false)
+1425:     if (!r)
+1426:         return
+1427:     IniWrite(Format("{},{},{},{}", r.x, r.y, r.w, r.h), ini, sec, "NvPestana")
+1428:     h := WinExist("ahk_class " _NvCfg()["claseMarco"])
+1429:     if h {
+1430:         WinGetPos(&fx, &fy, &fw, &fh, "ahk_id " h)
+1431:         IniWrite(Format("{},{},{},{}", fx, fy, fw, fh), ini, sec, "NvPestanaMarco")
+1432:     }
+1433:     CargarPuntos()
+1434:     _PtsRefrescar()
+1435:     if (IsObject(ptsEd) && HasProp(ptsEd, "lvNv") && IsObject(ptsEd.lvNv))
+1436:         _NvPanRefrescarTabla()
+1437:     if (IsObject(ptsEd) && HasProp(ptsEd, "stNvZonas") && IsObject(ptsEd.stNvZonas))
+1438:         ptsEd.stNvZonas.Text := "✔ Franja de pestañas guardada (no cuenta como lienzo)  |  " _NvPanTexto()
+1439:     if (IsObject(st))
+1440:         st.Text := "Franja de pestañas guardada."
+1441:     if (ptsEd.ovl.Length > 0)
+1442:         MostrarZonasCalibracion(0)
+1443: }
+=== calibrador_antes_p3.bak.ahk L1513 ===
+1513: _NvPanPestana(st := 0) {
+1514:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1515:     r := _PtsDibujarRango("Marca donde aparecerá la pestaña nueva (2.ª, con 1 sola abierta)", "FFD166", false)
+1516:     if (!r)
+1517:         return
+1518:     IniWrite(Format("{},{},{},{}", r.x, r.y, r.w, r.h), ini, sec, "NvPestana")
+1519:     h := WinExist("ahk_class " _NvCfg()["claseMarco"])
+1520:     if h {
+1521:         WinGetPos(&fx, &fy, &fw, &fh, "ahk_id " h)
+1522:         IniWrite(Format("{},{},{},{}", fx, fy, fw, fh), ini, sec, "NvPestanaMarco")
+1523:     }
+1524:     CargarPuntos()
+1525:     _PtsRefrescar()
+1526:     _NvPanRefrescarTabla()
+1527:     if (IsObject(ptsEd) && HasProp(ptsEd, "stNvZonas") && IsObject(ptsEd.stNvZonas))
+1528:         ptsEd.stNvZonas.Text := "Pestaña calibrada: (" r.x ", " r.y ") " r.w "x" r.h " px"
+1529:     if (ptsEd.ovl.Length > 0)
+1530:         MostrarZonasCalibracion(0)
+1531: }

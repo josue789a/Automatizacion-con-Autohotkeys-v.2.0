@@ -1,0 +1,267 @@
+diff --git a/lib/companion_flotantes.ahk b/lib/companion_flotantes.ahk
+--- a/lib/companion_flotantes.ahk
++++ b/lib/companion_flotantes.ahk
+@@ -953,6 +953,7 @@ _NvMostrarMenu() {
+     if (IsObject(st0["g"]) && A_TickCount - st0["t"] < 600)
+         return                       ; antirrebote: 2.ª apertura no destruye/recrea
+     _NvPanelCerrar()
++    _HubPanelCerrar()               ; nunca dos paneles propios a la vez
+     if (IsSet(stylus) && IsObject(stylus)) {
+         stylus.rButtonHeld := false
+         stylus.comboUsado := true
+@@ -1547,7 +1548,7 @@ _MostrarMenuContextualHub() {
+         return
+     ultMenuTick := A_TickCount
+ 
+-    m := Menu()
++    filas := []
+ 
+     cat := [
+         ["lock", "🔒 Bloquear Companion", () => panelBlk.locked ? "🔓 Desbloquear Companion" : "🔒 Fijar Companion"],
+@@ -1572,7 +1573,7 @@ _MostrarMenuContextualHub() {
+             continue
+         for item in cat {
+             if (item[1] = k) {
+-                m.Add(item[3](), _EjecutarAccionHub.Bind(k))
++                filas.Push({t: item[3](), f: _EjecutarAccionHub.Bind(k)})
+                 puestos[k] := true
+                 break
+             }
+@@ -1580,9 +1581,9 @@ _MostrarMenuContextualHub() {
+     }
+ 
+     ; ── 2) Siempre presentes ──
+-    m.Add((IsSet(estabSoloLinea) && estabSoloLinea) ? "🔲 Slider: Modo Completo" : "➖ Slider: Solo Línea", (*) => _EjecutarAccionHub("estabsolo"))
+-    m.Add("📍 Actualizar calibrador", (*) => _EjecutarAccionHub("puntos"))
+-    m.Add("🔄 Reiniciar script", (*) => _EjecutarAccionHub("reload"))
++    filas.Push({t: (IsSet(estabSoloLinea) && estabSoloLinea) ? "🔲 Slider: Modo Completo" : "➖ Slider: Solo Línea", f: (*) => _EjecutarAccionHub("estabsolo")})
++    filas.Push({t: "📍 Actualizar calibrador", f: (*) => _EjecutarAccionHub("puntos")})
++    filas.Push({t: "🔄 Reiniciar script", f: (*) => _EjecutarAccionHub("reload")})
+ 
+     ; ── 3) Solo extras marcados en "Acceso rápido" ──
+     extras := []
+@@ -1597,46 +1598,189 @@ _MostrarMenuContextualHub() {
+             if puestos.Has(k)
+                 continue
+             if !sepPuesto {
+-                m.Add()
++                filas.Push({sep: true})
+                 sepPuesto := true
+             }
+             switch k {
+                 case "frente":
+-                    m.Add(panelBlk.frente ? "📌 Modo Frente: Desactivar (Solo en CSP)" : "📌 Modo Frente: Activar (AlwaysOnTop)", _EjecutarAccionHub.Bind("frente"))
++                    filas.Push({t: panelBlk.frente ? "📌 Modo Frente: Desactivar (Solo en CSP)" : "📌 Modo Frente: Activar (AlwaysOnTop)", f: _EjecutarAccionHub.Bind("frente")})
+                 case "estab":
+-                    m.Add(estabGui.visible ? "🎚 Deslizador: Ocultar" : "🎚 Deslizador: Mostrar", _EjecutarAccionHub.Bind("estab"))
++                    filas.Push({t: estabGui.visible ? "🎚 Deslizador: Ocultar" : "🎚 Deslizador: Mostrar", f: _EjecutarAccionHub.Bind("estab")})
+                 case "flip":
+-                    m.Add("🪞 Voltear Lienzo Horizontal", _EjecutarAccionHub.Bind("flip"))
++                    filas.Push({t: "🪞 Voltear Lienzo Horizontal", f: _EjecutarAccionHub.Bind("flip")})
+                 case "enfoque":
+-                    m.Add(enfoque.activo ? "🔍 Salir de Modo Enfoque" : "🔍 Activar Modo Enfoque", _EjecutarAccionHub.Bind("enfoque"))
++                    filas.Push({t: enfoque.activo ? "🔍 Salir de Modo Enfoque" : "🔍 Activar Modo Enfoque", f: _EjecutarAccionHub.Bind("enfoque")})
+                 case "layout":
+-                    mLay := Menu()
+-                    itN := "🖥 Modo 1 · Normal"
+-                    itE := "🔍 Modo 2 · Enfoque"
+-                    mLay.Add(itN, (*) => EstablecerModoTrabajo("Normal"))
+-                    mLay.Add(itE, (*) => EstablecerModoTrabajo("Enfoque"))
+-                    mLay.Check(enfoque.activo ? itE : itN)
+-                    mLay.Add()
+-                    mLay.Add("🎛 Selector flotante: Mostrar/Ocultar", (*) => ModoSel_Alternar())
+-                    mLay.Add("💾 Guardar ubicaciones en el modo activo", (*) => _ModoGuardarActivo())
+-                    mLay.Add("💾 Guardar posición actual como Modo 1 (Normal)", (*) => _CapturarLayout("Normal"))
+-                    mLay.Add("💾 Guardar posición actual como Modo 2 (Enfoque)", (*) => _CapturarLayout("Enfoque"))
+-                    m.Add("📐 Layout Paneles CSP (Modo 1 y 2)", mLay)
++                    filas.Push({t: "📐 Layout Paneles CSP (Modo 1 y 2)  ▸", f: _HubPanelLayout})
+                 case "rapidas":
+-                    m.Add("⚡ Acciones Rápidas (Capas y Lienzo)", _EjecutarAccionHub.Bind("rapidas"))
++                    filas.Push({t: "⚡ Acciones Rápidas (Capas y Lienzo)", f: _EjecutarAccionHub.Bind("rapidas")})
+                 case "audio":
+-                    m.Add("🔊 Restaurar Audio (Sin Reiniciar)", _EjecutarAccionHub.Bind("audio_reset"))
++                    filas.Push({t: "🔊 Restaurar Audio (Sin Reiniciar)", f: _EjecutarAccionHub.Bind("audio_reset")})
+             }
+         }
+     }
+ 
+-    ; Flag de menú abierto: pausa ResetAlphaStates mientras el menú nativo está visible (Req. B)
++    ; Flag de menú abierto: pausa ResetAlphaStates mientras el panel está visible (Req. B)
+     hubGui.menuTick := A_TickCount
+-    try {
+-        m.Show()
+-    } finally {
++    _HubPanelMostrar(filas)
++}
++
++; ══════════════════════════════════════════════════════════════════
++; Panel emergente del MENÚ DEL COMPANION (reemplaza Menu() nativo;
++; compatible con stylus). Misma mecánica probada en _NvMostrarMenu (WINDOW):
++;  · Gui propio + controles Text (una fila = un botón)
++;  · WM_LBUTTONDOWN (ratón) y WM_POINTERDOWN 0x0246 (lápiz/dedo) ejecutan
++;    la acción sin depender del mensaje de menú nativo
++;  · Vigilante: Esc / clic fuera / 6 s de inactividad cierran el panel
++; ══════════════════════════════════════════════════════════════════
++_HubPanelSt() {
++    static st := Map("g", 0, "acc", Map(), "t", 0)
++    return st
++}
++
++_HubPanelCerrar() {
++    global hubGui
++    st := _HubPanelSt()
++    SetTimer(_HubPanelVigilar, 0)
++    OnMessage(0x0201, _HubPanel_WM_LBUTTONDOWN, 0)
++    OnMessage(0x0246, _HubPanel_WM_POINTERDOWN, 0)
++    g := st["g"]
++    st["g"] := 0
++    st["acc"] := Map()
++    if IsObject(g)
++        try g.Destroy()
++    if (IsObject(hubGui) && hubGui.HasOwnProp("menuTick"))
+         hubGui.menuTick := 0
++}
++
++_HubPanelEjecutarEn(hwnd) {
++    st := _HubPanelSt()
++    if (!IsObject(st["g"]) || !st["acc"].Has(hwnd))
++        return false
++    fn := st["acc"][hwnd]
++    _HubPanelCerrar()
++    SetTimer(fn, -30)
++    return true
++}
++
++_HubPanel_WM_LBUTTONDOWN(wParam, lParam, msg, hwnd) {
++    if _HubPanelEjecutarEn(hwnd)
++        return 0
++}
++
++_HubPanel_WM_POINTERDOWN(wParam, lParam, msg, hwnd) {
++    px := lParam << 48 >> 48
++    py := lParam << 32 >> 48
++    hw := DllCall("WindowFromPoint", "Int64", (py << 32) | (px & 0xFFFFFFFF), "Ptr")
++    if _HubPanelEjecutarEn(hw)
++        return 0
++}
++
++_HubPanelVigilar() {
++    static ultElev := 0
++    st := _HubPanelSt()
++    g := st["g"]
++    if !IsObject(g) {
++        SetTimer(_HubPanelVigilar, 0)
++        return
+     }
++    ; [Z-ORDER] las píldoras del companion son topmost: si alguna queda encima, re-elevar el panel
++    prev := DllCall("GetWindow", "Ptr", g.Hwnd, "UInt", 3)   ; GW_HWNDPREV
++    if (prev && A_TickCount - ultElev > 250 && DllCall("IsWindowVisible", "Ptr", prev) && _VentanaDelProceso(prev)) {
++        ultElev := A_TickCount
++        DllCall("SetWindowPos", "Ptr", g.Hwnd, "Ptr", 0, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x13)
++    }
++    if GetKeyState("Escape", "P") {
++        _HubPanelCerrar()
++        return
++    }
++    CoordMode("Mouse", "Screen")
++    MouseGetPos(, , &win)
++    if (win = g.Hwnd) {
++        st["t"] := A_TickCount
++        return
++    }
++    if (GetKeyState("LButton", "P") || GetKeyState("RButton", "P") || A_TickCount - st["t"] > 6000)
++        _HubPanelCerrar()
++}
++
++_HubPanelMostrar(filas) {
++    global stylus, hubGui
++    if !filas.Length
++        return
++    st0 := _HubPanelSt()
++    if (IsObject(st0["g"]) && A_TickCount - st0["t"] < 600)
++        return                       ; antirrebote: 2.ª apertura no destruye/recrea
++    _HubPanelCerrar()
++    _NvPanelCerrar()                 ; nunca dos paneles propios a la vez
++    if (IsSet(stylus) && IsObject(stylus)) {
++        stylus.rButtonHeld := false
++        stylus.comboUsado := true
++    }
++    KeyWait("RButton", "T0.25")
++    KeyWait("LButton", "T0.25")
++    CoordMode("Mouse", "Screen")
++    MouseGetPos(&mx, &my)
++
++    GP := _E(2), RH := _E(24), PADB := _E(16)
++    wNeed := _E(120)
++    for f in filas {
++        if (f.HasProp("sep") && f.sep)
++            continue
++        wNeed := Max(wNeed, _AnchoTextoPill(f.t) + PADB)
++    }
++    CWd := wNeed
++    W := CWd + 2 * GP
++
++    acc := Map()
++    g := Gui("+AlwaysOnTop -Caption +ToolWindow +Border +E0x08000000", "")
++    g.BackColor := _Tema("color", "surface.off", "424242")
++    g.MarginX := 0
++    g.MarginY := 0
++    GbSetFont(g, _FS(9))
++
++    y := GP
++    for f in filas {
++        if (f.HasProp("sep") && f.sep) {
++            g.Add("Text", "x" GP " y" y " w" CWd " h1 BackgroundWhite")
++            y += 1 + GP
++        } else {
++            _NvPanelBoton(g, acc, GP, y, CWd, RH, f.t, f.f, f.HasProp("a") ? f.a : false)
++            y += RH + GP
++        }
++    }
++
++    H := y
++    px := mx, py := my
++    _NvPanelClamp(&px, &py, W, H)
++    st := _HubPanelSt()
++    st["g"] := g
++    st["acc"] := acc
++    st["t"] := A_TickCount
++    hubGui.menuTick := A_TickCount
++    g.Show("x" px " y" py " w" W " h" H " NoActivate Hide")
++    _DwmRedondear(g.Hwnd)
++    ; topmost mientras está oculto: no existe ningún fotograma con una píldora encima del panel
++    DllCall("SetWindowPos", "Ptr", g.Hwnd, "Ptr", -1, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x13)
++    g.Show("NoActivate")
++    DllCall("SetWindowPos", "Ptr", g.Hwnd, "Ptr", 0, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x13)
++    OnMessage(0x0201, _HubPanel_WM_LBUTTONDOWN)
++    OnMessage(0x0246, _HubPanel_WM_POINTERDOWN)
++    SetTimer(_HubPanelVigilar, 50)
++}
++
++; Submenú "📐 Layout Paneles CSP (Modo 1 y 2)" como segundo panel (también con stylus)
++_HubPanelLayout(*) {
++    global enfoque
++    filas := []
++    filas.Push({t: "🖥 Modo 1 · Normal", f: (*) => EstablecerModoTrabajo("Normal"), a: !enfoque.activo})
++    filas.Push({t: "🔍 Modo 2 · Enfoque", f: (*) => EstablecerModoTrabajo("Enfoque"), a: enfoque.activo})
++    filas.Push({sep: true})
++    filas.Push({t: "🎛 Selector flotante: Mostrar/Ocultar", f: (*) => ModoSel_Alternar()})
++    filas.Push({t: "💾 Guardar ubicaciones en el modo activo", f: (*) => _ModoGuardarActivo()})
++    filas.Push({t: "💾 Guardar posición actual como Modo 1 (Normal)", f: (*) => _CapturarLayout("Normal")})
++    filas.Push({t: "💾 Guardar posición actual como Modo 2 (Enfoque)", f: (*) => _CapturarLayout("Enfoque")})
++    _HubPanelMostrar(filas)
+ }
+ 
+ _MenuToggleEmbebido(k, *) {
+@@ -1673,7 +1817,10 @@ _HubMenuAbierto() {
+     if (IsObject(hubGui) && hubGui.HasOwnProp("menuTick") && hubGui.menuTick && A_TickCount - hubGui.menuTick < 30000)
+         return true
+     st := _NvPanelSt()
+-    return IsObject(st["g"])
++    if IsObject(st["g"])
++        return true
++    stH := _HubPanelSt()
++    return IsObject(stH["g"])
+ }
+ 
+ IniciarPuntosGUI() {

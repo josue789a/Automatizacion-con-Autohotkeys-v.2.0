@@ -1,0 +1,1291 @@
+﻿
+  XPPEN AHK VERSION ESTABLE.ahk:35:CoordMode("ToolTip","Screen")
+  XPPEN AHK VERSION ESTABLE.ahk:36:SetTitleMatchMode(2)
+  XPPEN AHK VERSION ESTABLE.ahk:37:sys := {lastModTime:"",modoEscritura:false}
+> XPPEN AHK VERSION ESTABLE.ahk:38:stylus := {altActive:false,rButtonHeld:false,comboUsado:false,upSinteticoTick:0,boto
+nSostenido:false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,origX:0,origY:0,spaceFlipTimerRunning:0}
+  XPPEN AHK VERSION ESTABLE.ahk:39:sel := {estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
+  XPPEN AHK VERSION ESTABLE.ahk:40:colorEstado := 0
+  XPPEN AHK VERSION ESTABLE.ahk:41:UP_SINTETICO_MS := 70
+  XPPEN_NO_ADMIN.ahk:36:CoordMode("ToolTip","Screen")
+  XPPEN_NO_ADMIN.ahk:37:SetTitleMatchMode(2)
+  XPPEN_NO_ADMIN.ahk:38:sys := {lastModTime:"",modoEscritura:false}
+> XPPEN_NO_ADMIN.ahk:39:stylus := {altActive:false,rButtonHeld:false,comboUsado:false,upSinteticoTick:0,botonSostenido:
+false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,origX:0,origY:0,spaceFlipTimerRunning:0}
+  XPPEN_NO_ADMIN.ahk:40:sel := {estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
+  XPPEN_NO_ADMIN.ahk:41:colorEstado := 0
+  XPPEN_NO_ADMIN.ahk:42:UP_SINTETICO_MS := 70
+  lib\companion_flotantes.ahk:1041:    _NvPanelCerrar()
+  lib\companion_flotantes.ahk:1042:    _HubPanelCerrar()               ; nunca dos paneles propios a la vez
+  lib\companion_flotantes.ahk:1043:    if (IsSet(stylus) && IsObject(stylus)) {
+> lib\companion_flotantes.ahk:1044:        stylus.rButtonHeld := false
+> lib\companion_flotantes.ahk:1045:        stylus.comboUsado := true
+  lib\companion_flotantes.ahk:1046:    }
+  lib\companion_flotantes.ahk:1047:    KeyWait("RButton", "T0.25")
+  lib\companion_flotantes.ahk:1048:    KeyWait("LButton", "T0.25")
+  lib\companion_flotantes.ahk:1813:    _HubPanelCerrar()
+  lib\companion_flotantes.ahk:1814:    _NvPanelCerrar()                 ; nunca dos paneles propios a la vez
+  lib\companion_flotantes.ahk:1815:    if (IsSet(stylus) && IsObject(stylus)) {
+> lib\companion_flotantes.ahk:1816:        stylus.rButtonHeld := false
+> lib\companion_flotantes.ahk:1817:        stylus.comboUsado := true
+  lib\companion_flotantes.ahk:1818:    }
+  lib\companion_flotantes.ahk:1819:    KeyWait("RButton", "T0.25")
+  lib\companion_flotantes.ahk:1820:    KeyWait("LButton", "T0.25")
+  lib\hotkeys_csp.ahk:384:}
+  lib\hotkeys_csp.ahk:385:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp.ahk:386:RButton:: {
+> lib\hotkeys_csp.ahk:387:    stylus.rButtonHeld := true
+> lib\hotkeys_csp.ahk:388:    stylus.comboUsado := false
+  lib\hotkeys_csp.ahk:389:    stylus.upSinteticoTick := 0
+  lib\hotkeys_csp.ahk:390:}
+  lib\hotkeys_csp.ahk:391:RButton up:: {
+  lib\hotkeys_csp.ahk:392:    elapsed := (stylus.upSinteticoTick > 0) ? (A_TickCount - stylus.upSinteticoTick) : 9999
+  lib\hotkeys_csp.ahk:393:    if (elapsed < UP_SINTETICO_MS) {
+> lib\hotkeys_csp.ahk:394:        stylus.rButtonHeld := true
+  lib\hotkeys_csp.ahk:395:        stylus.upSinteticoTick := 0
+  lib\hotkeys_csp.ahk:396:        return
+  lib\hotkeys_csp.ahk:397:    }
+> lib\hotkeys_csp.ahk:398:    stylus.rButtonHeld := false
+> lib\hotkeys_csp.ahk:399:    if (!stylus.comboUsado)
+  lib\hotkeys_csp.ahk:400:        SendInput("{RButton}")
+  lib\hotkeys_csp.ahk:401:}
+  lib\hotkeys_csp.ahk:402:Space & RButton:: {
+> lib\hotkeys_csp.ahk:403:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:404:    _InvSeleccionConGUI()
+  lib\hotkeys_csp.ahk:405:}
+  lib\hotkeys_csp.ahk:406:Numpad0:: {
+  lib\hotkeys_csp.ahk:508:}
+  lib\hotkeys_csp.ahk:509:$^z:: _DeshacerRehacer()
+  lib\hotkeys_csp.ahk:510:_MaskRButton() {
+> lib\hotkeys_csp.ahk:511:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:512:    if (stylus.botonSostenido)
+  lib\hotkeys_csp.ahk:513:        return
+  lib\hotkeys_csp.ahk:514:    stylus.botonSostenido := true
+  lib\hotkeys_csp.ahk:533:_DeshacerRehacer() {
+  lib\hotkeys_csp.ahk:534:    static ultUndo := 0, ultRedo := 0
+  lib\hotkeys_csp.ahk:535:    ahora := A_TickCount
+> lib\hotkeys_csp.ahk:536:    if (stylus.rButtonHeld || stylus.altActive) {
+> lib\hotkeys_csp.ahk:537:        stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:538:        if (!stylus.botonSostenido) {
+  lib\hotkeys_csp.ahk:539:            stylus.botonSostenido := true
+> lib\hotkeys_csp.ahk:540:            if (stylus.rButtonHeld) {
+  lib\hotkeys_csp.ahk:541:                stylus.upSinteticoTick := A_TickCount
+  lib\hotkeys_csp.ahk:542:                MouseGetPos(&origX,&origY)
+  lib\hotkeys_csp.ahk:543:                MouseMove(PUNTOS[29][1],PUNTOS[29][2],0)
+  lib\hotkeys_csp.ahk:649:f up:: AltF_state.held := false
+  lib\hotkeys_csp.ahk:650:$!Space::
+  lib\hotkeys_csp.ahk:651:$Space:: {
+> lib\hotkeys_csp.ahk:652:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:653:    SendInput("!g")
+  lib\hotkeys_csp.ahk:654:    MostrarHUD("FLIP HORIZONTAL","888888",700)
+  lib\hotkeys_csp.ahk:655:    _SonarUI("flip")
+  lib\hotkeys_csp.ahk:672:    }
+  lib\hotkeys_csp.ahk:673:}
+  lib\hotkeys_csp.ahk:674:~RButton & a:: {
+> lib\hotkeys_csp.ahk:675:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:676:    EnviarNtilde()
+  lib\hotkeys_csp.ahk:677:    MostrarHUD("REFERENCE LAYER","AA44FF",1680)
+  lib\hotkeys_csp.ahk:678:}
+  lib\hotkeys_csp.ahk:706:    MostrarToolTipE("ERASER  (1)")
+  lib\hotkeys_csp.ahk:707:}
+  lib\hotkeys_csp.ahk:708:~RButton & e:: {
+> lib\hotkeys_csp.ahk:709:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:710:    Send("{F12}")
+  lib\hotkeys_csp.ahk:711:    _SonarUI("borrador")
+  lib\hotkeys_csp.ahk:712:    MostrarHUD("ERASER LAZO","FF4444",1200)
+  lib\hotkeys_csp.ahk:802:    }
+  lib\hotkeys_csp.ahk:803:    now := A_TickCount
+  lib\hotkeys_csp.ahk:804:    ; Prioridad al botón del lápiz: toggle Stab Normal inmediato, sin pasar por la ventana 
+de doble-toque
+> lib\hotkeys_csp.ahk:805:    if (stylus.rButtonHeld || GetKeyState("RButton","P")) {
+> lib\hotkeys_csp.ahk:806:        stylus.comboUsado := true              ; evita que RButton up emita un clic derecho
+  lib\hotkeys_csp.ahk:807:        AlternarEstabilizacion()
+  lib\hotkeys_csp.ahk:808:        return
+  lib\hotkeys_csp.ahk:809:    }
+  lib\hotkeys_csp.ahk:1171:}
+  lib\hotkeys_csp.ahk:1172:; [DESACTIVADO] ~RButton & s retirado por solicitud: bloqueaba S (herramienta Lazo) del 
+stylus.
+  lib\hotkeys_csp.ahk:1173:~RButton & q:: {
+> lib\hotkeys_csp.ahk:1174:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:1175:    Send("{F6}")
+  lib\hotkeys_csp.ahk:1176:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  lib\hotkeys_csp.ahk:1177:}
+  lib\hotkeys_csp.ahk:1398:    try DllCall("SetWindowPos", "Ptr", _sftHud.Hwnd, "Ptr", -1, "int", 0, "int", 0, "int", 
+0, "int", 0, "uint", 0x0001 | 0x0002 | 0x0010)
+  lib\hotkeys_csp.ahk:1399:}
+  lib\hotkeys_csp.ahk:1400:~RButton & w:: {
+> lib\hotkeys_csp.ahk:1401:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:1402:    EnviarNtilde()
+  lib\hotkeys_csp.ahk:1403:    MostrarBadgeCombo("PEN + W","DIFU MIXER 2","00E5FF",2200)
+  lib\hotkeys_csp.ahk:1404:}
+  lib\hotkeys_csp.ahk:1407:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 2","00E5FF",2200)
+  lib\hotkeys_csp.ahk:1408:}
+  lib\hotkeys_csp.ahk:1409:~RButton & -:: {
+> lib\hotkeys_csp.ahk:1410:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:1411:    now := A_TickCount
+  lib\hotkeys_csp.ahk:1412:    if (now - RM.last < 300) {
+  lib\hotkeys_csp.ahk:1413:        RM.last := 0
+  lib\hotkeys_csp.ahk:1420:    MostrarHUD("Rule","1A1A2E",800)
+  lib\hotkeys_csp.ahk:1421:}
+  lib\hotkeys_csp.ahk:1422:~RButton & z:: {
+> lib\hotkeys_csp.ahk:1423:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:1424:    Send("^v")
+  lib\hotkeys_csp.ahk:1425:    _SonarUI("copiar")
+  lib\hotkeys_csp.ahk:1426:    MostrarHUD("📋 PEGAR (CTRL+V)","44DD88",800)
+  lib\hotkeys_csp.ahk:1427:}
+  lib\hotkeys_csp.ahk:1428:~RButton & z up:: stylus.botonSostenido := false
+  lib\hotkeys_csp.ahk:1429:~RButton & x:: {
+> lib\hotkeys_csp.ahk:1430:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:1431:    Send("u")
+  lib\hotkeys_csp.ahk:1432:    MostrarHUD("GRADIENT (U)","00E5FF",900)
+  lib\hotkeys_csp.ahk:1433:}
+  lib\hotkeys_csp.ahk:1434:~RButton & 1:: {
+> lib\hotkeys_csp.ahk:1435:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:1436:    MostrarToolTipE("FILL  (V)")
+  lib\hotkeys_csp.ahk:1437:    Send("v")
+  lib\hotkeys_csp.ahk:1438:}
+  lib\hotkeys_csp.ahk:1439:~RButton & 2:: {
+> lib\hotkeys_csp.ahk:1440:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:1441:    Send("{F11}")
+  lib\hotkeys_csp.ahk:1442:    MostrarHUD("Advanced fill","AA8844",800)
+  lib\hotkeys_csp.ahk:1443:}
+  lib\hotkeys_csp.ahk:1455:~RButton & 8::
+  lib\hotkeys_csp.ahk:1456:~RButton & 9::
+  lib\hotkeys_csp.ahk:1457:~RButton & 0:: {
+> lib\hotkeys_csp.ahk:1458:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:1459:    key := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  lib\hotkeys_csp.ahk:1460:    porcentaje := (key = "0") ? 100 : Integer(key) * 10
+  lib\hotkeys_csp.ahk:1461:    opacidad.nivel := porcentaje
+  lib\hotkeys_csp_20261115_024309.bak.ahk:226:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:227:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:228:RButton:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:229:    stylus.rButtonHeld := true
+> lib\hotkeys_csp_20261115_024309.bak.ahk:230:    stylus.comboUsado := false
+  lib\hotkeys_csp_20261115_024309.bak.ahk:231:    stylus.upSinteticoTick := 0
+  lib\hotkeys_csp_20261115_024309.bak.ahk:232:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:233:RButton up:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:234:    elapsed := (stylus.upSinteticoTick > 0) ? (A_TickCount - 
+stylus.upSinteticoTick) : 9999
+  lib\hotkeys_csp_20261115_024309.bak.ahk:235:    if (elapsed < UP_SINTETICO_MS) {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:236:        stylus.rButtonHeld := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:237:        stylus.upSinteticoTick := 0
+  lib\hotkeys_csp_20261115_024309.bak.ahk:238:        return
+  lib\hotkeys_csp_20261115_024309.bak.ahk:239:    }
+> lib\hotkeys_csp_20261115_024309.bak.ahk:240:    stylus.rButtonHeld := false
+> lib\hotkeys_csp_20261115_024309.bak.ahk:241:    if (!stylus.comboUsado)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:242:        SendInput("{RButton}")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:243:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:244:Space & RButton:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:245:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:246:    _InvSeleccionConGUI()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:247:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:248:Numpad0:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:350:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:351:$^z:: _DeshacerRehacer()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:352:_MaskRButton() {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:353:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:354:    if (stylus.botonSostenido)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:355:        return
+  lib\hotkeys_csp_20261115_024309.bak.ahk:356:    stylus.botonSostenido := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:375:_DeshacerRehacer() {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:376:    static ultUndo := 0, ultRedo := 0
+  lib\hotkeys_csp_20261115_024309.bak.ahk:377:    ahora := A_TickCount
+> lib\hotkeys_csp_20261115_024309.bak.ahk:378:    if (stylus.rButtonHeld || stylus.altActive) {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:379:        stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:380:        if (!stylus.botonSostenido) {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:381:            stylus.botonSostenido := true
+> lib\hotkeys_csp_20261115_024309.bak.ahk:382:            if (stylus.rButtonHeld) {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:383:                stylus.upSinteticoTick := A_TickCount
+  lib\hotkeys_csp_20261115_024309.bak.ahk:384:                MouseGetPos(&origX,&origY)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:385:                MouseMove(PUNTOS[29][1],PUNTOS[29][2],0)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:491:f up:: AltF_state.held := false
+  lib\hotkeys_csp_20261115_024309.bak.ahk:492:$!Space::
+  lib\hotkeys_csp_20261115_024309.bak.ahk:493:$Space:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:494:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:495:    SendInput("!g")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:496:    MostrarHUD("FLIP HORIZONTAL","888888",700)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:497:    _SonarUI("flip")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:514:    }
+  lib\hotkeys_csp_20261115_024309.bak.ahk:515:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:516:~RButton & a:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:517:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:518:    EnviarNtilde()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:519:    MostrarHUD("REFERENCE LAYER","AA44FF",1680)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:520:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:548:    MostrarToolTipE("ERASER  (1)")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:549:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:550:~RButton & e:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:551:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:552:    Send("{F12}")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:553:    _SonarUI("borrador")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:554:    MostrarHUD("ERASER LAZO","FF4444",1200)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:644:    }
+  lib\hotkeys_csp_20261115_024309.bak.ahk:645:    now := A_TickCount
+  lib\hotkeys_csp_20261115_024309.bak.ahk:646:    ; Prioridad al botón del lápiz: toggle Stab Normal inmediato, sin 
+pasar por la ventana de doble-toque
+> lib\hotkeys_csp_20261115_024309.bak.ahk:647:    if (stylus.rButtonHeld || GetKeyState("RButton","P")) {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:648:        stylus.comboUsado := true              ; evita que RButton up 
+emita un clic derecho
+  lib\hotkeys_csp_20261115_024309.bak.ahk:649:        AlternarEstabilizacion()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:650:        return
+  lib\hotkeys_csp_20261115_024309.bak.ahk:651:    }
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1013:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1014:; [DESACTIVADO] ~RButton & s retirado por solicitud: bloqueaba S 
+(herramienta Lazo) del stylus.
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1015:~RButton & q:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1016:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1017:    Send("{F6}")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1018:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1019:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1240:    try DllCall("SetWindowPos", "Ptr", _sftHud.Hwnd, "Ptr", -1, "int", 
+0, "int", 0, "int", 0, "int", 0, "uint", 0x0001 | 0x0002 | 0x0010)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1241:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1242:~RButton & w:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1243:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1244:    EnviarNtilde()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1245:    MostrarBadgeCombo("PEN + W","DIFU MIXER 2","00E5FF",2200)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1246:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1249:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 2","00E5FF",2200)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1250:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1251:~RButton & -:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1252:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1253:    now := A_TickCount
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1254:    if (now - RM.last < 300) {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1255:        RM.last := 0
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1262:    MostrarHUD("Rule","1A1A2E",800)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1263:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1264:~RButton & z:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1265:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1266:    Send("^v")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1267:    _SonarUI("copiar")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1268:    MostrarHUD("📋 PEGAR (CTRL+V)","44DD88",800)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1269:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1270:~RButton & z up:: stylus.botonSostenido := false
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1271:~RButton & x:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1272:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1273:    Send("u")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1274:    MostrarHUD("GRADIENT (U)","00E5FF",900)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1275:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1276:~RButton & 1:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1277:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1278:    MostrarToolTipE("FILL  (V)")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1279:    Send("v")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1280:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1281:~RButton & 2:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1282:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1283:    Send("{F11}")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1284:    MostrarHUD("Advanced fill","AA8844",800)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1285:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1297:~RButton & 8::
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1298:~RButton & 9::
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1299:~RButton & 0:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1300:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1301:    key := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1302:    porcentaje := (key = "0") ? 100 : Integer(key) * 10
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1303:    opacidad.nivel := porcentaje
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:35:CoordMode("ToolTip","Screen")
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:36:SetTitleMatchMode(2)
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:37:sys := {lastModTime:"",modoEscritura:false}
+> _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:38:stylus := {altActive:false,rButtonHeld:false,comboUsado
+:false,upSinteticoTick:0,botonSostenido:false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,origX:0,origY:0
+,spaceFlipTimerRunning:0}
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:39:sel := 
+{estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:40:colorEstado := 0
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:41:UP_SINTETICO_MS := 70
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:36:CoordMode("ToolTip","Screen")
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:37:SetTitleMatchMode(2)
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:38:sys := {lastModTime:"",modoEscritura:false}
+> _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:39:stylus := {altActive:false,rButtonHeld:false,comboUsado:false,upSi
+nteticoTick:0,botonSostenido:false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,origX:0,origY:0,spaceFlipT
+imerRunning:0}
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:40:sel := 
+{estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:41:colorEstado := 0
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:42:UP_SINTETICO_MS := 70
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:1719:        return                       ; antirrebote: 2.ª 
+apertura no destruye/recrea
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:1720:    _NvPanelCerrar()
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:1721:    if (IsSet(stylus) && IsObject(stylus)) {
+> _backups\lib_baks\companion_20261112_131914.bak.ahk:1722:        stylus.rButtonHeld := false
+> _backups\lib_baks\companion_20261112_131914.bak.ahk:1723:        stylus.comboUsado := true
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:1724:    }
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:1725:    KeyWait("RButton", "T0.25")
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:1726:    KeyWait("LButton", "T0.25")
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:1719:        return                       ; antirrebote: 2.ª 
+apertura no destruye/recrea
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:1720:    _NvPanelCerrar()
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:1721:    if (IsSet(stylus) && IsObject(stylus)) {
+> _backups\lib_baks\companion_20261112_154112.bak.ahk:1722:        stylus.rButtonHeld := false
+> _backups\lib_baks\companion_20261112_154112.bak.ahk:1723:        stylus.comboUsado := true
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:1724:    }
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:1725:    KeyWait("RButton", "T0.25")
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:1726:    KeyWait("LButton", "T0.25")
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:1721:        return                       ; antirrebote: 2.ª 
+apertura no destruye/recrea
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:1722:    _NvPanelCerrar()
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:1723:    if (IsSet(stylus) && IsObject(stylus)) {
+> _backups\lib_baks\companion_20261112_154428.bak.ahk:1724:        stylus.rButtonHeld := false
+> _backups\lib_baks\companion_20261112_154428.bak.ahk:1725:        stylus.comboUsado := true
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:1726:    }
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:1727:    KeyWait("RButton", "T0.25")
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:1728:    KeyWait("LButton", "T0.25")
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:1725:        return                       ; antirrebote: 2.ª 
+apertura no destruye/recrea
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:1726:    _NvPanelCerrar()
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:1727:    if (IsSet(stylus) && IsObject(stylus)) {
+> _backups\lib_baks\companion_20261113_232654.bak.ahk:1728:        stylus.rButtonHeld := false
+> _backups\lib_baks\companion_20261113_232654.bak.ahk:1729:        stylus.comboUsado := true
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:1730:    }
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:1731:    KeyWait("RButton", "T0.25")
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:1732:    KeyWait("LButton", "T0.25")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:128:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:129:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:130:RButton:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:131:    stylus.rButtonHeld := true
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:132:    stylus.comboUsado := false
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:133:    stylus.upSinteticoTick := 0
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:134:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:135:RButton up:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:136:    elapsed := (stylus.upSinteticoTick > 0) ? (A_TickCount 
+- stylus.upSinteticoTick) : 9999
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:137:    if (elapsed < UP_SINTETICO_MS) {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:138:        stylus.rButtonHeld := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:139:        stylus.upSinteticoTick := 0
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:140:        return
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:141:    }
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:142:    stylus.rButtonHeld := false
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:143:    if (!stylus.comboUsado)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:144:        SendInput("{RButton}")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:145:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:146:Space & RButton:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:147:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:148:    _InvSeleccionConGUI()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:149:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:150:Numpad0:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:252:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:253:$^z:: _DeshacerRehacer()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:254:_MaskRButton() {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:255:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:256:    if (stylus.botonSostenido)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:257:        return
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:258:    stylus.botonSostenido := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:277:_DeshacerRehacer() {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:278:    static ultUndo := 0, ultRedo := 0
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:279:    ahora := A_TickCount
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:280:    if (stylus.rButtonHeld || stylus.altActive) {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:281:        stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:282:        if (!stylus.botonSostenido) {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:283:            stylus.botonSostenido := true
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:284:            if (stylus.rButtonHeld) {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:285:                stylus.upSinteticoTick := A_TickCount
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:286:                MouseGetPos(&origX,&origY)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:287:                MouseMove(PUNTOS[29][1],PUNTOS[29][2],0)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:393:f up:: AltF_state.held := false
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:394:$!Space::
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:395:$Space:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:396:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:397:    SendInput("!g")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:398:    MostrarHUD("FLIP HORIZONTAL","888888",700)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:399:    _SonarUI("flip")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:416:    }
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:417:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:418:~RButton & a:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:419:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:420:    EnviarNtilde()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:421:    MostrarHUD("REFERENCE LAYER","AA44FF",1680)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:422:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:450:    MostrarToolTipE("ERASER  (1)")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:451:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:452:~RButton & e:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:453:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:454:    Send("{F12}")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:455:    _SonarUI("borrador")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:456:    MostrarHUD("ERASER LAZO","FF4444",1200)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:546:    }
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:547:    now := A_TickCount
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:548:    ; Prioridad al botón del lápiz: toggle Stab Normal 
+inmediato, sin pasar por la ventana de doble-toque
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:549:    if (stylus.rButtonHeld || GetKeyState("RButton","P")) {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:550:        stylus.comboUsado := true              ; evita que 
+RButton up emita un clic derecho
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:551:        AlternarEstabilizacion()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:552:        return
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:553:    }
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:923:~f:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:924:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:925:~RButton & s:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:926:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:927:    ; Capa > Máscara (layerinmask = M). Tu CSP no tiene 
+atajo para
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:928:    ; layerchangebelowclip (recorte real); si se lo 
+asignas, cámbialo aquí.
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:929:    Send("m")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:931:    _AvisoEvento("mascara_recorte", "MÁSCARA DE RECORTE", 
+"PEN + S", "00E5FF", 0)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:932:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:933:~RButton & q:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:934:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:935:    Send("{F6}")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:936:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:937:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1134:    try DllCall("SetWindowPos", "Ptr", _sftHud.Hwnd, 
+"Ptr", -1, "int", 0, "int", 0, "int", 0, "int", 0, "uint", 0x0001 | 0x0002 | 0x0010)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1135:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1136:~RButton & w:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1137:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1138:    EnviarNtilde()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1139:    MostrarBadgeCombo("PEN + W","DIFU MIXER 
+2","00E5FF",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1140:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1143:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 
+2","00E5FF",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1144:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1145:~RButton & -:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1146:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1147:    now := A_TickCount
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1148:    if (now - RM.last < 300) {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1149:        RM.last := 0
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1156:    MostrarHUD("Rule","1A1A2E",800)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1157:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1158:~RButton & z:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1159:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1160:    Send("^v")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1161:    _SonarUI("copiar")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1162:    MostrarHUD("📋 PEGAR (CTRL+V)","44DD88",800)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1163:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1164:~RButton & z up:: stylus.botonSostenido := false
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1165:~RButton & x:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1166:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1167:    Send("u")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1168:    MostrarHUD("GRADIENT (U)","00E5FF",900)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1169:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1170:~RButton & 1:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1171:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1172:    MostrarToolTipE("FILL  (V)")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1173:    Send("v")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1174:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1175:~RButton & 2:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1176:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1177:    Send("{F11}")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1178:    MostrarHUD("Advanced fill","AA8844",800)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1179:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1191:~RButton & 8::
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1192:~RButton & 9::
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1193:~RButton & 0:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1194:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1195:    key := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1196:    porcentaje := (key = "0") ? 100 : Integer(key) * 10
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1197:    opacidad.nivel := porcentaje
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:177:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:178:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:179:RButton:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:180:    stylus.rButtonHeld := true
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:181:    stylus.comboUsado := false
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:182:    stylus.upSinteticoTick := 0
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:183:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:184:RButton up:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:185:    elapsed := (stylus.upSinteticoTick > 0) ? (A_TickCount 
+- stylus.upSinteticoTick) : 9999
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:186:    if (elapsed < UP_SINTETICO_MS) {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:187:        stylus.rButtonHeld := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:188:        stylus.upSinteticoTick := 0
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:189:        return
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:190:    }
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:191:    stylus.rButtonHeld := false
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:192:    if (!stylus.comboUsado)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:193:        SendInput("{RButton}")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:194:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:195:Space & RButton:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:196:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:197:    _InvSeleccionConGUI()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:198:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:199:Numpad0:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:301:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:302:$^z:: _DeshacerRehacer()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:303:_MaskRButton() {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:304:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:305:    if (stylus.botonSostenido)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:306:        return
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:307:    stylus.botonSostenido := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:326:_DeshacerRehacer() {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:327:    static ultUndo := 0, ultRedo := 0
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:328:    ahora := A_TickCount
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:329:    if (stylus.rButtonHeld || stylus.altActive) {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:330:        stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:331:        if (!stylus.botonSostenido) {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:332:            stylus.botonSostenido := true
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:333:            if (stylus.rButtonHeld) {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:334:                stylus.upSinteticoTick := A_TickCount
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:335:                MouseGetPos(&origX,&origY)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:336:                MouseMove(PUNTOS[29][1],PUNTOS[29][2],0)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:442:f up:: AltF_state.held := false
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:443:$!Space::
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:444:$Space:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:445:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:446:    SendInput("!g")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:447:    MostrarHUD("FLIP HORIZONTAL","888888",700)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:448:    _SonarUI("flip")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:465:    }
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:466:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:467:~RButton & a:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:468:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:469:    EnviarNtilde()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:470:    MostrarHUD("REFERENCE LAYER","AA44FF",1680)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:471:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:499:    MostrarToolTipE("ERASER  (1)")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:500:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:501:~RButton & e:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:502:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:503:    Send("{F12}")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:504:    _SonarUI("borrador")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:505:    MostrarHUD("ERASER LAZO","FF4444",1200)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:595:    }
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:596:    now := A_TickCount
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:597:    ; Prioridad al botón del lápiz: toggle Stab Normal 
+inmediato, sin pasar por la ventana de doble-toque
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:598:    if (stylus.rButtonHeld || GetKeyState("RButton","P")) {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:599:        stylus.comboUsado := true              ; evita que 
+RButton up emita un clic derecho
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:600:        AlternarEstabilizacion()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:601:        return
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:602:    }
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:972:~f:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:973:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:974:~RButton & s:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:975:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:976:    ; Capa > Máscara (layerinmask = M). Tu CSP no tiene 
+atajo para
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:977:    ; layerchangebelowclip (recorte real); si se lo 
+asignas, cámbialo aquí.
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:978:    Send("m")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:980:    _AvisoEvento("mascara_recorte", "MÁSCARA DE RECORTE", 
+"PEN + S", "00E5FF", 0)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:981:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:982:~RButton & q:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:983:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:984:    Send("{F6}")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:985:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:986:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1207:    try DllCall("SetWindowPos", "Ptr", _sftHud.Hwnd, 
+"Ptr", -1, "int", 0, "int", 0, "int", 0, "int", 0, "uint", 0x0001 | 0x0002 | 0x0010)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1208:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1209:~RButton & w:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1210:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1211:    EnviarNtilde()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1212:    MostrarBadgeCombo("PEN + W","DIFU MIXER 
+2","00E5FF",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1213:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1216:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 
+2","00E5FF",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1217:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1218:~RButton & -:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1219:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1220:    now := A_TickCount
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1221:    if (now - RM.last < 300) {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1222:        RM.last := 0
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1229:    MostrarHUD("Rule","1A1A2E",800)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1230:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1231:~RButton & z:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1232:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1233:    Send("^v")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1234:    _SonarUI("copiar")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1235:    MostrarHUD("📋 PEGAR (CTRL+V)","44DD88",800)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1236:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1237:~RButton & z up:: stylus.botonSostenido := false
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1238:~RButton & x:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1239:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1240:    Send("u")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1241:    MostrarHUD("GRADIENT (U)","00E5FF",900)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1242:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1243:~RButton & 1:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1244:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1245:    MostrarToolTipE("FILL  (V)")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1246:    Send("v")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1247:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1248:~RButton & 2:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1249:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1250:    Send("{F11}")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1251:    MostrarHUD("Advanced fill","AA8844",800)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1252:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1264:~RButton & 8::
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1265:~RButton & 9::
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1266:~RButton & 0:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1267:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1268:    key := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1269:    porcentaje := (key = "0") ? 100 : Integer(key) * 10
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1270:    opacidad.nivel := porcentaje
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:57:; │  2. ESTADO  (objetos agrupados)                       
+   │
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:58:; 
+└──────────────────────────────────────────────────────────┘
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:59:sys := { lastModTime: "", modoEscritura: false }
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:60:stylus := { altActive: false, rButtonHeld: false, 
+comboUsado: false, upSinteticoTick: 0, botonSostenido: false, smearSend: false, ignorarUpSintetico: false, 
+bSinteticoTick: 0, origX: 0, origY: 0, spaceFlipTimerRunning: 0 }
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:61:sel := { estado: 0, estadoAltX: false, estadoC: 0, 
+guiActivo: false, sRapido: false }
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:62:colorEstado     := 0   ; 0=primario  1=secundario  2=alpha
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:63:UP_SINTETICO_MS := 70
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:256:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:257:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:258:RButton:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:259:    stylus.rButtonHeld     := true
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:260:    stylus.comboUsado      := false
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:261:    stylus.upSinteticoTick := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:262:    ; Sin tilde — bloquea el down completamente, CSP no 
+ve nada.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:263:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:264:RButton up:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:265:    elapsed := (stylus.upSinteticoTick > 0) ? 
+(A_TickCount - stylus.upSinteticoTick) : 9999
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:266:    if (elapsed < UP_SINTETICO_MS) {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:267:        stylus.rButtonHeld     := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:268:        stylus.upSinteticoTick := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:269:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:270:    }
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:271:    stylus.rButtonHeld := false
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:272:    if (!stylus.comboUsado)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:273:        SendInput("{RButton}")   ; cuentagotas al soltar
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:274:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:275:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:276:Space & RButton:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:277:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:278:    _InvSeleccionConGUI()
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:279:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:280:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:304:; RButton del stylus — LÓGICA GENERAL
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:305:;
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:306:; El driver reporta el clic derecho del stylus como 
+INSTANTÁNEO
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:307:; (0-15ms). La lógica es: armar rButtonHeld al 
+presionar, diferir
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:308:; la acción al soltar según si hubo combo o no.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:309:;   sin combo → soltar manda {RButton} → cuentagotas en 
+CSP
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:310:;   con combo → soltar no manda nada → cuentagotas 
+absorbido
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:316:; Los combos ~RButton & X tienen su propia tilde y 
+funcionan
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:317:; independientemente — quitarla aquí no los afecta.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:318:;
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:319:; POR QUÉ comboUsado := true EN CADA ~RButton & X
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:320:; Si un combo no lo marca, al soltar RButton up:: ve 
+comboUsado=false
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:321:; y manda el cuentagotas igual, aunque se haya usado un 
+combo.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:322:; Regla: todo hotkey ~RButton & X debe tener esa línea 
+al inicio.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:323:;
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:328:; sostenido — lo trata como herramienta temporal activa. 
+Solución:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:329:; mandar {RButton up} sintético para que CSP "vea" el 
+botón soltado.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:330:; Ese up sintético también dispara RButton up:: — hay 
+que ignorarlo
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:331:; sin resetear rButtonHeld (de lo contrario se rompe 
+rehacer múltiple).
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:332:;
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:333:; POR QUÉ EL CURSOR SE MUEVE A (2775, 11) ANTES DEL UP 
+SINTÉTICO
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:334:; Sin tilde el down no llegó a CSP, pero el up sintético 
+sí llegaría
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:339:; Se marca upSinteticoTick = A_TickCount justo antes del 
+up sintético.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:340:; En RButton up:: elapsed = A_TickCount - 
+upSinteticoTick.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:341:; Sintético llega en 20-40ms, real en ≥100ms. Umbral = 
+UP_SINTETICO_MS.
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:342:; elapsed < umbral → sintético: re-afirmar rButtonHeld, 
+ignorar.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:343:; elapsed ≥ umbral → real: resetear y procesar 
+normalmente.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:344:;
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:345:; botonSostenido: evita mandar up sintético en cada 
+repetición de
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:450:; de la tecla mantenida vuelva a alternar la máscara; se 
+libera en
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:451:; "$^z up" / "~RButton & z up".
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:452:_MaskRButton() {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:453:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:454:    if (stylus.botonSostenido)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:455:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:456:    stylus.botonSostenido := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:462:_DeshacerRehacer() {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:463:    ; De momento, con RButton sostenido este botón (K10, 
+Ctrl+Z del
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:464:    ; keydial) es Mask (Alt+M) en vez de rehacer. Alt+B 
+sigue rehaciendo.
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:465:    if (stylus.rButtonHeld) {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:466:        _MaskRButton()
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:467:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:468:    }
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:469:    if (stylus.rButtonHeld || stylus.altActive) {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:470:        stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:471:        if (!stylus.botonSostenido) {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:472:            stylus.botonSostenido := true
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:473:            if (stylus.rButtonHeld) {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:474:                ; RButton: mandar up sintético para 
+desbloquear CSP
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:475:                stylus.upSinteticoTick := A_TickCount
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:476:                MouseGetPos(&origX, &origY)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:602:; Reacciona inmediatamente para invertir el lienzo con 
+respuesta ultra-rápida.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:603:$!Space::
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:604:$Space:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:605:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:606:    SendInput("!g")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:607:    MostrarHUD("FLIP HORIZONTAL", "888888", 700)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:608:    SoundBeep(800, 100)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:634:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:635:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:636:~RButton & a:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:637:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:638:    EnviarNtilde()
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:639:    MostrarHUD("REFERENCE LAYER", "AA44FF", 1680)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:640:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:672:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:673:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:674:~RButton & e:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:675:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:676:    Send("{F12}")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:677:    SoundPlay(A_WinDir "\Media\Windows Recycle.wav")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:678:    MostrarHUD("ERASER LAZO", "FF4444", 1200)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1155:; │  5d. ATAJOS CON CLIC DERECHO        │
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1156:; └─────────────────────────────────────┘
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1157:~RButton & s:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1158:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1159:    MostrarHUD("LAZO CON AUTORELLENO", "FF6B00", 1200)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1160:    SoundPlay(A_ScriptDir "\sonidos\fill_loud.wav")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1161:    Send("{F9}")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1162:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1163:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1164:~RButton & q:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1165:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1166:    Send("{F6}")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1167:    MostrarBadgeCombo("PEN + Q", "HARD BRUSH", 
+"FF6B00", 2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1168:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1172:; sostenerlo físicamente. Ya no se suelta solo — es un 
+toggle: un
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1173:; lanzamiento lo activa, el siguiente lanzamiento lo 
+desactiva.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1174:~RButton & f:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1175:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1176:    shiftSostenido.activo := !shiftSostenido.activo
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1177:    if (shiftSostenido.activo) {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1178:        Send("{Shift down}")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1186:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1187:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1188:~RButton & w:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1189:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1190:    EnviarNtilde()
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1191:    MostrarBadgeCombo("PEN + W", "DIFU MIXER 2", 
+"00E5FF", 2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1192:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1200:; el combo con RButton manda directamente "t". "-" 
+suelta (sin RButton)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1201:; sigue intacta más abajo (*-::) para el estabilizador.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1202:~RButton & -:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1203:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1204:    now := A_TickCount
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1205:    ; Doble toque rápido (<300ms) del mismo combo → 
+ocultar regla (Alt+T)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1206:    if (now - RM.last < 300) {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1215:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1216:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1217:~RButton & z:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1218:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1219:    ; Ctrl+Z con RButton sostenido también coincide con 
+este combo y
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1220:    ; disparaba el pegado. Si Ctrl está abajo, es 
+rehacer, no pegar.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1221:    ; Estado LÓGICO (sin "P"): el keydial manda Ctrl+Z 
+por driver, no como
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1234:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1235:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1236:~RButton & x:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1237:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1238:    Send("u")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1239:    MostrarHUD("GRADIENT (U)", "00E5FF", 900)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1240:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1241:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1242:; RButton+1 = Fill (V). RButton+2 = Advanced fill (F11).
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1243:~RButton & 1:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1244:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1245:    MostrarToolTipE("FILL  (V)")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1246:    Send("v")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1247:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1248:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1249:~RButton & 2:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1250:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1251:    Send("{F11}")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1252:    MostrarHUD("Advanced fill", "AA8844", 800)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1253:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1267:~RButton & 8::
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1268:~RButton & 9::
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1269:~RButton & 0:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1270:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1271:    key        := SubStr(A_ThisHotkey, 
+StrLen(A_ThisHotkey))
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1272:    porcentaje := (key = "0") ? 100 : Integer(key) * 10
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1273:    opacidad.nivel := porcentaje
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:19:CoordMode("ToolTip","Screen")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:20:SetTitleMatchMode(2)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:21:sys := {lastModTime:"",modoEscritura:false}
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:22:stylus := {altActive:false,rButtonHeld:false,comboUsado:false,upSi
+nteticoTick:0,botonSostenido:false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,origX:0,origY:0,spaceFlipT
+imerRunning:0,altTick:0}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:23:sel := 
+{estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:24:colorEstado := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:25:UP_SINTETICO_MS := 70
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:140:#SuspendExempt False
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:141:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:142:RButton:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:143:    stylus.rButtonHeld := true
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:144:    stylus.comboUsado := false
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:145:    stylus.upSinteticoTick := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:146:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:147:RButton up:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:148:    elapsed := (stylus.upSinteticoTick > 0) ? (A_TickCount - 
+stylus.upSinteticoTick) : 9999
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:149:    if (elapsed < UP_SINTETICO_MS) {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:150:        stylus.rButtonHeld := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:151:        stylus.upSinteticoTick := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:152:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:153:    }
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:154:    stylus.rButtonHeld := false
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:155:    if (!stylus.comboUsado)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:156:        SendInput("{RButton}")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:157:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:158:Space & RButton:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:159:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:160:    _InvSeleccionConGUI()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:161:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:162:Numpad0:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:241:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:242:$^z:: _DeshacerRehacer()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:243:_MaskRButton() {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:244:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:245:    if (stylus.botonSostenido)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:246:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:247:    stylus.botonSostenido := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:249:    MostrarHUD("MASK (ALT+M)","00E5FF",900)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:250:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:251:_DeshacerRehacer() {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:252:    if (stylus.rButtonHeld) {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:253:        _MaskRButton()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:254:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:255:    }
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:256:    if (stylus.rButtonHeld || stylus.altActive) {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:257:        stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:258:        if (!stylus.botonSostenido) {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:259:            stylus.botonSostenido := true
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:260:            if (stylus.rButtonHeld) {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:261:                stylus.upSinteticoTick := A_TickCount
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:262:                MouseGetPos(&origX,&origY)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:263:                MouseMove(PUNTOS[29][1],PUNTOS[29][2],0)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:357:f up:: AltF_state.held := false
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:358:$!Space::
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:359:$Space:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:360:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:361:    SendInput("!g")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:362:    MostrarHUD("FLIP HORIZONTAL","888888",700)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:363:    SoundBeep(800,100)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:381:    }
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:382:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:383:~RButton & a:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:384:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:385:    EnviarNtilde()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:386:    MostrarHUD("REFERENCE LAYER","AA44FF",1680)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:387:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:414:    MostrarToolTipE("ERASER  (1)")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:415:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:416:~RButton & e:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:417:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:418:    Send("{F12}")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:419:    SoundPlay(A_WinDir "\Media\Windows Recycle.wav")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:420:    MostrarHUD("ERASER LAZO","FF4444",1200)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:789:~f:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:790:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:791:~RButton & s:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:792:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:793:    MostrarHUD("LAZO CON AUTORELLENO","FF6B00",1200)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:794:    SoundPlay(A_ScriptDir "\sonidos\fill_loud.wav")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:795:    Send("{F9}")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:796:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:797:~RButton & q:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:798:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:799:    Send("{F6}")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:800:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:801:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:802:~RButton & f:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:803:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:804:    shiftSostenido.activo := !shiftSostenido.activo
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:805:    if (shiftSostenido.activo) {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:806:        Send("{Shift down}")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:813:    }
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:814:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:815:~RButton & w:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:816:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:817:    EnviarNtilde()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:818:    MostrarBadgeCombo("PEN + W","DIFU MIXER 2","00E5FF",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:819:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:822:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 2","00E5FF",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:823:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:824:~RButton & -:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:825:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:826:    now := A_TickCount
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:827:    if (now - RM.last < 300) {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:828:        RM.last := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:835:    MostrarHUD("Rule","1A1A2E",800)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:836:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:837:~RButton & z:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:838:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:839:    if GetKeyState("Ctrl") {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:840:        _MaskRButton()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:841:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:846:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:847:~RButton & z up:: stylus.botonSostenido := false
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:848:~RButton & x:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:849:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:850:    Send("u")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:851:    MostrarHUD("GRADIENT (U)","00E5FF",900)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:852:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:853:~RButton & 1:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:854:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:855:    MostrarToolTipE("FILL  (V)")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:856:    Send("v")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:857:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:858:~RButton & 2:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:859:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:860:    Send("{F11}")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:861:    MostrarHUD("Advanced fill","AA8844",800)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:862:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:874:~RButton & 8::
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:875:~RButton & 9::
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:876:~RButton & 0:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:877:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:878:    key := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:879:    porcentaje := (key = "0") ? 100 : Integer(key) * 10
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:880:    opacidad.nivel := porcentaje
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2021:    }
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2022:    if (shiftSostenido.activo && !GetKeyState("Shift"))
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2023:        SendInput("{Shift down}")
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2024:    if (stylus.rButtonHeld && !GetKeyState("RButton","P"))
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2025:        stylus.rButtonHeld := false
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2026:    _FlushPendentes()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2027:    Z.timerRunning := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2028:    AltF_state.held := false
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:19:CoordMode("ToolTip","Screen")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:20:SetTitleMatchMode(2)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:21:sys := {lastModTime:"",modoEscritura:false}
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:22:stylus := {altActive:false,rButtonHeld:false
+,comboUsado:false,upSinteticoTick:0,botonSostenido:false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,orig
+X:0,origY:0,spaceFlipTimerRunning:0}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:23:sel := 
+{estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:24:colorEstado := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:25:UP_SINTETICO_MS := 70
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:130:#SuspendExempt False
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:131:#HotIf WinActive("ahk_exe 
+CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:132:RButton:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:133:    stylus.rButtonHeld := true
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:134:    stylus.comboUsado := false
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:135:    stylus.upSinteticoTick := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:136:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:137:RButton up:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:138:    elapsed := (stylus.upSinteticoTick > 
+0) ? (A_TickCount - stylus.upSinteticoTick) : 9999
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:139:    if (elapsed < UP_SINTETICO_MS) {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:140:        stylus.rButtonHeld := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:141:        stylus.upSinteticoTick := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:142:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:143:    }
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:144:    stylus.rButtonHeld := false
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:145:    if (!stylus.comboUsado)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:146:        SendInput("{RButton}")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:147:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:148:Space & RButton:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:149:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:150:    _InvSeleccionConGUI()
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:151:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:152:Numpad0:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:228:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:229:$^z:: _DeshacerRehacer()
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:230:_MaskRButton() {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:231:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:232:    if (stylus.botonSostenido)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:233:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:234:    stylus.botonSostenido := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:236:    MostrarHUD("MASK (ALT+M)","00E5FF",900)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:237:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:238:_DeshacerRehacer() {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:239:    if (stylus.rButtonHeld) {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:240:        _MaskRButton()
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:241:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:242:    }
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:243:    if (stylus.rButtonHeld || 
+stylus.altActive) {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:244:        stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:245:        if (!stylus.botonSostenido) {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:246:            stylus.botonSostenido := true
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:247:            if (stylus.rButtonHeld) {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:248:                stylus.upSinteticoTick := 
+A_TickCount
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:249:                MouseGetPos(&origX,&origY)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:250:                
+MouseMove(PUNTOS[29][1],PUNTOS[29][2],0)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:344:f up:: AltF_state.held := false
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:345:$!Space::
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:346:$Space:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:347:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:348:    SendInput("!g")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:349:    MostrarHUD("FLIP 
+HORIZONTAL","888888",700)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:350:    SoundBeep(800,100)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:366:    }
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:367:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:368:~RButton & a:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:369:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:370:    EnviarNtilde()
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:371:    MostrarHUD("REFERENCE 
+LAYER","AA44FF",1680)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:372:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:397:    MostrarToolTipE("ERASER  (1)")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:398:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:399:~RButton & e:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:400:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:401:    Send("{F12}")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:402:    SoundPlay(A_WinDir "\Media\Windows 
+Recycle.wav")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:403:    MostrarHUD("ERASER LAZO","FF4444",1200)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:758:~f:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:759:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:760:~RButton & s:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:761:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:762:    MostrarHUD("LAZO CON 
+AUTORELLENO","FF6B00",1200)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:763:    SoundPlay(A_ScriptDir 
+"\sonidos\fill_loud.wav")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:764:    Send("{F9}")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:765:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:766:~RButton & q:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:767:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:768:    Send("{F6}")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:769:    MostrarBadgeCombo("PEN + Q","HARD 
+BRUSH","FF6B00",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:770:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:771:~RButton & f:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:772:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:773:    shiftSostenido.activo := 
+!shiftSostenido.activo
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:774:    if (shiftSostenido.activo) {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:775:        Send("{Shift down}")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:782:    }
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:783:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:784:~RButton & w:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:785:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:786:    EnviarNtilde()
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:787:    MostrarBadgeCombo("PEN + W","DIFU 
+MIXER 2","00E5FF",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:788:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:791:    MostrarBadgeCombo("ALT + W","★ OPC 
+PRESSURE 2","00E5FF",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:792:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:793:~RButton & -:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:794:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:795:    now := A_TickCount
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:796:    if (now - RM.last < 300) {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:797:        RM.last := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:804:    MostrarHUD("Rule","1A1A2E",800)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:805:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:806:~RButton & z:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:807:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:808:    if GetKeyState("Ctrl") {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:809:        _MaskRButton()
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:810:        return
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:815:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:816:~RButton & z up:: stylus.botonSostenido := 
+false
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:817:~RButton & x:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:818:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:819:    Send("u")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:820:    MostrarHUD("GRADIENT (U)","00E5FF",900)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:821:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:822:~RButton & 1:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:823:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:824:    MostrarToolTipE("FILL  (V)")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:825:    Send("v")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:826:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:827:~RButton & 2:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:828:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:829:    Send("{F11}")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:830:    MostrarHUD("Advanced 
+fill","AA8844",800)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:831:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:843:~RButton & 8::
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:844:~RButton & 9::
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:845:~RButton & 0:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:846:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:847:    key := 
+SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:848:    porcentaje := (key = "0") ? 100 : 
+Integer(key) * 10
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:849:    opacidad.nivel := porcentaje
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:19:CoordMode("ToolTip","Screen")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:20:SetTitleMatchMode(2)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:21:sys := {lastModTime:"",modoEscritura:false}
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:22:stylus := {altActive:false,rButtonHeld:false,comboUsado:false,up
+SinteticoTick:0,botonSostenido:false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,origX:0,origY:0,spaceFli
+pTimerRunning:0}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:23:sel := 
+{estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:24:colorEstado := 0
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:25:UP_SINTETICO_MS := 70
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:136:#SuspendExempt False
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:137:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:138:RButton:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:139:    stylus.rButtonHeld := true
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:140:    stylus.comboUsado := false
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:141:    stylus.upSinteticoTick := 0
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:142:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:143:RButton up:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:144:    elapsed := (stylus.upSinteticoTick > 0) ? (A_TickCount - 
+stylus.upSinteticoTick) : 9999
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:145:    if (elapsed < UP_SINTETICO_MS) {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:146:        stylus.rButtonHeld := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:147:        stylus.upSinteticoTick := 0
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:148:        return
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:149:    }
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:150:    stylus.rButtonHeld := false
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:151:    if (!stylus.comboUsado)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:152:        SendInput("{RButton}")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:153:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:154:Space & RButton:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:155:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:156:    _InvSeleccionConGUI()
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:157:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:158:Numpad0:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:234:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:235:$^z:: _DeshacerRehacer()
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:236:_MaskRButton() {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:237:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:238:    if (stylus.botonSostenido)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:239:        return
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:240:    stylus.botonSostenido := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:242:    MostrarHUD("MASK (ALT+M)","00E5FF",900)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:243:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:244:_DeshacerRehacer() {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:245:    if (stylus.rButtonHeld) {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:246:        _MaskRButton()
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:247:        return
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:248:    }
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:249:    if (stylus.rButtonHeld || stylus.altActive) {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:250:        stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:251:        if (!stylus.botonSostenido) {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:252:            stylus.botonSostenido := true
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:253:            if (stylus.rButtonHeld) {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:254:                stylus.upSinteticoTick := A_TickCount
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:255:                MouseGetPos(&origX,&origY)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:256:                MouseMove(PUNTOS[29][1],PUNTOS[29][2],0)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:350:f up:: AltF_state.held := false
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:351:$!Space::
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:352:$Space:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:353:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:354:    SendInput("!g")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:355:    MostrarHUD("FLIP HORIZONTAL","888888",700)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:356:    SoundBeep(800,100)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:372:    }
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:373:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:374:~RButton & a:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:375:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:376:    EnviarNtilde()
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:377:    MostrarHUD("REFERENCE LAYER","AA44FF",1680)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:378:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:403:    MostrarToolTipE("ERASER  (1)")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:404:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:405:~RButton & e:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:406:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:407:    Send("{F12}")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:408:    SoundPlay(A_WinDir "\Media\Windows Recycle.wav")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:409:    MostrarHUD("ERASER LAZO","FF4444",1200)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:764:~f:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:765:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:766:~RButton & s:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:767:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:768:    MostrarHUD("LAZO CON AUTORELLENO","FF6B00",1200)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:769:    SoundPlay(A_ScriptDir "\sonidos\fill_loud.wav")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:770:    Send("{F9}")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:771:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:772:~RButton & q:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:773:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:774:    Send("{F6}")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:775:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:776:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:777:~RButton & f:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:778:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:779:    shiftSostenido.activo := !shiftSostenido.activo
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:780:    if (shiftSostenido.activo) {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:781:        Send("{Shift down}")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:788:    }
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:789:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:790:~RButton & w:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:791:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:792:    EnviarNtilde()
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:793:    MostrarBadgeCombo("PEN + W","DIFU MIXER 2","00E5FF",2200)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:794:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:797:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 
+2","00E5FF",2200)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:798:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:799:~RButton & -:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:800:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:801:    now := A_TickCount
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:802:    if (now - RM.last < 300) {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:803:        RM.last := 0
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:810:    MostrarHUD("Rule","1A1A2E",800)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:811:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:812:~RButton & z:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:813:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:814:    if GetKeyState("Ctrl") {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:815:        _MaskRButton()
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:816:        return
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:821:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:822:~RButton & z up:: stylus.botonSostenido := false
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:823:~RButton & x:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:824:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:825:    Send("u")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:826:    MostrarHUD("GRADIENT (U)","00E5FF",900)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:827:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:828:~RButton & 1:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:829:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:830:    MostrarToolTipE("FILL  (V)")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:831:    Send("v")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:832:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:833:~RButton & 2:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:834:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:835:    Send("{F11}")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:836:    MostrarHUD("Advanced fill","AA8844",800)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:837:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:849:~RButton & 8::
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:850:~RButton & 9::
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:851:~RButton & 0:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:852:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:853:    key := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:854:    porcentaje := (key = "0") ? 100 : Integer(key) * 10
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:855:    opacidad.nivel := porcentaje
+  _historico\diagnosticos_y_tests\test_completo.ahk:28:SetTitleMatchMode(2)
+  _historico\diagnosticos_y_tests\test_completo.ahk:29:
+  _historico\diagnosticos_y_tests\test_completo.ahk:30:sys := {lastModTime:"",modoEscritura:false}
+> _historico\diagnosticos_y_tests\test_completo.ahk:31:stylus := {altActive:false,rButtonHeld:false,comboUsado:false,up
+SinteticoTick:0,botonSostenido:false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,origX:0,origY:0,spaceFli
+pTimerRunning:0}
+  _historico\diagnosticos_y_tests\test_completo.ahk:32:sel := 
+{estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
+  _historico\diagnosticos_y_tests\test_completo.ahk:33:colorEstado := 0
+  _historico\diagnosticos_y_tests\test_completo.ahk:34:colorV := 
+{dsID:0,dsVis:false,bDS:0,hover:true,cspHwnd:0,dsX:0,dsY:0,dsW:0,dsH:0,supresionHasta:0}
+
+

@@ -1,0 +1,31 @@
+=== LOG WM_POINTER MODO V2 INICIADO ===
+subclass 0x300dc8 1
+subclass 0x111c74 1
+subclass 0x141c46 1
+20747171 PTR msg=0x245 flags=0x6003 barrel=False contact=False
+20747609 PTR msg=0x246 flags=0x6026 barrel=True contact=True
+20747734   TK <ButtonPress> num=1
+20747734   TK-ROOT <ButtonPress> num=1
+20753750 PTR msg=0x247 flags=0x6002 barrel=False contact=False
+20753750   TK <ButtonRelease> num=1
+20753750   TK-ROOT <ButtonRelease> num=1
+20756515 PTR msg=0x246 flags=0x6026 barrel=True contact=True
+20756796   TK <ButtonPress> num=1
+20756796   TK-ROOT <ButtonPress> num=1
+20760296 PTR msg=0x247 flags=0x6002 barrel=False contact=False
+20760296   TK <ButtonRelease> num=1
+20760296   TK-ROOT <ButtonRelease> num=1
+20763484 PTR msg=0x246 flags=0x6026 barrel=True contact=True
+20764390   TK <ButtonPress> num=1
+20764390   TK-ROOT <ButtonPress> num=1
+20765000 PTR msg=0x247 flags=0x6002 barrel=False contact=False
+20765000   TK <ButtonRelease> num=1
+20765000   TK-ROOT <ButtonRelease> num=1
+20765921 PTR msg=0x246 flags=0x6016 barrel=False contact=True
+20767796 PTR msg=0x247 flags=0x6002 barrel=False contact=False
+20767796   TK <ButtonPress> num=3
+20767796   TK-ROOT <ButtonPress> num=3
+20767796   TK <ButtonRelease> num=3
+20767812   TK-ROOT <ButtonRelease> num=3
+20768984 PTR msg=0x245 flags=0x6000 barrel=False contact=False
+20769750 PTR msg=0x245 flags=0x6002 barrel=False contact=False

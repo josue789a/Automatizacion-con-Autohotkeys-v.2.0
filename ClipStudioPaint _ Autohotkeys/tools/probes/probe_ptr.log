@@ -1,0 +1,28 @@
+=== LOG WM_POINTER INICIADO ===
+subclass 0x121974 1
+subclass 0x60cbc 1
+subclass 0xa1744 1
+206770.3ms hwnd=0xa1744 WM_POINTERDOWN barrel=False penFlags=0x0 ptrFlags=0x16016
+206836.0ms hwnd=0xa1744 WM_POINTERUP barrel=False penFlags=0x0 ptrFlags=0x46002
+   TK <ButtonPress> num=1
+   TK <ButtonRelease> num=1
+220343.3ms hwnd=0xa1744 WM_POINTERDOWN barrel=False penFlags=0x0 ptrFlags=0x16016
+221511.9ms hwnd=0xa1744 WM_POINTERUP barrel=False penFlags=0x0 ptrFlags=0x46002
+   TK <ButtonPress> num=3
+   TK <ButtonRelease> num=3
+223042.6ms hwnd=0xa1744 WM_POINTERDOWN barrel=False penFlags=0x0 ptrFlags=0x16016
+224386.9ms hwnd=0xa1744 WM_POINTERUP barrel=False penFlags=0x0 ptrFlags=0x46002
+   TK <ButtonPress> num=3
+   TK <ButtonRelease> num=3
+226508.0ms hwnd=0xa1744 WM_POINTERDOWN barrel=False penFlags=0x0 ptrFlags=0x16016
+226627.1ms hwnd=0xa1744 WM_POINTERUP barrel=False penFlags=0x0 ptrFlags=0x46002
+   TK <ButtonPress> num=1
+   TK <ButtonRelease> num=1
+227042.5ms hwnd=0xa1744 WM_POINTERDOWN barrel=False penFlags=0x0 ptrFlags=0x16016
+227147.2ms hwnd=0xa1744 WM_POINTERUP barrel=False penFlags=0x0 ptrFlags=0x46002
+   TK <ButtonPress> num=1
+   TK <ButtonRelease> num=1
+227472.2ms hwnd=0xa1744 WM_POINTERDOWN barrel=False penFlags=0x0 ptrFlags=0x16016
+227567.5ms hwnd=0xa1744 WM_POINTERUP barrel=False penFlags=0x0 ptrFlags=0x46002
+   TK <ButtonPress> num=1
+   TK <ButtonRelease> num=1

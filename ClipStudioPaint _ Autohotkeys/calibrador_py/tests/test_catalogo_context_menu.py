@@ -65,14 +65,74 @@ def test_duplicar_y_eliminar_custom(tmp_path):
     assert clon.custom is True
 
     # Eliminar
-    patches_del = [
-        ("EventosCustom", "lista", ""),
-        ("EventosCustom", cid, None),
-        ("EventosGrupo", cid, None)
-    ]
-    store.save_patches(patches_del)
+    cat.eliminar_eventos([cid])
     cat.load()
     assert cat.por_id(cid) is None
+
+
+def test_eliminar_evento_existente_y_purga_cascada(tmp_path):
+    import shutil
+    ini_path = tmp_path / "posiciones_gui.ini"
+    ini_path.write_text(
+        "[HudEventos1]\n"
+        "formato_deshacer=moderno\n"
+        "zona_deshacer=alta\n"
+        "formato_rehacer=moderno\n"
+        "[HudTextos1]\n"
+        "texto_deshacer=ATRAS\n"
+        "texto_rehacer=ADELANTE\n"
+        "[Rangos1]\n"
+        "deshacer_x=100\n"
+        "deshacer_y=200\n"
+        "deshacer_w=50\n"
+        "deshacer_h=60\n"
+        "HUD_ev_deshacer=100,200,50,60\n"
+        "rehacer_x=300\n"
+        "[Particularidades]\n"
+        "cruzar_deshacer=1\n"
+        "cruzar_rehacer=1\n"
+        "[Remapeos]\n"
+        "atajo_deshacer=^z\n",
+        encoding="utf-8"
+    )
+    store = IniFile(ini_path).load()
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    orig_data_dir = Path(__file__).resolve().parents[1] / "data"
+    if (orig_data_dir / "catalogo.json").exists():
+        shutil.copy2(orig_data_dir / "catalogo.json", data_dir / "catalogo.json")
+
+    cat = Catalogo(store, data_dir).load()
+    assert cat.por_id("deshacer") is not None
+    assert cat.por_id("rehacer") is not None
+
+    # Eliminar evento existente ("deshacer")
+    cat.eliminar_eventos(["deshacer"])
+    cat.load()
+
+    # Verificar que "deshacer" ya no existe en el catálogo
+    assert cat.por_id("deshacer") is None
+    # "rehacer" debe seguir intacto
+    assert cat.por_id("rehacer") is not None
+
+    # Verificar registro en [EventosEliminados]
+    assert store.get("EventosEliminados", "deshacer") == "1"
+    assert "deshacer" in (store.get("EventosEliminados", "lista") or "")
+
+    # Verificar purga en cascada en INI
+    assert store.get("HudEventos1", "formato_deshacer") is None
+    assert store.get("HudTextos1", "texto_deshacer") is None
+    assert store.get("Rangos1", "deshacer_x") is None
+    assert store.get("Rangos1", "deshacer_w") is None
+    assert store.get("Rangos1", "HUD_ev_deshacer") is None
+    assert store.get("Particularidades", "cruzar_deshacer") is None
+    assert store.get("Remapeos", "atajo_deshacer") is None
+
+    # Verificar que los datos de "rehacer" no se tocaron
+    assert store.get("HudEventos1", "formato_rehacer") == "moderno"
+    assert store.get("HudTextos1", "texto_rehacer") == "ADELANTE"
+    assert store.get("Rangos1", "rehacer_x") == "300"
+    assert store.get("Particularidades", "cruzar_rehacer") == "1"
 
 def test_operaciones_en_lote(tmp_path):
     ini_path = tmp_path / "posiciones_gui.ini"

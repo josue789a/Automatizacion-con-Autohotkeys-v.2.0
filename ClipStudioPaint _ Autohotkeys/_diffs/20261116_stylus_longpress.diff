@@ -1,0 +1,269 @@
+diff --git a/lib/companion_flotantes.ahk b/lib/companion_flotantes.ahk
+index d4f659a..8ae680d 100644
+--- a/lib/companion_flotantes.ahk
++++ b/lib/companion_flotantes.ahk
+@@ -257,6 +257,53 @@ _LBtnAbajo() {
+     return GetKeyState("LButton") || (DllCall("GetAsyncKeyState", "Int", 0x01, "Short") & 0x8000)
+ }
+ 
++; ── Pulsación larga con la punta del lápiz sobre una píldora → menú del Hub ──
++; El toque corto sigue haciendo la acción normal de la píldora. Si la punta se
++; queda apoyada sin moverse, la acción se cancela y en su lugar se abre el menú.
++_HubLPSt() {
++    static st := Map("tLapiz", 0)
++    return st
++}
++
++; Interruptor único. Para llevarlo a Opciones basta con que esa opción haga
++; hubGui.lpLapiz := true/false (por defecto está activo).
++_HubLPActivo() {
++    global hubGui
++    if (IsObject(hubGui) && hubGui.HasOwnProp("lpLapiz"))
++        return hubGui.lpLapiz
++    return true
++}
++
++; 0x0246 = WM_POINTERDOWN. Solo marca las pulsaciones hechas con lápiz (PT_PEN=3);
++; el dedo (PT_TOUCH=2) y el ratón no activan la pulsación larga.
++_HubLP_WM_POINTERDOWN(wParam, lParam, msg, hwnd) {
++    if !_VentanaDelProceso(hwnd)
++        return
++    tipo := 0
++    if !DllCall("GetPointerType", "UInt", wParam, "Int*", &tipo)
++        return
++    if (tipo != 3)
++        return
++    _HubLPSt()["tLapiz"] := A_TickCount
++}
++
++; ¿La pulsación que empieza ahora viene de la punta del lápiz?
++_HubLPFueLapiz() {
++    t := _HubLPSt()["tLapiz"]
++    return (t && A_TickCount - t < 150)
++}
++
++; Umbral de pulsación larga (550 ms), sin movimiento y solo con lápiz.
++_HubLPHecha(t0, movido, esLapiz) {
++    return (esLapiz && !movido && _HubLPActivo() && A_TickCount - t0 >= 550)
++}
++
++; Cierra el gesto: abre el menú y evita que la píldora ejecute su acción.
++_HubLPDisparar() {
++    _HubLPSt()["tLapiz"] := 0
++    SetTimer(_MostrarMenuContextualHub, -10)
++}
++
+ ; WM_SETREDRAW (0x000B). Al descongelar: RedrawWindow sincrono
+ ; (INVALIDATE|ERASE|ALLCHILDREN|UPDATENOW = 0x0185) = un solo repintado por boton.
+ _CongelarPanel(h, congelar) {
+@@ -301,8 +348,17 @@ _SweepToggle(g0) {
+     if (!IsObject(g0) || !IsObject(g0.g))
+         return
+     if (g0.g.Hwnd = lockGui.g.Hwnd) {
+-        while _LBtnAbajo()
++        t0 := A_TickCount
++        lp := _HubLPFueLapiz(), largo := false
++        while _LBtnAbajo() {
++            if (!largo && _HubLPHecha(t0, false, lp))
++                largo := true
+             Sleep(5)
++        }
++        if (largo) {
++            _HubLPDisparar()
++            return
++        }
+         _ToggleBloqueo()
+         return
+     }
+@@ -313,6 +369,7 @@ _SweepToggle(g0) {
+     visitados := Map()
+     visitados[g0.g.Hwnd] := true
+     tocados := [g0]
++    lp := _HubLPFueLapiz()
+     Thread("NoTimers", true)   ; ningun timer interrumpe el muestreo ni repinta paneles durante el gesto
+     DllCall("winmm\timeBeginPeriod","UInt",1)
+     try {
+@@ -330,6 +387,7 @@ _SweepToggle(g0) {
+         DllCall("GetCursorPos","Ptr",cur)
+         px := NumGet(cur,0,"int"), py := NumGet(cur,4,"int")
+         t0 := A_TickCount
++        movidoGesto := false, largo := false
+         Loop {
+             if GetKeyState("Escape","P") {   ; Esc = cancelar el gesto sin aplicar nada
+                 tocados := []
+@@ -339,6 +397,7 @@ _SweepToggle(g0) {
+             DllCall("GetCursorPos","Ptr",cur)
+             mx := NumGet(cur,0,"int"), my := NumGet(cur,4,"int")
+             if (mx != px || my != py) {
++                movidoGesto := true
+                 for rr in rects {
+                     if visitados.Has(rr.h)
+                         continue
+@@ -349,10 +408,18 @@ _SweepToggle(g0) {
+                 }
+                 px := mx, py := my
+             }
++            if (!largo && _HubLPHecha(t0, movidoGesto, lp)) {
++                largo := true            ; pulsación larga: no se barre, se abre al soltar
++                tocados := []
++            }
+             if soltado
+                 break
+             Sleep(1)
+         }
++        if (largo) {
++            _HubLPDisparar()
++            return
++        }
+         g_sweepActivo := true
+         _SweepAplicar(tocados, target)
+     } finally {
+@@ -374,6 +441,7 @@ _ClickOArrastre(hwndClick,lParam,guiObj) {
+     offY := clickY - NumGet(rc,4,"int")
+     cur := Buffer(8,0)
+     movido := false
++    lp := _HubLPFueLapiz(), t0 := A_TickCount, largo := false
+     while _LBtnAbajo() {
+         DllCall("GetCursorPos","Ptr",cur)
+         mx := NumGet(cur,0,"int"), my := NumGet(cur,4,"int")
+@@ -382,8 +450,16 @@ _ClickOArrastre(hwndClick,lParam,guiObj) {
+             DllCall("SetWindowPos","Ptr",guiObj.g.Hwnd,"Ptr",0,"int",mx-offX,"int",my-offY
+                 ,"int",0,"int",0,"uint",0x0001|0x0004|0x0010)
+         }
++        if (!largo && _HubLPHecha(t0, movido, lp))
++            largo := true
++        else if (largo && movido)     ; si empieza a arrastrar, se cancela el menú
++            largo := false
+         Sleep(8)
+     }
++    if (largo) {
++        _HubLPDisparar()
++        return
++    }
+     if !movido {
+         if (guiObj.g.Hwnd = lockGui.g.Hwnd)
+             _ToggleBloqueo()
+@@ -767,13 +843,15 @@ _NvGUI_WM_LBUTTONDOWN(wParam, lParam, msg, hwnd) {
+     st["x0"] := NumGet(pt, 0, "Int")
+     st["y0"] := NumGet(pt, 4, "Int")
+     st["t0"] := A_TickCount
++    st["lp"] := _HubLPFueLapiz()
++    st["largo"] := false
+     st["trk"] := true
+     SetTimer(_NvClicPoll, 15)
+     return 0
+ }
+ 
+ _NvClicSt() {
+-    static st := Map("trk", false, "pend", false, "x0", 0, "y0", 0, "t0", 0, "tPrev", 0)
++    static st := Map("trk", false, "pend", false, "x0", 0, "y0", 0, "t0", 0, "tPrev", 0, "lp", false, "largo", false)
+     return st
+ }
+ 
+@@ -801,6 +879,8 @@ _NvClicPoll() {
+                 return
+             PostMessage(0xA1, 2, , , nvGui.g)
+             SetTimer(_NvGUI_EsperarSoltar, 100)
++        } else if (_HubLPHecha(st["t0"], false, st["lp"])) {   ; pulsación larga: se abre al soltar
++            st["largo"] := true
+         } else if (A_TickCount - st["t0"] > 5000) {   ; seguridad: contacto atascado
+             _NvClicFin()
+             st["pend"] := false
+@@ -808,6 +888,12 @@ _NvClicPoll() {
+         return
+     }
+     _NvClicFin()                                       ; botón soltado sin arrastre
++    if st["largo"] {
++        st["largo"] := false
++        st["pend"] := false
++        _HubLPDisparar()
++        return
++    }
+     dbl := Min(Max(DllCall("GetDoubleClickTime", "UInt"), 200), 500)
+     if (st["pend"] && st["t0"] - st["tPrev"] <= dbl) { ; 2.º clic dentro del intervalo
+         SetTimer(_NvClicSimple, 0)
+@@ -1329,6 +1415,7 @@ _ReloadGUI_WM_LBUTTONDOWN(wParam,lParam,msg,hwnd) {
+         offY := clickY - NumGet(rc,4,"int")
+         cur := Buffer(8,0)
+         movido := false
++        lp := _HubLPFueLapiz(), t0 := A_TickCount, largo := false
+         while _LBtnAbajo() {
+             DllCall("GetCursorPos","Ptr",cur)
+             mx := NumGet(cur,0,"int")
+@@ -1337,8 +1424,17 @@ _ReloadGUI_WM_LBUTTONDOWN(wParam,lParam,msg,hwnd) {
+                 movido := true
+                 DllCall("SetWindowPos","Ptr",reloadGui.g.Hwnd,"Ptr",0,"int",mx - offX,"int",my - offY,"int",0,"int",0,"uint",0x0001 | 0x0004 | 0x0010)
+             }
++            if (!largo && _HubLPHecha(t0, movido, lp))
++                largo := true
++            else if (largo && movido)
++                largo := false
+             Sleep(8)
+         }
++        if (largo) {
++            arrastrando := false
++            _HubLPDisparar()
++            return
++        }
+         if !movido {
+             try _AudReiniciar()
+             _SonarUI("reload")
+@@ -1390,6 +1486,7 @@ IniciarHubGUI() {
+     hubGui.barra := 0
+ 
+     OnMessage(0x0205,_Companion_WM_RBUTTON)
++    OnMessage(0x0246,_HubLP_WM_POINTERDOWN)   ; pulsación larga con la punta del lápiz
+     _AplicarVisibilidadEmbebidos()
+ }
+ 
+@@ -1730,6 +1827,7 @@ _PuntosGUI_WM_LBUTTONDOWN(wParam,lParam,msg,hwnd) {
+         offY := clickY - NumGet(rc,4,"int")
+         cur := Buffer(8,0)
+         movido := false
++        lp := _HubLPFueLapiz(), t0 := A_TickCount, largo := false
+         while _LBtnAbajo() {
+             if (!panelBlk.locked) {
+                 DllCall("GetCursorPos","Ptr",cur)
+@@ -1740,8 +1838,17 @@ _PuntosGUI_WM_LBUTTONDOWN(wParam,lParam,msg,hwnd) {
+                     DllCall("SetWindowPos","Ptr",puntosGui.g.Hwnd,"Ptr",0,"int",mx - offX,"int",my - offY,"int",0,"int",0,"uint",0x0001 | 0x0004 | 0x0010)
+                 }
+             }
++            if (!largo && _HubLPHecha(t0, movido, lp))
++                largo := true
++            else if (largo && movido)
++                largo := false
+             Sleep(8)
+         }
++        if (largo) {
++            arrastrando := false
++            _HubLPDisparar()
++            return
++        }
+         if !movido {
+             try AbrirCalibradorPy()
+             catch
+@@ -1997,6 +2104,7 @@ _PillClickOArrastre(hwndClick, lParam, p) {
+     bloqueado := panelBlk.locked             ; bloqueado: no se arrastra, solo dispara
+     cur := Buffer(8, 0)
+     movido := false
++    lp := _HubLPFueLapiz(), t0 := A_TickCount, largo := false
+     while _LBtnAbajo() {
+         DllCall("GetCursorPos", "Ptr", cur)
+         mx := NumGet(cur, 0, "int"), my := NumGet(cur, 4, "int")
+@@ -2005,8 +2113,16 @@ _PillClickOArrastre(hwndClick, lParam, p) {
+             DllCall("SetWindowPos", "Ptr", p.g.Hwnd, "Ptr", 0, "int", mx - offX, "int", my - offY
+                 , "int", 0, "int", 0, "uint", 0x0001 | 0x0004 | 0x0010)
+         }
++        if (!largo && _HubLPHecha(t0, movido, lp))
++            largo := true
++        else if (largo && movido)
++            largo := false
+         Sleep(8)
+     }
++    if (largo) {
++        _HubLPDisparar()
++        return
++    }
+     if movido
+         GuardarPosicionGUI("Pildora_" p.idEv, p.g.Hwnd)
+     else

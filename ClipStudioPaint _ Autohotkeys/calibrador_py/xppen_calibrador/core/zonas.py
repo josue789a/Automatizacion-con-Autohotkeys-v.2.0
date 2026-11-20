@@ -48,21 +48,17 @@ ZONAS = (
     Zona("toggleizq", "Toggle panel izq.", "P1", "toggleizq"),
     Zona("toggleder", "Toggle panel der.", "P2", "toggleder"),
     Zona("zonasegura", "Zona segura cursor", "P29", "zonasegura"),
+    # Deslizadores
+    Zona("estab", "Deslizador de estabilización", "SL", "estab"),
+    Zona("estabfoco", "Deslizador de enfoque (Shift+E)", "SL", "estabfoco"),
     # Avisos HUD
     Zona("hud_alta", "Aviso HUD · Zona 1 (Alta)", "HUD", "hud_alta"),
     Zona("hud_media", "Aviso HUD · Zona 2 (Media)", "HUD", "hud_media"),
     Zona("hud_baja", "Aviso HUD · Zona 3 (Baja)", "HUD", "hud_baja"),
-    Zona("hud_ev_shift_sostenido", "HUD Shift Sostenido", "HUD", "hud_ev_shift_sostenido"),
-    # Nuevas Ventanas / Lienzos auxiliares (NvZona 1-8)
+    # Nuevas Ventanas / Lienzos auxiliares (NvZona 1-3)
     Zona("nvzona1", "Nueva ventana 1", "NV", "nvzona1"),
     Zona("nvzona2", "Nueva ventana 2", "NV", "nvzona2"),
     Zona("nvzona3", "Nueva ventana 3", "NV", "nvzona3"),
-    Zona("nvzona4", "Nueva ventana 4", "NV", "nvzona4"),
-    Zona("nvzona5", "Nueva ventana 5", "NV", "nvzona5"),
-    Zona("nvzona6", "Nueva ventana 6", "NV", "nvzona6"),
-    Zona("nvzona7", "Nueva ventana 7", "NV", "nvzona7"),
-    Zona("nvzona8", "Nueva ventana 8", "NV", "nvzona8"),
-    Zona("nvpestana", "Franja de pestañas", "NV", "nvpestana"),
 )
 SUFIJOS = ("x1", "y1", "x2", "y2")
 
@@ -86,7 +82,28 @@ def _int(txt: str) -> int:
 def leer(d: Draft, modo: int, z: Zona) -> tuple[int, int, int, int]:
     """(x, y, w, h) tal como está en el borrador/INI."""
     sec = seccion(modo, getattr(d, "perfil", "1"))
-    val = d.get_key(sec, z.prefijo, None)
+    pref = z.prefijo.removeprefix("HUD_ev_")
+
+    if z.tipo == "EV":
+        # Aviso HUD del evento: primero busca HUD_ev_<id> de 1 línea
+        val = d.get_key(sec, f"HUD_ev_{pref}", None)
+        if val is None:
+            val = d.get_key(sec, pref, None)
+        # Si no tiene clave HUD_ev_ fija, pero tiene zona espacial configurada (<pref>_x..h):
+        if val is None and d.get_key(sec, f"{pref}_x", None) is not None:
+            return (_int(d.get_key(sec, f"{pref}_x", "0")),
+                    _int(d.get_key(sec, f"{pref}_y", "0")),
+                    _int(d.get_key(sec, f"{pref}_w", "0")),
+                    _int(d.get_key(sec, f"{pref}_h", "0")))
+    else:
+        # Zona espacial: 4 claves <id>_x.._h (formato 99b6c31); si no, línea "x,y,w,h"
+        if d.get_key(sec, f"{pref}_x", None) is not None:
+            return (_int(d.get_key(sec, f"{pref}_x", "0")),
+                    _int(d.get_key(sec, f"{pref}_y", "0")),
+                    _int(d.get_key(sec, f"{pref}_w", "0")),
+                    _int(d.get_key(sec, f"{pref}_h", "0")))
+        val = d.get_key(sec, z.prefijo, None)
+
     if val is not None and "," in str(val):
         partes = [p.strip() for p in str(val).split(",")]
         if len(partes) >= 4:
@@ -105,6 +122,15 @@ def leer(d: Draft, modo: int, z: Zona) -> tuple[int, int, int, int]:
 
 def escribir(d: Draft, modo: int, z: Zona, x: int, y: int, w: int, h: int) -> None:
     sec = seccion(modo, getattr(d, "perfil", "1"))
+    pref = z.prefijo.removeprefix("HUD_ev_")
+    # Si la zona ya existe como disparador espacial de 4 claves (<id>_x..h):
+    if d.get_key(sec, f"{pref}_x", None) is not None:
+        d.set_key(sec, f"{pref}_x", str(int(x)))
+        d.set_key(sec, f"{pref}_y", str(int(y)))
+        d.set_key(sec, f"{pref}_w", str(int(w)))
+        d.set_key(sec, f"{pref}_h", str(int(h)))
+        return
+
     if x == 0 and y == 0 and w == 0 and h == 0:
         d.set_key(sec, z.prefijo, "0,0,0,0", default="0,0,0,0")
     else:
@@ -124,6 +150,28 @@ def a_ui(r) -> tuple[int, int, int, int]:
     return r[0], r[1], r[2], r[3]
 
 
+# ── Descripción libre por zona (columna 2 de la tabla) ──────────────────
+# Se guarda aparte de [Rangos] para no mezclar texto con las coordenadas que
+# lee AHK: [ZonasDesc<perfil>] desc_<prefijo> = texto. Vacía por defecto.
+def sec_desc(perfil: str = "1") -> str:
+    return f"ZonasDesc{perfil}"
+
+
+def clave_desc(z: Zona) -> str:
+    return f"desc_{z.prefijo}"
+
+
+def leer_desc(d: Draft, z: Zona) -> str:
+    sec = sec_desc(getattr(d, "perfil", "1"))
+    return str(d.get_key(sec, clave_desc(z), "") or "")
+
+
+def escribir_desc(d: Draft, z: Zona, txt: str) -> None:
+    """Normaliza espacios; un texto vacío deja la clave en blanco (no la borra)."""
+    txt = " ".join(str(txt).split())
+    d.set_key(sec_desc(getattr(d, "perfil", "1")), clave_desc(z), txt, default="")
+
+
 def validar_celda(col: str, txt: str) -> int | None:
     """col ∈ x|y|w|h. None si es inválido."""
     try:
@@ -133,6 +181,98 @@ def validar_celda(col: str, txt: str) -> int | None:
     if col in ("w", "h"):
         return v if 0 <= v <= COORD_HI - COORD_LO else None
     return v if COORD_LO <= v <= COORD_HI else None
+
+
+def _ids_custom(d: Draft) -> list[str]:
+    """IDs de [EventosCustom] según lista=custom_1,custom_2,... (orden preservado)."""
+    if not hasattr(d, "store"):
+        return []
+    try:
+        raw = d.store.get("EventosCustom", "lista", "") or ""
+    except Exception:
+        return []
+    return [c.strip() for c in str(raw).split(",") if c.strip()]
+
+
+def _nombre_evento(d: Draft, catalogo, ev_id: str) -> str:
+    """Nombre real del evento: catálogo -> [EventosCustom] -> [HudTextos] -> 'Evento: <id>'."""
+    if catalogo and hasattr(catalogo, "por_id"):
+        try:
+            ev = catalogo.por_id(ev_id)
+        except Exception:
+            ev = None
+        if ev and getattr(ev, "nombre", ""):
+            return ev.nombre
+    if hasattr(d, "store"):
+        try:
+            custom_raw = d.store.get("EventosCustom", ev_id, "") or ""
+        except Exception:
+            custom_raw = ""
+        nom = str(custom_raw).partition("|")[0].strip()
+        if nom:
+            return nom
+        try:
+            p = getattr(d, "perfil", "1")
+            nom_hud = d.store.get(f"HudTextos{p}", f"texto_{ev_id}", "").strip()
+            if nom_hud:
+                return nom_hud
+        except Exception:
+            pass
+    return f"Evento: {ev_id}"
+
+
+def _ids_catalogo(catalogo) -> list[str]:
+    """IDs de todos los eventos del catálogo (acepta dict id->evento o iterable)."""
+    if not catalogo:
+        return []
+    try:
+        fuente = catalogo.values() if hasattr(catalogo, "values") else catalogo
+        salida: list[str] = []
+        for e in fuente:
+            cid = e.get("id") if isinstance(e, dict) else getattr(e, "id", None)
+            if cid and str(cid) not in salida:
+                salida.append(str(cid))
+        return salida
+    except Exception:
+        return []
+
+
+def obtener_todas_zonas(d: Draft, modo: int, catalogo=None) -> list[Zona]:
+    """Zonas fijas + HUD_ev_* persistidas + eventos de [EventosCustom] (aunque aún no tengan zona)."""
+    resultado = list(ZONAS)
+    p = getattr(d, "perfil", "1")
+    sec = seccion(modo, p)
+    prefijos_vistos = {z.prefijo for z in ZONAS}
+    try:
+        keys_sec = d.store.keys(sec) if hasattr(d, "store") else []
+    except Exception:
+        keys_sec = []
+
+    ids: list[str] = []
+    for k in keys_sec:
+        if k.startswith("HUD_ev_"):
+            ids.append(k[7:])
+        elif k.endswith("_x"):
+            cid = k[:-2]
+            if cid not in ids:
+                ids.append(cid)
+
+    candidatas: list[tuple[str, str, str]] = []  # (ev_id, nombre, prefijo)
+    cuenta: dict[str, int] = {}
+    for ev_id in ids:
+        prefijo = f"HUD_ev_{ev_id}"
+        if prefijo in prefijos_vistos:
+            continue
+        prefijos_vistos.add(prefijo)
+        nom = _nombre_evento(d, catalogo, ev_id)
+        cuenta[nom] = cuenta.get(nom, 0) + 1
+        candidatas.append((ev_id, nom, prefijo))
+
+    for ev_id, nom, prefijo in candidatas:
+        nom_final = f"{nom} ({ev_id})" if cuenta.get(nom, 0) > 1 else nom
+        resultado.append(Zona(id=f"ev_{ev_id}", nombre=nom_final, tipo="EV", prefijo=prefijo))
+
+    return resultado
 
 
 def editar_celda(d: Draft, modo: int, z: Zona, col: str, v: int) -> None:

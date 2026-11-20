@@ -44,19 +44,23 @@ class _Cell:
 
 class ZonasTable:
     """Tabla de zonas en dos canvas (cabecera fija + cuerpo con scroll) y UN editor flotante."""
-    ROW_H, HDR_H, NUM_W, TIPO_W, PAD = 25, 26, 68, 44, 10
+    ROW_H, HDR_H, PAD = 25, 26, 10
 
     def __init__(self, parent, zonas, cols, on_select, on_commit):
         self.zonas, self.cols = list(zonas), list(cols)
         self.byid = {z.id: z for z in self.zonas}
         self.on_select, self.on_commit = on_select, on_commit   # on_commit(zona, col)
-        self.vals = {(z.id, col): "" for z in self.zonas for col, _ in self.cols}
+        self._cols_edit = ("desc",) + tuple(c for c, _ in self.cols)   # orden de Tab
+        self.vals = {(z.id, col): "" for z in self.zonas for col in self._cols_edit}
         self._items, self._rects, self._sel = {}, {}, {}
         self._ed = self._ed_key = self._ed_win = None
         self._job = None
         self._rh = 0
         self.xs = {}
-        self._tipo_cx = 0
+        self._idx_w = 0             # columna Puntos (índice P1..Pn)
+        self._zone_x = 0            # inicio de la columna Zona
+        self._zone_x1 = 0           # fin de la columna Zona (concatenada)
+        self._desc_x = (0, 0)       # columna Descripción
 
         self.frame = ctk.CTkFrame(parent, fg_color="transparent", corner_radius=0, border_width=0)
         self.frame.grid_columnconfigure(0, weight=1)
@@ -77,7 +81,7 @@ class ZonasTable:
         for z in self.zonas:
             n = _Null()
             self.rows[z.id] = {"frame": _RowProxy(self, z.id), "zona": z, "labels": (n, n),
-                               "ents": {col: _Cell(self, z.id, col) for col, _ in self.cols}}
+                               "ents": {col: _Cell(self, z.id, col) for col in self._cols_edit}}
 
         self.cv.bind("<Configure>", self._sched_layout, add="+")
         self.cv.bind("<Button-1>", self._on_click)
@@ -87,12 +91,34 @@ class ZonasTable:
     # ---------- datos ----------
     def _set(self, zid, col, txt):
         self.vals[(zid, col)] = txt
+        raw = txt
         it = self._items.get((zid, col))
         if it:
+            if col == "desc":
+                a, b = self._desc_x
+                txt = self._fit(txt, b - a - lite.scale(self.cv, 4))
             self.cv.itemconfigure(it, text=txt)
         if self._ed_key == (zid, col) and self._ed is not None:
             self._ed.delete(0, "end")
-            self._ed.insert(0, txt)
+            self._ed.insert(0, raw)
+        self._sched_layout()
+
+    def set_zonas(self, nuevas_zonas):
+        """Actualiza la lista de zonas (p. ej. al descubrir zonas de eventos dinámicas)."""
+        nuevas = list(nuevas_zonas)
+        if [z.id for z in nuevas] == [z.id for z in self.zonas]:
+            return
+        self.zonas = nuevas
+        self.byid = {z.id: z for z in self.zonas}
+        for z in self.zonas:
+            for col in self._cols_edit:
+                if (z.id, col) not in self.vals:
+                    self.vals[(z.id, col)] = ""
+            if z.id not in self.rows:
+                n = _Null()
+                self.rows[z.id] = {"frame": _RowProxy(self, z.id), "zona": z, "labels": (n, n),
+                                   "ents": {col: _Cell(self, z.id, col) for col in self._cols_edit}}
+        self._sched_layout()
 
     def paint_row(self, zid, color):
         self._sel[zid] = None if color in (None, "", "transparent") else lite.c(color)
@@ -112,6 +138,18 @@ class ZonasTable:
         if self._job is None:
             self._job = self.frame.after_idle(self._layout)
 
+    def _fit(self, txt, px: int, font=None) -> str:
+        """Recorta el texto con «…» para que no invada la columna siguiente."""
+        txt = "" if txt is None else str(txt)
+        f = font or self.f
+        if px <= 8 or not txt:
+            return "" if px <= 8 else txt
+        if f.measure(txt) <= px:
+            return txt
+        while txt and f.measure(txt + "…") > px:
+            txt = txt[:-1]
+        return txt + "…"
+
     def _layout(self):
         self._job = None
         cv = self.cv
@@ -122,23 +160,66 @@ class ZonasTable:
         if w < 80:
             return
         s = lambda v: lite.scale(cv, v)
-        rh, pad, tipo_w, n = s(self.ROW_H), s(self.PAD), s(self.TIPO_W), len(self.cols)
-        nw = max(s(56), min(s(self.NUM_W), (w - pad - tipo_w - s(110)) // n))
-        x = w - nw * n - s(4)
+        rh, pad = s(self.ROW_H), s(self.PAD)
+        gap, right = s(12), s(4)
+        avail = w - pad - right
+
+        # 1 · ancho mínimo de cada columna = su contenido más ancho (título incluido)
+        def minimo(titulo, textos, pad_x=None):
+            px = self.fb.measure(str(titulo))
+            for t in textos:
+                px = max(px, self.f.measure(str(t)))
+            return px + (s(16) if pad_x is None else pad_x)
+
+        zonas_txt = [f"{z.zid}  ·  {z.nombre}" if z.zid else z.nombre for z in self.zonas]
+        idx_min = minimo("Puntos", [f"P{r + 1}" for r in range(len(self.zonas))])
+        zona_min = minimo("Zona", zonas_txt)
+        desc_min = minimo("Descripción de eventos", [self.vals[(z.id, "desc")] for z in self.zonas])
+        num_min = {col: minimo(tx, [self.vals[(z.id, col)] for z in self.zonas]) for col, tx in self.cols}
+
+        # 2 · Zona se queda en su ancho de contenido (así Descripción arranca pegado
+        #     a la izquierda, no a media tabla) y todo el sobrante va a Descripción.
+        libre = avail - (idx_min + zona_min + desc_min + sum(num_min.values()) + 3 * gap)
+        if libre > 0:
+            desc_w, zona_w = desc_min + libre, zona_min
+        else:
+            falta, desc_w, zona_w = -libre, desc_min, zona_min
+            for attr in ("desc", "zona"):
+                piso = s(90) if attr == "desc" else s(80)
+                actual = desc_w if attr == "desc" else zona_w
+                cut = min(falta, max(0, actual - piso))
+                if attr == "desc":
+                    desc_w -= cut
+                else:
+                    zona_w -= cut
+                falta -= cut
+            if falta > 0 and num_min:
+                factor = max(0.0, 1 - falta / sum(num_min.values()))
+                num_min = {c: max(s(40), int(v * factor)) for c, v in num_min.items()}
+
+        # 3 · posiciones reales
+        self._idx_w = int(idx_min)
+        self._zone_x = pad + self._idx_w + gap
+        zona_w = max(s(60), int(zona_w))
+        self._zone_x1 = self._zone_x + zona_w
+        desc_x0 = self._zone_x1 + gap
+        desc_w = max(s(60), int(desc_w))
+        self._desc_x = (desc_x0, desc_x0 + desc_w)
+        self._rh = rh
+        x = self._desc_x[1] + gap
         self.xs = {}
         for col, _ in self.cols:
-            self.xs[col] = (x, x + nw)
-            x += nw
-        self._rh = rh
-        self._tipo_cx = self.xs[self.cols[0][0]][0] - tipo_w // 2
+            self.xs[col] = (x, x + int(num_min[col]))
+            x = self.xs[col][1]
 
         txt, txt2 = lite.c(T.TXT), lite.c(T.TXT2)
         # cabecera
         h, hy = self.hdr, s(self.HDR_H) // 2
         h.delete("all")
-        h.create_text(pad, hy, text="Zona", anchor="w", fill=txt, font=self.fb)
-        h.create_text(pad + s(54), hy, text="Nombre identificador", anchor="w", fill=txt, font=self.fb)
-        h.create_text(self._tipo_cx, hy, text="Tipo", fill=txt, font=self.fb)
+        h.create_text(pad, hy, text="Puntos", anchor="w", fill=txt, font=self.fb)
+        h.create_text(self._zone_x, hy, text="Zona", anchor="w", fill=txt, font=self.fb)
+        h.create_text(desc_x0 + s(2), hy, text=self._fit("Descripción de eventos", desc_w - s(4), self.fb),
+                      anchor="w", fill=txt, font=self.fb)
         for col, tx in self.cols:
             a, b = self.xs[col]
             h.create_text((a + b) // 2, hy, text=tx, fill=txt, font=self.fb)
@@ -148,11 +229,15 @@ class ZonasTable:
         for r, z in enumerate(self.zonas):
             self._rects[z.id] = cv.create_rectangle(0, r * rh, w, (r + 1) * rh, width=0, state="hidden")
         cv.create_rectangle(0, 0, 0, 0, width=0, fill=lite.c(T.SOFT), state="hidden", tags=("hover",))
+        d0, d1 = self._desc_x
         for r, z in enumerate(self.zonas):
             yc = r * rh + rh // 2
-            cv.create_text(pad, yc, text=z.zid, anchor="w", fill=txt, font=self.fb)
-            cv.create_text(pad + s(54), yc, text=z.nombre, anchor="w", fill=txt, font=self.f)
-            cv.create_text(self._tipo_cx, yc, text=z.tipo, fill=txt2, font=self.f)
+            cv.create_text(pad, yc, text=f"P{r + 1}", anchor="w", fill=txt, font=self.fb)
+            cv.create_text(self._zone_x, yc, text=self._fit(zonas_txt[r], zona_w - s(4)), anchor="w",
+                           fill=txt, font=self.f)
+            self._items[(z.id, "desc")] = cv.create_text(
+                d0 + s(2), yc, text=self._fit(self.vals[(z.id, "desc")], d1 - d0 - s(4)),
+                anchor="w", fill=txt2, font=self.f)
             for col, _ in self.cols:
                 a, b = self.xs[col]
                 self._items[(z.id, col)] = cv.create_text((a + b) // 2, yc, fill=txt, font=self.f,
@@ -168,6 +253,9 @@ class ZonasTable:
         r = int(self.cv.canvasy(ey) // self._rh)
         if not 0 <= r < len(self.zonas):
             return -1, None
+        d0, d1 = self._desc_x
+        if d0 <= ex < d1:
+            return r, "desc"
         for col, (a, b) in self.xs.items():
             if a <= ex < b:
                 return r, col
@@ -179,7 +267,7 @@ class ZonasTable:
             self.cv.itemconfigure("hover", state="hidden")
             self.cv.configure(cursor="")
             return
-        a, b = self.xs[col]
+        a, b = self._desc_x if col == "desc" else self.xs[col]
         m = lite.scale(self.cv, 3)
         self.cv.coords("hover", a + 1, r * self._rh + m, b - 1, (r + 1) * self._rh - m)
         self.cv.itemconfigure("hover", state="normal")
@@ -207,15 +295,16 @@ class ZonasTable:
             cv.yview_moveto((y0 + rh - vh) / total)
 
     def _open_editor(self, z, col):
-        if not self._rh or col not in self.xs:
+        if not self._rh or col not in self._cols_edit:
             return
         r = self.zonas.index(z)
         self._ensure_visible(r)
-        a, b = self.xs[col]
+        a, b = self._desc_x if col == "desc" else self.xs[col]
         m = lite.scale(self.cv, 3)
-        ed = tk.Entry(self.cv, justify="center", bd=0, relief="flat", font=self.f,
-                      bg=lite.c(T.CARD), fg=lite.c(T.TXT), insertbackground=lite.c(T.TXT),
-                      highlightthickness=1, highlightbackground=lite.c(T.BORDER),
+        ed = tk.Entry(self.cv, justify="left" if col == "desc" else "center", bd=0, relief="flat",
+                      font=self.f, bg=lite.c(T.CARD), fg=lite.c(T.TXT),
+                      insertbackground=lite.c(T.TXT), highlightthickness=1,
+                      highlightbackground=lite.c(T.BORDER),
                       highlightcolor=lite.c(getattr(T, "ACCENT", T.BORDER)))
         ed.insert(0, self.vals[(z.id, col)])
         self._ed, self._ed_key = ed, (z.id, col)
@@ -233,7 +322,7 @@ class ZonasTable:
         if not self._ed_key:
             return "break"
         zid, col = self._ed_key
-        cols = [cn for cn, _ in self.cols]
+        cols = list(self._cols_edit)
         r, i = self.zonas.index(self.byid[zid]), cols.index(col) + step
         if i >= len(cols):
             i, r = 0, r + 1
@@ -355,6 +444,9 @@ class ZonasTab(ctk.CTkFrame):
         return self.tc.draft
 
     def refresh(self):
+        todas = Z.obtener_todas_zonas(self._d(), self.modo, getattr(self.tc, "catalogo", None))
+        self.tabla.set_zonas(todas)
+        self.rows = self.tabla.rows
         et = self._etiquetas()
         if et != getattr(self, "_et", None):          # solo si cambió «(activo en CSP)»: evita parpadeo
             self._et = et
@@ -369,8 +461,8 @@ class ZonasTab(ctk.CTkFrame):
                 if self._tiene_foco(e):
                     continue
                 e.delete(0, "end")
-                e.insert(0, str(vals[c]))
-                e.configure(text_color=col, border_color=T.BORDER)
+                e.insert(0, Z.leer_desc(self._d(), z) if c == "desc" else str(vals[c]))
+                e.configure(text_color=T.TXT2 if c == "desc" else col, border_color=T.BORDER)
         self.v_panel.set(1 if self._d().get_key(Z.seccion(self.modo, self._d().perfil), Z.PANEL_CSP_KEY, "1").strip() != "0" else 0)
         self._paint()
         self.tc.on_dirty()
@@ -419,6 +511,12 @@ class ZonasTab(ctk.CTkFrame):
     def _commit(self, z: Z.Zona, col: str):
         e = self.rows[z.id]["ents"][col]
         txt = e.get().strip()
+        if col == "desc":
+            txt = " ".join(txt.split())
+            Z.escribir_desc(self._d(), z, txt)
+            self.tabla._set(z.id, "desc", txt)
+            self.tc.on_dirty()
+            return
         cur = dict(zip(("x", "y", "w", "h"), Z.a_ui(Z.leer(self._d(), self.modo, z))))[col]
         if txt == str(cur):
             e.configure(border_color=T.BORDER)
@@ -435,7 +533,7 @@ class ZonasTab(ctk.CTkFrame):
         z = self._zona_sel()
         if z:
             self._expect = z
-            self.tc.send("CAL_ZONE", z.prefijo, "panel", self.modo, "zona", z.nombre, ok_msg=f"Calibra «{z.nombre}» en el panel…")
+            self.tc.send("CAL_ZONE", z.prefijo, "dibujar", self.modo, "zona", z.nombre, ok_msg=f"Dibuja «{z.nombre}» en pantalla…")
 
     def _cadena(self):
         if self._chain:
@@ -541,7 +639,8 @@ class ZonasTab(ctk.CTkFrame):
         if not Z.configurada(Z.leer(self._d(), self.modo, z)):
             self.tc.flash("La zona está sin configurar: dibújala primero", False)
             return
-        Ajuste(self, z)
+        self._expect = z
+        self.tc.send("CAL_ZONE", z.prefijo, "ajustar", self.modo, "zona", z.nombre, ok_msg=f"Ajusta «{z.nombre}» en pantalla…")
 
     def nudge(self, z: Z.Zona, dx=0, dy=0, dw=0, dh=0):
         x, y, w, h = Z.a_ui(Z.leer(self._d(), self.modo, z))

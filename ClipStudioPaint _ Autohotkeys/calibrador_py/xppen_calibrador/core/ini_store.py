@@ -129,6 +129,14 @@ class IniFile:
             pos -= 1
         self.lines.insert(pos, new)
 
+    def delete(self, section: str, key: str) -> bool:
+        """Elimina una clave si existe en la sección especificada."""
+        idx, _, _ = self._locate(section, key)
+        if idx is not None:
+            del self.lines[idx]
+            return True
+        return False
+
     # ── serialización y guardado atómico ───────────────────
     def to_bytes(self) -> bytes:
         text = self.eol.join(self.lines) + (self.eol if self.trailing_eol and self.lines else "")
@@ -185,15 +193,19 @@ class IniFile:
         self.load()
         return last
 
-    def save_patches(self, patches: list[tuple[str, str, str]], retries: int = 6) -> None:
-        """Aplica parches (sección, clave, valor) sobre el archivo ACTUAL y lo reemplaza atómicamente."""
+    def save_patches(self, patches: list[tuple[str, str, str | None]], retries: int = 6) -> None:
+        """Aplica parches (sección, clave, valor) sobre el archivo ACTUAL y lo reemplaza atómicamente.
+        Si valor es None, la clave es eliminada."""
         if not patches:
             return
         last_err: Exception | None = None
         for attempt in range(retries):
             self.load()                                   # siempre sobre lo último en disco
             for sec, key, val in patches:
-                self.set(sec, key, val)
+                if val is None:
+                    self.delete(sec, key)
+                else:
+                    self.set(sec, key, val)
             self._backup()
             tmp = self.path.with_name(f"{self.path.name}.tmp-{os.getpid()}")
             try:

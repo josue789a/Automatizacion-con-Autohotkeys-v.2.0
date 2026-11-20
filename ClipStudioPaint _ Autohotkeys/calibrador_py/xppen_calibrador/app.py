@@ -127,15 +127,17 @@ class CalibradorApp(ctk.CTk):
         try:
             from .core import single_instance
             if single_instance.consumir_recarga():
-                if mtime_codigo() != _SIG_CODIGO:
-                    self._reiniciar_proceso()      # el .py cambió: hace falta proceso nuevo
-                    return
                 self.deiconify()
                 self.attributes("-topmost", bool(self.attributes("-topmost")))
                 self.lift()
                 self.focus_force()
+                self.catalogo.load()
+                if hasattr(self, "cat_panel"):
+                    self.cat_panel.rebuild()
                 if hasattr(self, "reload_all"):
                     self.reload_all()
+                elif hasattr(self, "_refresh_tabs"):
+                    self._refresh_tabs()
         except Exception:
             pass
         try:
@@ -259,7 +261,7 @@ class CalibradorApp(ctk.CTk):
         pg.place(relx=0.0, rely=0.0, relwidth=1.0, relheight=1.0)
         pg.grid_columnconfigure(1, weight=1)
         pg.grid_rowconfigure(0, weight=1)
-        self.cat_panel = CatalogoPanel(pg, self.catalogo, self._select, self._add_event)
+        self.cat_panel = CatalogoPanel(pg, self.catalogo, self._select, self._add_event, app=self)
         self.cat_panel.grid(row=0, column=0, sticky="ns", padx=(0, 12))
         self.editor = EditorPanel(pg, self.ctx)
         self.editor.grid(row=0, column=1, sticky="nsew")
@@ -278,6 +280,10 @@ class CalibradorApp(ctk.CTk):
         if ev:
             self.editor.show_event(ev)
             self._on_dirty()
+            try:
+                self.bridge.send("SELECT_EVENT", id_ev, ev.nombre)
+            except Exception:
+                pass
 
     def _on_dirty(self):
         if not hasattr(self, "footer"):
@@ -297,7 +303,7 @@ class CalibradorApp(ctk.CTk):
         cid, nombre = self.catalogo.siguiente_custom()
         lista = [c for c in (self.store.get("EventosCustom", "lista", "") or "").split(",") if c.strip()]
         try:
-            self.store.save_patches([("EventosCustom", "lista", ",".join([*lista, cid])), ("EventosCustom", cid, f"{nombre}|")])
+            self.store.save_patches([("EventosCustom", "lista", ",".join([*lista, cid])), ("EventosCustom", cid, f"{nombre}|Personalizados")])
         except OSError as e:
             self.footer.flash(str(e), False)
             return
@@ -333,11 +339,7 @@ class CalibradorApp(ctk.CTk):
 
     def save_and_close(self):
         if self.save():
-            self.after(120, self._ocultar_residente)
-
-    def _ocultar_residente(self):
-        """Modo residente: ocultar ventana para reapertura instantánea (<0.1s)."""
-        self.withdraw()
+            self.after(120, self.destroy)
 
     def _close(self):
         if self.draft.count:
@@ -346,7 +348,7 @@ class CalibradorApp(ctk.CTk):
                 return
             if r and not self.save():
                 return
-        self._ocultar_residente()
+        self.destroy()
 
     # ── cambios externos (AHK escribe el INI) ──────────────
     def _refresh_tabs(self, external=False):

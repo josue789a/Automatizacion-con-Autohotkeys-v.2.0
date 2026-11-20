@@ -8,6 +8,17 @@ def test_borrador_suave_quick_l():
     assert particularidad_default("borrador_suave", "quick_ms") == 300
 
 
+def test_pluma_y_aerografo_particularidades_defaults():
+    assert particularidad_default("pluma", "quick") == 1
+    assert particularidad_default("pluma", "quick_a") == "q"
+    assert particularidad_default("pluma", "quick_b") == "Ctrl+2"
+    assert particularidad_default("aerografo", "quick") == 1
+    assert particularidad_default("aerografo", "quick_a") == "w"
+    assert particularidad_default("aerografo", "quick_b") == "k"
+    assert particularidad_default("aerografo_alpha", "quick_b") == "k"
+    assert particularidad_default("color_primario", "quick_b") == "Ctrl+2"
+
+
 def test_toggle_deseleccion():
     assert particularidad_default("deseleccion", "toggle_a") == "x"
     assert particularidad_default("reseleccion", "toggle_b") == "F10"

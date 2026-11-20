@@ -207,9 +207,10 @@ GetWindowRectSize(hwnd, &w, &h) {
 _GfxGdipInicio(cerrar := false) {
     static token := 0, alSalir := false
     if cerrar {
-        if token
-            DllCall("gdiplus\GdiplusShutdown", "Ptr", token)
-        token := 0
+        if token {
+            try DllCall("gdiplus\GdiplusShutdown", "Ptr", token)
+            token := 0
+        }
         return 0
     }
     if token
@@ -723,6 +724,7 @@ _TemaSelCerrar(*) {
 }
 
 _TemaSelAplicarPerfil(perfil, *) {
+    global estabGui
     est := _TemaSelEst()
     iniPath := A_ScriptDir "\theme.ini"
     try {
@@ -733,17 +735,37 @@ _TemaSelAplicarPerfil(perfil, *) {
         try est.st.Value := "⚠ Error al escribir en theme.ini"
         return
     }
+    ; Sincronizar dinamicamente en vivo los colores del deslizador estabilizador
+    if (IsSet(estabGui) && IsObject(estabGui)) {
+        if perfil.tokens.Has("accent.estab") {
+            estabGui.estabTrackOn := perfil.tokens["accent.estab"]
+            estabGui.estabKnob := perfil.tokens["accent.estab"]
+        } else {
+            try estabGui.DeleteProp("estabTrackOn"), estabGui.DeleteProp("estabKnob")
+        }
+        if perfil.tokens.Has("surface.on")
+            estabGui.estabTrackOff := perfil.tokens["surface.on"]
+        else
+            try estabGui.DeleteProp("estabTrackOff")
+    }
     _TemaRecargar()
     _TemaRefrescarPaneles()
     try est.st.Value := "✔ Paleta aplicada: " perfil.nombre
 }
 
 _TemaRefrescarPaneles() {
+    global estabGui, panelBlk
     for fnPanel in [ActualizarDsGUI,ActualizarCcGUI,ActualizarArGUI,ActualizarHCGUI,ActualizarLockGUI,ActualizarFrenteGUI,ActualizarEstabBtnGUI] {
         try fnPanel()
     }
     try reloadGui.g.BackColor := _Tema("color","surface.reload","3B7A4B")
     try puntosGui.g.BackColor := _Tema("color","surface.off","424242")
-    try ActualizarEstabGUI(-1,true)
+    if (IsSet(estabGui) && IsObject(estabGui) && HasProp(estabGui, "g") && IsObject(estabGui.g)) {
+        try estabGui.g.BackColor := (IsSet(panelBlk) && panelBlk.locked) ? _Tema("color","surface.estabLocked","2B2B2B") : _Tema("color","surface.estabOpen","3A4260")
+        estabGui.dibG := ""
+        try ActualizarEstabGUI(-1, true)
+        try _EstabDibujar()
+    }
+    try ActualizarNVGUI(true)                   ; [A4] la caché de la píldora exige forzar al cambiar tema
 }
 ; === P3-PALETA-END ===

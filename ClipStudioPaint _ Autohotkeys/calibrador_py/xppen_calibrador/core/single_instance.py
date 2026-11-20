@@ -125,23 +125,7 @@ def adquirir() -> bool:
         return True
     k32.CloseHandle(h)
 
-    pid = _pid_ventana()
-    if pid and _obsoleta(pid):
-        if _terminar(pid):
-            log.info("instancia obsoleta %s terminada (código más nuevo en disco)", pid)
-            for _ in range(40):                                  # hasta 2 s a que suelte el mutex
-                h = k32.CreateMutexW(None, False, _MUTEX_NOMBRE)
-                if k32.GetLastError() != 183:
-                    _handle = h
-                    return True
-                k32.CloseHandle(h)
-                time.sleep(0.05)
-            log.warning("el mutex sigue ocupado tras terminar la instancia %s", pid)
-        else:
-            log.warning("no se pudo terminar la instancia obsoleta %s (¿permisos?)", pid)
-            _avisar_no_reemplazable(pid)
-
-    # instancia viva y al día: avisarla (recarga) y traerla al frente
+    # Instancia viva: avisarla (recarga en caliente sin cerrar la ventana) y traerla al frente
     if _evt:
         k32.SetEvent(_evt)
     hwnd = u32.FindWindowW(None, TITULO)

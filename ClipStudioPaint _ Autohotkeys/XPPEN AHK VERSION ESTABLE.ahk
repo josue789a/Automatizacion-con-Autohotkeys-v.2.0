@@ -1,14 +1,25 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
+#Warn All, OutputDebug
 if !A_IsAdmin {
     try Run('*RunAs "' A_ScriptFullPath '"')
     ExitApp()
 }
+_icOk := false
 for _ic in [A_ScriptDir "\iconos\clipstudio.ico", A_ScriptDir "\clipstudio.ico"] {
     if FileExist(_ic) {
-        try TraySetIcon(_ic)
+        try {
+            TraySetIcon(_ic)
+            _icOk := true
+        }
         break
     }
+}
+; Provisional hasta tener un .ico definitivo: icono de Paint (temática dibujo)
+if !_icOk {
+    try TraySetIcon(A_WinDir "\System32\mspaint.exe", 1)
+    catch
+        try TraySetIcon("shell32.dll", 71)   ; 2º fallback; si el índice no gusta, probar 44 o 138
 }
 DllCall("SetThreadDpiAwarenessContext","ptr",-3,"ptr")
 SendMode("Input")
@@ -24,7 +35,7 @@ CoordMode("Mouse","Screen")
 CoordMode("ToolTip","Screen")
 SetTitleMatchMode(2)
 sys := {lastModTime:"",modoEscritura:false}
-stylus := {altActive:false,rButtonHeld:false,comboUsado:false,upSinteticoTick:0,botonSostenido:false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,origX:0,origY:0,spaceFlipTimerRunning:0}
+stylus := {altActive:false,rButtonHeld:false,comboUsado:false,upSinteticoTick:0,botonSostenido:false,smearSend:false,ignorarUpSintetico:false,bSinteticoTick:0,origX:0,origY:0,spaceFlipTimerRunning:0,origenCompanion:false}
 sel := {estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
 colorEstado := 0
 UP_SINTETICO_MS := 70
@@ -52,7 +63,7 @@ STAB_KNOWN_INI := A_ScriptDir "\estab_known.ini"
 STAB_ALIAS := Map("x","q")
 E := {procesando:false,last:0}
 W := {last:0}
-Z := {last:0,timerRunning:0}
+Z := {last:0,timerRunning:0,estaAbajo:false}
 Q := {last:0,estadoEstab:0,pendiente:false}
 RM := {last:0}
 A_state := {lastPress:0}
@@ -91,8 +102,9 @@ frenteGui := {g:0,icono:0,barra:0}
 hubGui := {g:0,icono:0,barra:0,embebidos:Map()}
 estabBtnGui := {g:0,icono:0,label:0,barra:0}
 estabGui := {g:0,valorTxt:0,grip:0,valor:50,previsto:50,sincronizado:false,arrastrando:false,visible:true,ancho:0,alto:0,txtH:0,trackW:0,trackX:0,trackY:0,trackH:0,knobSize:0,horiz:false,txtW:0,fuente:9,foco:false,rectNormal:0,fAbajo:false,fSoltado:0,fTick:0,fPrevHasta:0,dibV:-1,dibG:""}
+global PERFIL := 1
 _Stab_CargarKnown()
-panelBlk := {locked:true,frente:false}
+panelBlk := {locked:true,frente:false,clicAuto:true}   ; clicAuto existe desde t0: los timers de zona corren antes de IniciarLockGUI
 global g_sweepActivo := false
 global g_sweepAtomico := true   ; true = congelar/aplicar/redibujar al conmutar el barrido (false = comportamiento anterior)
 global _iniPend := Map()
@@ -107,13 +119,28 @@ PUNTOS := []
 AVISO_ESC := 1.0
 HIST_ALTO := 104
 ZONAS := {}
-PERFILES := ["Laptop + tableta","Monitor + tableta"]
+PERFILES := ["Laptop + tableta","Monitor + tableta","PC (1 monitor)"]
 PERFIL := 1
 ElegirPerfil()
 ESC := 1.0
 CargarEscala()
 CargarEscalaAvisos()
 CargarPuntos()
+AsegurarAtajosGlobales()
+SetTimer(AsegurarAtajosGlobales, 15000)
+
+AsegurarAtajosGlobales() {
+    SYNCHRONIZE := 0x00100000
+    hM := DllCall("OpenMutexW", "uint", SYNCHRONIZE, "int", 0, "str", "Local\AHK_AtajosMouse_Mutex", "ptr")
+    if (hM != 0) {
+        DllCall("CloseHandle", "ptr", hM)
+        return
+    }
+    target := "C:\Users\jbard\Desktop\AHK-global-main\Mouse.ahk"
+    if FileExist(target)
+        try Run('"' A_AhkPath '" "' target '"')
+}
+
 SetTimer(CheckReload,600)
 SetTimer(ChequearZonaHistorial,200)
 SetTimer(ChequearZonaAltA,35)
@@ -136,23 +163,141 @@ IniciarEstabBtnGUI()
 IniciarReloadGUI()
 IniciarPuntosGUI()
 IniciarHubGUI()
-A_TrayMenu.Add("🎨 Paleta del tema",(*) => _AbrirSelectorTema())
+_PillSincronizarDinamicas()
+_EspacialIniciar()
+_ConstruirTrayMenu()
+
+_ConstruirTrayMenu() {
+    A_TrayMenu.Delete()                       ; limpia cualquier entrada previa y estandares en AHK v2
+
+    mModo := Menu()
+    mModo.Add("Modo 1 · Normal",  (*) => EstablecerModoTrabajo("Normal"))
+    mModo.Add("Modo 2 · Enfoque", (*) => EstablecerModoTrabajo("Enfoque"))
+    if (IsSet(enfoque) && IsObject(enfoque) && HasProp(enfoque, "activo") && enfoque.activo)
+        mModo.Check("Modo 2 · Enfoque")
+    else
+        mModo.Check("Modo 1 · Normal")
+
+    mPerf := Menu()
+    if (IsSet(PERFILES) && IsObject(PERFILES)) {
+        for idx, nom in PERFILES {
+            mPerf.Add(nom, _CambiarPerfilTray.Bind(idx))
+            if (idx = PERFIL)
+                mPerf.Check(nom)
+        }
+    }
+
+    mArte := Menu()
+    mArte.Add("Proyectos / Cargar más proyectos", _AbrirProyectoArte)
+    mArte.Add("Brief del Proyecto", (*) => _AbrirBriefProyecto())
+    mArte.Add("Estado / Configuración CSP",
+              (*) => _AbrirRutaTray(EnvGet("APPDATA") "\OrganizadorArt\config.json"))
+
+    A_TrayMenu.Add("Modo de Trabajo", mModo)
+    A_TrayMenu.Add("Perfil de equipo", mPerf)
+    A_TrayMenu.Add("[Global] Nueva ventana", (*) => _NvBotonCrearVentana())
+    A_TrayMenu.Add("Calibrador de Zonas", (*) => _EjecutarAccionHub("puntos"))
+    A_TrayMenu.Add("Calibrador Clásico (Antiguo)", (*) => AbrirPanelPuntos())
+    A_TrayMenu.Add("Proyecto Arte", mArte)
+    A_TrayMenu.Add("Brief del Proyecto", (*) => _AbrirBriefProyecto())
+    A_TrayMenu.Add()
+    A_TrayMenu.Add("Recargar Script", (*) => _CalPyReiniciarSeguro())
+    A_TrayMenu.Add("Salir", (*) => ExitApp())
+}
+
+_CambiarPerfilTray(nuevo, *) {
+    _AplicarCambioPerfil(nuevo)
+}
+
+_AbrirProyectoArte(*) {
+    dirOrq := EnvGet("USERPROFILE") "\Documents\AntiGravity\Orquestador\organizador-art"
+    scriptTodos := dirOrq "\src\gui_context_menu.py"
+    if FileExist(scriptTodos) {
+        try {
+            Run('pythonw "' scriptTodos '" --todos', dirOrq)
+            return
+        }
+    }
+    dirArte := EnvGet("USERPROFILE") "\Documents\AntiGravity\Proyecto Arte"
+    try Run('python "' dirArte '\organizar.py"', dirArte)
+    catch
+        MostrarHUD("No se pudo abrir Proyecto Arte", "FF5555", 2500)
+}
+
+_AbrirBriefProyecto(*) {
+    dirOrq := "C:\Users\jbard\Downloads\Fase22_extraido\limpio\Orquestador\organizador-art"
+    if FileExist(dirOrq "\src\briefing.py") {
+        try {
+            Run('pythonw -m src.briefing --auto', dirOrq, "Hide")
+            return
+        }
+    }
+    dirDocs := EnvGet("USERPROFILE") "\Documents\AntiGravity\Orquestador\organizador-art"
+    if FileExist(dirDocs "\src\briefing.py") {
+        try {
+            Run('pythonw -m src.briefing --auto', dirDocs, "Hide")
+            return
+        }
+    }
+    cfgPath := EnvGet("APPDATA") "\OrganizadorArt\config.json"
+    if FileExist(cfgPath) {
+        try {
+            contenido := FileRead(cfgPath, "UTF-8")
+            if RegExMatch(contenido, '"ultimo_proyecto"\s*:\s*"([^"]+)"', &m) {
+                rutaNotas := StrReplace(m[1], "\\", "\") "\notas.md"
+                if FileExist(rutaNotas) {
+                    Run('"' rutaNotas '"')
+                    return
+                }
+            }
+        }
+    }
+    _AbrirRutaTray(EnvGet("APPDATA") "\OrganizadorArt\briefing_global.md")
+}
+
+_AbrirRutaTray(ruta) {
+    if !FileExist(ruta) {
+        MostrarHUD("No existe: " ruta, "FF5555", 2500)
+        return
+    }
+    try Run('"' ruta '"')
+}
 
 global _cspEraActiva := false
 global _bSmearAbajo := false
 SetTimer(_VigilaFocoCSP, 150)
+SetTimer(_RemapVigilarIni, 1000)
+SetTimer(_RemapCargarHotkeys, -200)
 OnExit(_AudAlSalir)
+CalPyInit()
 SetTimer(_AudPrecargar, -400)
 #Include %A_ScriptDir%\lib\core_config.ahk
 #Include %A_ScriptDir%\lib\theme_gfx.ahk
 #Include %A_ScriptDir%\lib\audio.ahk
+#Include %A_ScriptDir%\lib\sonido_evento.ahk
+#Include %A_ScriptDir%\lib\comportamientos.ahk
 #Include %A_ScriptDir%\lib\hud_badges.ahk
+#Include %A_ScriptDir%\lib\gui_builder.ahk
 #Include %A_ScriptDir%\lib\companion.ahk
 #Include %A_ScriptDir%\lib\estab_slider.ahk
 #Include %A_ScriptDir%\lib\calibrador.ahk
+#Include %A_ScriptDir%\lib\calibrador_panel.ahk
+#Include %A_ScriptDir%\lib\calibrador_py.ahk
 #Include %A_ScriptDir%\lib\hotkeys_csp.ahk
+#Include %A_ScriptDir%\lib\espacial.ahk
+#Include %A_ScriptDir%\lib\diag.ahk   ; medicion F1 de Enfoque (DiagLog/_DiagMs); sin Diag_Iniciar no cambia comportamiento
+
+; ╔══════════════════════════════════════════════════════════════╗
+; ║  Modo escritura, modo Hotkeys                                  ║
+; ╚══════════════════════════════════════════════════════════════╝
+^+!h:: {
+    Send("{Ctrl up}{Shift up}{Alt up}")
+    Send("^{Escape}")
+}
 
 ; --- Atajo de Pánico Universal (Cierre de emergencia sin procesos zombies) ---
 #HotIf
 ^!+q:: ExitApp()
+
+#Include %A_ScriptDir%\lib\captura_overlay.ahk
 

@@ -20,7 +20,19 @@ class AhkBridge:
             return 0
         import ctypes
         import ctypes.wintypes as wt
+        import tempfile
+        from pathlib import Path
         u32 = ctypes.windll.user32
+        try:
+            p = Path(tempfile.gettempdir()) / "_ahk_bridge_hwnd.txt"
+            if p.exists():
+                h_txt = p.read_text(encoding="utf-8-sig").strip()
+                if h_txt.isdigit():
+                    h_val = int(h_txt)
+                    if u32.IsWindow(h_val):
+                        return h_val
+        except Exception:
+            pass
         encontrado: list[int] = []
 
         @ctypes.WINFUNCTYPE(wt.BOOL, wt.HWND, wt.LPARAM)

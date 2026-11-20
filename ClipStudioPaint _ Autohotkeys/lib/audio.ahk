@@ -187,29 +187,72 @@ _HapticoSlider(v) {
     _AudPlay(_SliderBuf(Min(10, Integer(v) // 10)))
 }
 
-_RachaBuf(clave, nivel) {
-    static r := [1.0, 1.125, 1.25, 1.5, 1.667]     ; pentatónica mayor
+; Motor original del 7-nov (mono 22050 Hz, campana senoidal). preMs > 0 solo para despertar un DAC dormido.
+_CrearTonoSuave(f0, f1, ms, vol := 0.18, preMs := 0, postMs := 30) {
+    sr := 22050, pi := 3.14159265358979
+    lead  := Integer(sr * preMs / 1000)
+    n     := Integer(sr * ms / 1000)
+    tail  := Integer(sr * postMs / 1000)           ; cola de silencio (Buffer ya viene en ceros)
+    total := lead + n + tail
+    buf := Buffer(44 + total * 2, 0)
+    NumPut("UInt", 0x46464952, buf, 0)        ; "RIFF"
+    NumPut("UInt", 36 + total * 2, buf, 4)
+    NumPut("UInt", 0x45564157, buf, 8)        ; "WAVE"
+    NumPut("UInt", 0x20746D66, buf, 12)       ; "fmt "
+    NumPut("UInt", 16, buf, 16)
+    NumPut("UShort", 1, buf, 20)              ; PCM
+    NumPut("UShort", 1, buf, 22)              ; mono
+    NumPut("UInt", sr, buf, 24)
+    NumPut("UInt", sr * 2, buf, 28)
+    NumPut("UShort", 2, buf, 32)
+    NumPut("UShort", 16, buf, 34)
+    NumPut("UInt", 0x61746164, buf, 36)       ; "data"
+    NumPut("UInt", total * 2, buf, 40)
+    phase := 0.0
+    loop n {
+        i := A_Index - 1
+        f := f0 + (f1 - f0) * i / n
+        phase += 2 * pi * f / sr
+        env := Sin(pi * i / n) ** 2
+        NumPut("Short", Round(Sin(phase) * env * vol * 32767), buf, 44 + (lead + i) * 2)
+    }
+    return buf
+}
+
+_RachaBuf(clave, nivel, pre := 0) {
+    static r := [1.0, 1.125, 1.25, 1.5, 1.667]     ; pentatónica mayor original (Redo)
+    static fU := [520, 650, 800, 1000, 1250]       ; Undo: curva geométrica ~x1.25 por nivel
     idx := Max(0, Min(4, Integer(nivel)))
-    f := Round((clave = "redo" ? 760 : 520) * r[idx + 1])
-    return _AudTonoBuf("rch_" clave "_" idx, f, Round(f * 1.05), 16, 0.22)
+    f := (clave = "redo") ? Round(760 * r[idx + 1]) : fU[idx + 1]
+    id := "sua6_" clave "_" idx (pre ? "_w" : "")
+    c := _AudCache()
+    if !c.Has(id)
+        c[id] := _CrearTonoSuave(f, Round(f * (clave = "redo" ? 1.05 : 0.92)), 16, 0.50 * _AudVol(), pre, 30)
+    return c[id]
 }
 _HapticoRacha(clave) {
     static nivel := Map("undo",0,"redo",0), ult := Map("undo",0,"redo",0), ultSnd := Map("undo",0,"redo",0)
+    static bloq := 0                               ; hasta cuándo el último tono con preroll no debe ser cancelado
     try {
         if !_AudActivo()
             return
         ahora := A_TickCount
-        if (ahora - ultSnd[clave] < 20)                 ; blindaje: mínimo 20 ms entre sonidos para no saturar WinMM
+        if (ahora - ultSnd[clave] < 20)                 ; blindaje ligero original
             return
         ultSnd[clave] := ahora
         gap := ahora - ult[clave]
+        dormido := (ult[clave] = 0 || gap > 1500)       ; DAC en reposo: este toque lleva preroll de 60 ms
         if (gap < 400 && ult[clave] > 0)
             nivel[clave] := Min(4, Integer(nivel[clave]) + 1)
         else                                           ; reseteo suave: un nivel por cada 500 ms de pausa
             nivel[clave] := Max(0, Integer(nivel[clave]) - ((gap - 400) // 500 + 1))
         ult[clave] := ahora
         idx := Max(0, Min(4, Integer(nivel[clave])))
-        _AudPlay(_RachaBuf(clave, idx))
+        if (ahora < bloq)                          ; hay un tono en preroll: no lo canceles (el nivel ya subió arriba)
+            return
+        if dormido
+            bloq := ahora + 60 + 20                ; preroll (60) + tono (16) + margen
+        _AudPlay(_RachaBuf(clave, idx, dormido ? 60 : 0))
     }
 }
 
@@ -246,11 +289,11 @@ _AudReiniciar() {
     }
 }
 _AudAlSalir(*) {
-    DllCall("winmm\PlaySoundW","Ptr",0,"Ptr",0,"UInt",0)   ; corta el sonido antes de liberar buffers
-    _GdipLiberarFuentes()
+    try DllCall("winmm\PlaySoundW","Ptr",0,"Ptr",0,"UInt",0)   ; corta el sonido antes de liberar buffers
+    try _GdipLiberarFuentes()
     gr := _GdipRes()
     if gr.tok {
-        DllCall("gdiplus\GdiplusShutdown","ptr",gr.tok)
+        try DllCall("gdiplus\GdiplusShutdown","ptr",gr.tok)
         gr.tok := 0
     }
 }

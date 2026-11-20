@@ -39,6 +39,7 @@ _LimpiarGUIs() {
     _DestruirGui(floatGui.enfoque)
     floatGui.enfoque := 0
     enfoque.activo := false
+    _EnfEstado().pintado := -1      ; invalida la paridad: el estado cambió fuera de AccionEnfoque
     OcultarGUIEnfoque()
     _DestruirGui(floatGui.overlayIcon)
     floatGui.overlayIcon := 0
@@ -123,6 +124,8 @@ _AvisoCerrarAuxiliares() {
 _AvisoCerrarBadge() {
     global floatGui, _AvisoBadgesActivos
     try SetTimer(_TimerOcultarBadge, 0)
+    try floatGui.badgeTxt.Destroy()
+    try floatGui.badgeTxt := 0
     if (IsObject(floatGui) && IsObject(floatGui.badge)) {
         try {
             if (floatGui.badgeHwnd && DllCall("IsWindow", "Ptr", floatGui.badgeHwnd))
@@ -152,6 +155,7 @@ _AvisoCerrarHUD() {
         try {
             if (floatGui.hudHwnd && DllCall("IsWindow", "Ptr", floatGui.hudHwnd))
                 DllCall("ShowWindow", "Ptr", floatGui.hudHwnd, "Int", 0)
+            try floatGui.hudTxt.Hide()
             floatGui.hud.Hide()
         }
     }
@@ -220,6 +224,15 @@ MostrarAvisoUI(formato, textoPrincipal, subtexto := "", zona := 2, colorAcento :
         }
 
         grande := (h >= 90)
+        tSize := Max(10, Min(36, Round(h * 0.16)))
+        sSize := grande ? 10 : 8
+        wAj := _HudAnchoAjustado(w, textoPrincipal, subtexto, tSize, sSize)
+        if (wAj > w) {
+            px := Round(px - (wAj - w) / 2)   ; crece centrado sobre la zona calibrada
+            w := wAj
+        }
+        ClampPrimario(&px, &py, w, h)
+
         brazo := grande ? 16 : 10
         grosor := grande ? 3 : 2
 
@@ -264,13 +277,7 @@ MostrarAvisoUI(formato, textoPrincipal, subtexto := "", zona := 2, colorAcento :
         tY := (h - tAlto) // 2 + (subtexto != "" ? 8 : 0)
         ancho := Max(40, w - 24)
 
-        if (subtexto != "") {
-            g.SetFont("s" sSize " bold c9AA7C7", "Segoe UI")
-            g.Add("Text", Format("x12 y{} w{} h18 Center BackgroundTrans +0x200 +0x4000", Max(4, tY - 18), ancho), subtexto)
-        }
-        g.SetFont("s" tSize " bold cFFFFFF", "Segoe UI")
-        g.Add("Text", Format("x12 y{} w{} h{} Center BackgroundTrans +0x200 +0x4000", tY, ancho, tAlto), textoPrincipal)
-
+        ; [P3-TEXTO100] los textos se dibujan en la ventana gt (ver más abajo)
         floatGui.badge := g
         floatGui.badgeHwnd := hw
         floatGui.badgeTick := A_TickCount
@@ -282,6 +289,27 @@ MostrarAvisoUI(formato, textoPrincipal, subtexto := "", zona := 2, colorAcento :
             return
         try _DwmNoRedondear(hw)
         try WinSetRegion(Format("0-0 w{} h{}", w, h), g)
+        ; [P3-TEXTO100] capa de texto: ventana propia, alfa 255
+        gt := Gui("-Caption +AlwaysOnTop +ToolWindow +E0x20 -DPIScale")
+        gt.BackColor := "12141A"
+        gt.MarginX := 0
+        gt.MarginY := 0
+        if (subtexto != "") {
+            gt.SetFont("s" sSize " bold q4 c9AA7C7", "Segoe UI")
+            gt.Add("Text", Format("x12 y{} w{} h18 Center BackgroundTrans +0x200 +0x4000", Max(4, tY - 18), ancho), subtexto)
+        }
+        gt.SetFont("s" tSize " bold q4 cFFFFFF", "Segoe UI")
+        gt.Add("Text", Format("x12 y{} w{} h{} Center BackgroundTrans +0x200 +0x4000", tY, ancho, tAlto), textoPrincipal)
+        hwt := 0
+        try hwt := gt.Hwnd
+        if (hwt && DllCall("IsWindow", "Ptr", hw) && floatGui.badgeHwnd = hw) {
+            try _DwmNoRedondear(hwt)
+            try WinSetTransColor("12141A", gt)
+            try gt.Show(Format("x{} y{} w{} h{} NoActivate", px, py, w, h))
+            floatGui.badgeTxt := gt
+            _AvisoBadgesActivos.Push(hwt)
+        } else
+            try gt.Destroy()
         if (!esAnclado)
             SetTimer(_TimerOcultarBadge, -duracion)
         return
@@ -306,6 +334,7 @@ MostrarAvisoUI(formato, textoPrincipal, subtexto := "", zona := 2, colorAcento :
         p := _CalcularPosicionZona(zona, w, h)
         px := p.x, py := p.y
     }
+    ClampPrimario(&px, &py, w, h)
     if (opacidad = 0)
         opacidad := (zona = 1) ? 70 : ((zona = 2) ? 70 : 100)
     alpha := (opacidad <= 40) ? 102 : ((opacidad <= 70) ? 178 : 235)
@@ -320,12 +349,21 @@ MostrarAvisoUI(formato, textoPrincipal, subtexto := "", zona := 2, colorAcento :
         lblY := Round(4 * AVISO_ESC)
         lblH := Max(16, h - barH - lblY - Round(3 * AVISO_ESC))
         fSize := Max(7, Min(28, Round(h * 0.22)))
-        lbl := g.Add("Text", "x0 y" lblY " w" w " h" lblH " cFFFFFF +0x200 +0x4000 Center", textoPrincipal)
-        lbl.SetFont("s" fSize " bold", "Segoe UI")
+        ; [P3-TEXTO100] etiqueta en ventana propia (alfa 255)
+        try floatGui.hudTxt.Destroy()
+        gt := Gui("-Caption +AlwaysOnTop +ToolWindow +E0x20")
+        gt.BackColor := "1A1A1A"
+        gt.MarginX := 0
+        gt.MarginY := 0
+        lbl := gt.Add("Text", "x0 y" lblY " w" w " h" lblH " cFFFFFF +0x200 +0x4000 Center BackgroundTrans", textoPrincipal)
+        lbl.SetFont("s" fSize " bold q4", "Segoe UI")
+        try WinSetTransColor("1A1A1A", gt)
         bar := g.Add("Progress", "x0 y" (h - barH) " w" w " h" barH)
         bar.Opt("c" colorAcento)
         bar.Value := 100
         try g.Show(Format("x{} y{} w{} h{} NoActivate", px, py, w, h))
+        try gt.Show(Format("x{} y{} w{} h{} NoActivate", px, py, w, h))
+        floatGui.hudTxt := gt
         floatGui.hud := g
         floatGui.hudLabel := lbl
         floatGui.hudBar := bar
@@ -336,11 +374,19 @@ MostrarAvisoUI(formato, textoPrincipal, subtexto := "", zona := 2, colorAcento :
         floatGui.hudLabel.Value := textoPrincipal
         floatGui.hudBar.Opt("c" colorAcento)
         floatGui.hudBar.Value := 100
+        ClampPrimario(&px, &py, w, h)
         DllCall("SetWindowPos", "Ptr", floatGui.hudHwnd, "Ptr", -1, "int", px, "int", py, "int", w, "int", h, "uint", 0x0040 | 0x0010)
         floatGui.hudTick := A_TickCount
         try floatGui.hud.Show("NoActivate")
         if IsSet(GfxMascaraRedondeada)
             try GfxMascaraRedondeada(floatGui.hudHwnd, w, h, 6)
+        try {
+            hwt := floatGui.hudTxt.Hwnd
+            DllCall("SetWindowPos", "Ptr", hwt, "Ptr", -1, "int", px, "int", py, "int", w, "int", h, "uint", 0x0040 | 0x0010)
+            floatGui.hudTxt.Show("NoActivate")
+            if IsSet(GfxMascaraRedondeada)
+                GfxMascaraRedondeada(hwt, w, h, 6)
+        }
     }
     if (!esAnclado)
         SetTimer(_TimerOcultarHUD, -duracion)
@@ -349,6 +395,10 @@ MostrarAvisoUI(formato, textoPrincipal, subtexto := "", zona := 2, colorAcento :
 ; ===== DESPACHADOR DE EVENTOS CONFIGURADOS EN CALIBRADOR =====
 _AvisoEvento(clave, textoPrincipal := "", subtexto := "", colorAcento := "00E5FF", duracion := 0) {
     global PERFIL
+    if _PtsEvPausado(clave)
+        return
+    if (IniRead(_PosGuiIniPath(), "HudEventos" PERFIL, "activo_" clave, "1") = "0")
+        return
     c := HudConfigEvento(clave)
     zNum := (c.zona = "alta") ? 1 : ((c.zona = "media") ? 2 : 3)
     if (duracion = 0)
@@ -367,6 +417,7 @@ _AvisoEvento(clave, textoPrincipal := "", subtexto := "", colorAcento := "00E5FF
             }
         }
     }
+    _SndEvento(clave)          ; independiente de c.formato (suena aunque sea "desactivado")
     MostrarAvisoUI(c.formato, textoPrincipal, subtexto, zNum, colorAcento, duracion, c.opacidad, clave)
 }
 
@@ -607,4 +658,19 @@ QuitarTooltipToggle() {
     if IsObject(floatGui.tooltipToggle)
         try floatGui.tooltipToggle.Destroy()
     floatGui.tooltipToggle := 0
+}
+
+; Ancho necesario (px) para dibujar texto/subtexto completos + márgenes (x12 + 12 + holgura).
+_HudAnchoAjustado(w, texto, subtexto, tSize, sSize) {
+    maxW := Round(A_ScreenWidth * 0.6)
+    need := _HudMedirTexto(texto, tSize)
+    if (subtexto != "")
+        need := Max(need, _HudMedirTexto(subtexto, sSize))
+    return Min(maxW, Max(w, need + 24 + 16))
+}
+
+_HudMedirTexto(txt, size) {
+    if (txt = "")
+        return 0
+    return Round(StrLen(txt) * size * 0.72)
 }

@@ -41,6 +41,14 @@
   - CSP (`ahk_exe CLIPStudioPaint.exe`) y PureRef (`ahk_exe PureRef.exe`) no deben cruzar pulsaciones.
 - **Stylus combo**:
   - Cada combinación con el lápiz (`~RButton & tecla`) debe marcar `stylus.comboUsado := true`.
+- **Registro Obligatorio de Entrega (Antes, Ahora y Criterios de Prueba)**:
+  - Al completar cualquier funcionalidad, rediseño o ajuste estructural (en AHK o en el calibrador Python), es OBLIGATORIO documentar formalmente en el cierre de la interacción:
+    1. **Cómo estaba antes (Estado Previo / Prototipo Anterior)**: descripción o mockup del layout, widgets o comportamiento anterior.
+    2. **Cómo está ahora (Estado Actual / Entrega)**: estructura nueva, controles incorporados, cambios de esquema INI y su disposición.
+    3. **Criterios para probar (Testing Criteria)**: guía paso a paso con las acciones concretas para verificar manualmente y en runtime el funcionamiento correcto sin regresiones.
+- **Tolerancia Cero a Tareas Huérfanas (Cierre Limpio y Síncrono)**:
+  - Todo comando de terminal (`run_command`) para respaldos, validaciones, compresión o procesos de corta duración debe ejecutarse con tiempo de espera suficiente (`WaitMsBeforeAsync: 10000`) y con herramientas de terminación directa (ej. `tar.exe` nativo de Windows, nunca comandos PowerShell que abran streams bloqueantes o recurrentes).
+  - Al término de cada interacción, es OBLIGATORIO asegurar que `manage_task` no mantenga tareas en background (`list` limpio). Si alguna tarea quedó activa por error o timeout, debe terminarse inmediatamente con `kill`. Prohibido dejar tareas en segundo plano huérfanas en el entorno.
 
 ## Módulos
 
@@ -50,4 +58,5 @@
 - `lib/hud_badges.ahk`: badges y avisos HUD (modo moderno con brackets 90°, modo bruto, `_HudRangoEv`).
 - `lib/calibrador.ahk`: panel de calibración de zonas, duraciones, edición directa de texto de eventos y reubicación.
 - `lib/hotkeys_csp.ahk`: atajos de teclado y combinaciones con el stylus en CSP.
+- `calibrador_py/`: suite del nuevo calibrador en Python (CustomTkinter) comunicada vía puente IPC con AHK.
 - `posiciones_gui.ini`: persistencia de coordenadas, rangos (`[Rangos<P>]`), duraciones y textos personalizados.

@@ -273,6 +273,20 @@ class StylusContextMenu(tk.Toplevel):
             pass
 
 
+VAL_ARBOL = "🌳 Por Teclas Físicas (Árbol)"
+
+FAMILIAS_TECLAS = (
+    ("🔴 [ E ]  BORRADORES Y CAPAS", ("borrador", "borrador_suave", "borrador_lazo", "borrador_all_layers", "capa_visibilidad")),
+    ("🔵 [ W ]  AERÓGRAFO Y PINTURA", ("aerografo", "aerografo_alpha", "difu_mixer", "opc_presion")),
+    ("🟠 [ S ]  SELECCIÓN Y LAZO", ("lazo", "area_color")),
+    ("🟣 [ Q ]  PLUMILLA Y PINCELES", ("pluma", "color_primario", "color_secundario", "pincel_duro", "pincel_suave")),
+    ("⚪ [ F ]  HERRAMIENTAS F / SMEAR", ("smear", "smear_soft", "shift_sostenido")),
+    ("⚪ [ X ]  MEZCLA Y SELECCIÓN", ("deseleccion", "reseleccion", "color_mix", "smudge")),
+    ("⚪ [ Z ]  LIENZO Y ZOOM", ("zoom_lienzo", "rotar_lienzo", "flip_horizontal", "inv_seleccion", "regla_ocultar", "relleno")),
+    ("⚪ ACCIONES Y SISTEMA", ("guardar", "deshacer", "rehacer", "copiar", "enfoque", "history_lock", "panel_ds", "panel_cc", "gui_frente", "estab_slider", "layout", "reload")),
+)
+
+
 class CatalogoPanel(ctk.CTkFrame):
     def __init__(self, master, catalogo, on_select, on_add, app=None):
         super().__init__(master, fg_color=T.CARD, corner_radius=10, border_width=1, border_color=T.BORDER, width=T.LEFT_W)
@@ -294,8 +308,8 @@ class CatalogoPanel(ctk.CTkFrame):
         top.grid(row=0, column=0, sticky="ew", padx=2, pady=(2, 1))
         top.grid_columnconfigure(0, weight=1)
         lbl(top, "Eventos", 14, T.TXT, True).grid(row=0, column=0, sticky="w")
-        self.grp = combo(top, ["Todos los grupos"], command=lambda _v: self._filter(), width=150)
-        self.grp.set("Todos los grupos")
+        self.grp = combo(top, ["Todos los grupos"], command=lambda _v: self._filter(), width=160)
+        self.grp.set(VAL_ARBOL)
         self.grp.grid(row=0, column=1)
 
         bar = ctk.CTkFrame(self, fg_color="transparent", width=0, height=0)
@@ -371,7 +385,7 @@ class CatalogoPanel(ctk.CTkFrame):
     def rebuild(self, keep=True):
         self._rows.clear()
         actual = self.grp.get()
-        vals = ["Todos los grupos", *self.catalogo.grupos()]
+        vals = ["Todos los grupos", VAL_ARBOL, *self.catalogo.grupos()]
         if list(self.grp.cget("values")) != vals:
             self.grp.configure(values=vals)
         if actual not in vals:
@@ -391,15 +405,41 @@ class CatalogoPanel(ctk.CTkFrame):
         g = self.grp.get()
         self._vis = []
         n = 0
-        for grupo in self.catalogo.grupos():
-            vis = [i for i, (_, _, ev) in self._rows.items()
-                   if ev.grupo == grupo and (g in ("", "Todos los grupos", grupo))
-                   and (not q or q in ev.nombre.lower())]
-            if not vis:
-                continue
-            self._vis.append(("h", grupo))
-            self._vis.extend(("r", i) for i in vis)
-            n += len(vis)
+        if g == VAL_ARBOL:
+            asignados = set()
+            for titulo, eids in FAMILIAS_TECLAS:
+                vis = []
+                for idx, eid in enumerate(eids):
+                    if eid in self._rows:
+                        ev = self._rows[eid][2]
+                        if not q or q in ev.nombre.lower():
+                            pref = "   └─ " if idx == len(eids) - 1 else ("   ├─ " if idx > 0 else "")
+                            vis.append((eid, pref))
+                            asignados.add(eid)
+                if vis:
+                    self._vis.append(("h", titulo))
+                    self._vis.extend(("r", eid, pfx) for eid, pfx in vis)
+                    n += len(vis)
+            sobrantes = []
+            for eid, (_, _, ev) in self._rows.items():
+                if eid not in asignados and (not q or q in ev.nombre.lower()):
+                    sobrantes.append((eid, ""))
+            if sobrantes:
+                self._vis.append(("h", "⚪ PERSONALIZADOS Y OTROS"))
+                self._vis.extend(("r", eid, pfx) for eid, pfx in sobrantes)
+                n += len(sobrantes)
+        else:
+            for grupo in self.catalogo.grupos():
+                vis = [i for i, (_, _, ev) in self._rows.items()
+                       if ev.grupo == grupo and (g in ("", "Todos los grupos", grupo))
+                       and (not q or q in ev.nombre.lower())]
+                if not vis:
+                    continue
+                self._vis.append(("h", grupo))
+                for idx, i in enumerate(vis):
+                    pref = "   └─ " if idx == len(vis) - 1 else "   ├─ "
+                    self._vis.append(("r", i, pref))
+                n += len(vis)
         self.count.configure(text=f"{n} evento{'s' if n != 1 else ''}")
         self._render_canvas(keep=keep)
 
@@ -414,30 +454,44 @@ class CatalogoPanel(ctk.CTkFrame):
         soft, accent = self._c(T.SOFT), self._c(T.ACCENT)
         pri = self._c(T.PRIMARY)
         y = 2
-        for kind, key in self._vis:
+        for item in self._vis:
+            kind = item[0]
             if kind == "h":
+                key = item[1]
                 y += 14 if y > 2 else 2
-                cv.create_text(10, y + self._HEAD_H / 2, text=key.upper(), font=self._fh,
+                # Círculo decorativo
+                cv.create_oval(10, y + self._HEAD_H / 2 - 3, 16, y + self._HEAD_H / 2 + 3,
+                               fill=pri, outline="")
+                cv.create_text(24, y + self._HEAD_H / 2, text=key.upper(), font=self._fh,
                                fill=pri, anchor="w", state="disabled")
                 y += self._HEAD_H + 2
                 continue
+            key = item[1]
+            pfx = item[2] if len(item) > 2 else ""
             ev = self._rows[key][2]
             on = key in self.selected_set
             is_lead = (key == self.selected)
             rect = self._rrect(4, y, w - 6, y + self._ROW_H - 2, 8,
                                fill=soft if on else self._bg, outline="")
             pausado = getattr(ev, "pausado", False)
-            nom = f"⏸ {ev.nombre}" if pausado else ev.nombre
+            nom = f"{pfx}{'⏸ ' if pausado else ''}{ev.nombre}"
             font_use = self._fb if (is_lead or on) else self._f
-            txt = cv.create_text(22, y + self._ROW_H / 2 - 1,
-                                 text=ellipsize(nom, self._f, max(60, w - 58)),
+            indent = 8 if pfx else 0
+            txt = cv.create_text(22 + indent, y + self._ROW_H / 2 - 1,
+                                 text=ellipsize(nom, self._f, max(60, w - 75 - indent)),
                                  font=font_use,
                                  fill=self._c(T.PRIMARY if on else (T.TXT2 if pausado else T.TXT)),
                                  anchor="w", state="disabled")
-            self._items[key] = (rect, txt)
+            dots = cv.create_text(w - 20, y + self._ROW_H / 2 - 1,
+                                 text="⋮", font=T.font(14, True),
+                                 fill=self._c(T.TXT3), anchor="center")
+            self._items[key] = (rect, txt, dots)
             self._row_bounds.append((y, y + self._ROW_H, key))
             cv.tag_bind(rect, "<Button-1>", lambda e, i=key: self._on_row_down(e, i))
             cv.tag_bind(txt, "<Button-1>", lambda e, i=key: self._on_row_down(e, i))
+            cv.tag_bind(dots, "<Button-1>", lambda e, i=key: self._on_context_menu(e, i))
+            cv.tag_bind(dots, "<Enter>", lambda _e, i=key: self._hov(i, True))
+            cv.tag_bind(dots, "<Leave>", lambda _e, i=key: self._hov(i, False))
             cv.tag_bind(rect, "<ButtonRelease-1>", lambda e: self._on_row_up(e))
             cv.tag_bind(txt, "<ButtonRelease-1>", lambda e: self._on_row_up(e))
             cv.tag_bind(rect, "<B1-Motion>", self._on_lp_motion)
@@ -462,11 +516,14 @@ class CatalogoPanel(ctk.CTkFrame):
         self.cv.configure(cursor="hand2" if enter else "")
         if i not in self.selected_set:
             self.cv.itemconfigure(it[0], fill=self._c(T.SOFT) if enter else self._bg)
+        if len(it) > 2:
+            # Resaltar los 3 puntos al pasar el mouse
+            self.cv.itemconfigure(it[2], fill=self._c(T.PRIMARY if enter else T.TXT3))
 
     def _on_row_click(self, event, key: str):
         shift = bool(event.state & 0x0001)
         ctrl = bool(event.state & 0x0004)
-        vis_keys = [k for kind, k in self._vis if kind == "r"]
+        vis_keys = [item[1] for item in self._vis if item[0] == "r"]
 
         if shift and self._anchor and self._anchor in vis_keys and key in vis_keys:
             i1 = vis_keys.index(self._anchor)
@@ -513,17 +570,31 @@ class CatalogoPanel(ctk.CTkFrame):
 
     def _paint(self):
         w = self._W or 80
-        for i, (rect, txt) in self._items.items():
+        for i, it in self._items.items():
+            rect, txt = it[0], it[1]
+            dots = it[2] if len(it) > 2 else None
             on = i in self.selected_set
             is_lead = (i == self.selected)
             self.cv.itemconfigure(rect, fill=self._c(T.SOFT) if on else self._bg)
             ev = self._rows[i][2] if i in self._rows else None
             pausado = getattr(ev, "pausado", False) if ev else False
             font_use = self._fb if (is_lead or on) else self._f
-            nom = f"⏸ {ev.nombre}" if (ev and pausado) else (ev.nombre if ev else "")
-            self.cv.itemconfigure(txt, text=ellipsize(nom, self._f, max(60, w - 58)),
+            # Recuperar el prefijo original del objeto ev en self._rows
+            pfx = self._rows[i][1] if len(self._rows[i]) > 1 else "" # Esto es incorrecto, la estructura de _rows cambió.
+            # Necesitamos obtener el pfx guardado en _vis durante el filtrado.
+            # Como _vis se regenera, busquemos el pfx asociado a esta key i
+            pfx = ""
+            for item in self._vis:
+                if item[0] == "r" and item[1] == i:
+                    pfx = item[2]
+                    break
+
+            nom = f"{pfx}{'⏸ ' if pausado else ''}{ev.nombre}"
+            self.cv.itemconfigure(txt, text=ellipsize(nom, self._f, max(60, w - 75 - (8 if pfx else 0))),
                                   fill=self._c(T.PRIMARY if on else (T.TXT2 if pausado else T.TXT)),
                                   font=font_use)
+            if dots:
+                self.cv.itemconfigure(dots, fill=self._c(T.PRIMARY if on else T.TXT3))
 
     def _cancel_lp(self):
         if self._lp_job is not None:
@@ -611,11 +682,7 @@ class CatalogoPanel(ctk.CTkFrame):
                 menu.add_command(f"⏸  Pausar seleccionados ({num_sel})", lambda: self._pausar_seleccionados(True))
                 menu.add_command(f"▶  Activar seleccionados ({num_sel})", lambda: self._pausar_seleccionados(False))
 
-            customs = [eid for eid in self.selected_set if getattr(self.catalogo.por_id(eid), "custom", False)]
-            if customs:
-                menu.add_command(f"🗑  Eliminar eventos custom ({len(customs)})", self._eliminar_seleccionados)
-            else:
-                menu.add_command("🗑  Eliminar eventos (solo de fábrica)", None, state="disabled")
+            menu.add_command(f"🗑  Eliminar eventos ({num_sel})", self._eliminar_seleccionados)
 
             def _build_sub_multi(sub):
                 for g in self.catalogo.grupos():
@@ -634,10 +701,7 @@ class CatalogoPanel(ctk.CTkFrame):
                 lbl_pausa = "▶  Activar evento" if esta_pausado else "⏸  Pausar / Activar evento"
                 menu.add_command(lbl_pausa, lambda: self._toggle_pausa_evento(ev.id))
 
-                if getattr(ev, "custom", False):
-                    menu.add_command("🗑  Eliminar evento", lambda: self._eliminar_evento(ev.id))
-                else:
-                    menu.add_command("🗑  Eliminar evento (de fábrica)", None, state="disabled")
+                menu.add_command("🗑  Eliminar evento", lambda: self._eliminar_evento(ev.id))
 
                 def _build_sub_single(sub):
                     for g in self.catalogo.grupos():
@@ -709,21 +773,14 @@ class CatalogoPanel(ctk.CTkFrame):
         store = getattr(self.app, "store", None) or getattr(self.catalogo, "store", None)
         if not store or not self.selected_set:
             return
-        customs = [eid for eid in self.selected_set if getattr(self.catalogo.por_id(eid), "custom", False)]
-        if not customs:
+        eids = list(self.selected_set)
+        if not eids:
             return
         import tkinter.messagebox as mb
-        if not mb.askyesno("Eliminar eventos", f"¿Eliminar definitivamente los {len(customs)} eventos seleccionados?"):
+        if not mb.askyesno("Eliminar eventos", f"¿Eliminar definitivamente los {len(eids)} eventos seleccionados?"):
             return
-        lista = [c for c in (store.get("EventosCustom", "lista", "") or "").split(",") if c.strip()]
-        lista_nueva = [c for c in lista if c not in customs]
-        patches = [("EventosCustom", "lista", ",".join(lista_nueva))]
-        for eid in customs:
-            patches.append(("EventosCustom", eid, None))
-            patches.append(("EventosPausados", eid, None))
-            patches.append(("EventosGrupo", eid, None))
         try:
-            store.save_patches(patches)
+            self.catalogo.eliminar_eventos(eids)
         except OSError as e:
             if self.app and hasattr(self.app, "footer"):
                 self.app.footer.flash(str(e), False)
@@ -731,13 +788,13 @@ class CatalogoPanel(ctk.CTkFrame):
         if self.app and hasattr(self.app, "bridge"):
             self.app.bridge.send("RELOAD_INI", "catalogo")
         self.catalogo.load()
-        self.selected_set.difference_update(customs)
-        self.selected = next(iter(self.selected_set), None) or (self.catalogo.eventos[0].id if self.catalogo.eventos else None)
+        self.selected_set.clear()
+        self.selected = self.catalogo.eventos[0].id if self.catalogo.eventos else None
         self.rebuild()
         if self.selected:
             self.select(self.selected)
         if self.app and hasattr(self.app, "footer"):
-            self.app.footer.flash(f"🗑 {len(customs)} eventos eliminados")
+            self.app.footer.flash(f"🗑 {len(eids)} eventos eliminados")
 
     def _toggle_pausa_evento(self, id_ev: str):
         ev = self.catalogo.por_id(id_ev)
@@ -798,9 +855,7 @@ class CatalogoPanel(ctk.CTkFrame):
 
     def _eliminar_evento(self, id_ev: str):
         ev = self.catalogo.por_id(id_ev)
-        if not ev or not getattr(ev, "custom", False):
-            if self.app and hasattr(self.app, "footer"):
-                self.app.footer.flash("Solo se pueden eliminar eventos personalizados", False)
+        if not ev:
             return
         store = getattr(self.app, "store", None) or getattr(self.catalogo, "store", None)
         if not store:
@@ -808,16 +863,8 @@ class CatalogoPanel(ctk.CTkFrame):
         import tkinter.messagebox as mb
         if not mb.askyesno("Eliminar evento", f"¿Eliminar '{ev.nombre}' definitivamente?"):
             return
-        lista = [c for c in (store.get("EventosCustom", "lista", "") or "").split(",") if c.strip()]
-        lista_nueva = [c for c in lista if c != id_ev]
-        patches = [
-            ("EventosCustom", "lista", ",".join(lista_nueva)),
-            ("EventosCustom", id_ev, None),
-            ("EventosPausados", id_ev, None),
-            ("EventosGrupo", id_ev, None),
-        ]
         try:
-            store.save_patches(patches)
+            self.catalogo.eliminar_eventos([id_ev])
         except OSError as e:
             if self.app and hasattr(self.app, "footer"):
                 self.app.footer.flash(str(e), False)
@@ -825,10 +872,11 @@ class CatalogoPanel(ctk.CTkFrame):
         if self.app and hasattr(self.app, "bridge"):
             self.app.bridge.send("RELOAD_INI", "catalogo")
         self.catalogo.load()
+        self.selected_set.discard(id_ev)
+        self.selected = self.catalogo.eventos[0].id if self.catalogo.eventos else None
         self.rebuild()
-        primer = self.catalogo.eventos[0].id if self.catalogo.eventos else None
-        if primer:
-            self.select(primer)
+        if self.selected:
+            self.select(self.selected)
         if self.app and hasattr(self.app, "footer"):
             self.app.footer.flash(f"🗑 Evento '{ev.nombre}' eliminado")
 
@@ -968,10 +1016,6 @@ class EditorPanel(ctk.CTkFrame):
     def _on_toggle(self, block):
         if block.expanded:
             self.opened.append(block)
-            while len(self.opened) > MAX_OPEN:
-                old = self.opened.pop(0)
-                if old is not block:
-                    old.set_expanded(False)
         elif block in self.opened:
             self.opened.remove(block)
         self._queue_sync()
