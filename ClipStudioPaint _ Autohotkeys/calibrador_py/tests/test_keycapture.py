@@ -16,3 +16,15 @@ def test_tokens():
     assert _tok_de(_ev("exclam", 49, "!")) == "1"
     assert _tok_de(_ev("Escape", 27)) == "Esc"
     assert _tok_de(_ev("Caps_Lock", 20)) == ""
+
+def test_badge_cursor():
+    import customtkinter as ctk
+    from xppen_calibrador.ui.widgets import attach_keycapture
+    r = ctk.CTk()
+    try:
+        e = ctk.CTkEntry(r)
+        attach_keycapture(e)
+        inner = getattr(e, "_entry", e)
+        assert inner.cget("cursor") == "hand2"
+    finally:
+        r.destroy()

@@ -715,11 +715,15 @@ def attach_keycapture(host, on_clear=None, on_commit=None, get_history=None):
             orig = None
 
     def accent(on):
-        if orig is not None:
-            try:
-                ent.configure(border_color=_T.ACCENT if on else orig)
-            except Exception:
-                pass
+        try:
+            if on:
+                ent.configure(border_color=_T.ACCENT)
+            elif hasattr(host, "_apply_style"):
+                pass  # Conserva el estilo blindado del host
+            elif orig is not None:
+                ent.configure(border_color=orig)
+        except Exception:
+            pass
 
     def put(txt):
         ent.delete(0, "end")
@@ -756,37 +760,24 @@ def attach_keycapture(host, on_clear=None, on_commit=None, get_history=None):
             _gracia = st.pop("gracia_once", None) or (PEN_GRACIA_MS if st["pico"] == ["RButton"] else 200)
             st["job"] = inner.after(_gracia, lambda: st.update(cerrado=True, job=None))
 
-    # Botón "RB" de la UI: un toque arma RButton como prefijo del acorde.
+    # Botón "RB" de la UI: arma el capturador oficial si no está armado.
     def tap_rbutton():
-        if st["manual"]:
+        if st.get("armed"):
             return
-        try:
-            inner.focus_set()
-        except Exception:
-            return
-        st["gracia_once"] = PEN_LATCH_MS
-        try:
-            press("RButton")
-            release("RButton")
-        finally:
-            st.pop("gracia_once", None)
+        arm_capture()
 
     host._kc_rbutton = tap_rbutton
 
     def kdown(ev):
-        if st["manual"]:
+        # Campo blindado contra escritura manual directa para evitar descalibraciones
+        # y garantizar que RButton del stylus sea detectado por el overlay AHK.
+        if getattr(ev, "keysym", "") in ("Tab", "ISO_Left_Tab"):
             return None
-        tok = _tok_de(ev)
-        if tok:
-            press(tok)
         return "break"
 
     def kup(ev):
-        if st["manual"]:
+        if getattr(ev, "keysym", "") in ("Tab", "ISO_Left_Tab"):
             return None
-        tok = _tok_de(ev)
-        if tok:
-            release(tok)
         return "break"
 
     def mdown(ev):
@@ -903,6 +894,10 @@ def attach_keycapture(host, on_clear=None, on_commit=None, get_history=None):
         arm_capture()
 
     for _w in ([w for w in (inner, ent, canvas) if w is not None]):
+        try:
+            _w.configure(cursor="hand2")
+        except Exception:
+            pass
         _w.bind("<ButtonPress>", btn_press, add="+")
         _w.bind("<ButtonRelease>", btn_release, add="+")
         _w.bind("<ButtonPress-3>", mdown, add="+")

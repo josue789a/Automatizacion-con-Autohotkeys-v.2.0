@@ -373,8 +373,27 @@ class Block(ctk.CTkFrame):
             if callable(hook):
                 hook(name, value)
 
+        w = entry(c, width)
+
+        def _apply_style(is_custom: bool):
+            try:
+                if is_custom:
+                    w.configure(
+                        text_color=T.PRIMARY,
+                        fg_color=T.SOFT,
+                        border_color=T.FIELD_OFF,
+                    )
+                else:
+                    w.configure(
+                        text_color=T.TXT3,
+                        fg_color="#FAF9FD",
+                        border_color=T.FIELD_BORDER,
+                    )
+            except Exception:
+                pass
+        w._apply_style = _apply_style
+
         if defecto is not None:
-            w = entry(c, width)
             w.configure(placeholder_text=_get_def(), placeholder_text_color=T.TXT3)
 
             def commit(_e=None):
@@ -382,13 +401,15 @@ class Block(ctk.CTkFrame):
                 raw = w.get().strip()
                 val_to_commit = "" if (not raw or (cur_def and raw.lower() == cur_def.lower())) else raw
                 ok = self._commit(name, val_to_commit)
-                w.configure(border_color=T.FIELD_BORDER if ok else T.DANGER)
                 if val_to_commit == "":
                     w.delete(0, "end")
                     try:
                         w._activate_placeholder()
                     except Exception:
                         pass
+                _apply_style(bool(val_to_commit))
+                if not ok:
+                    w.configure(border_color=T.DANGER)
                 _notify(val_to_commit)
 
             w.bind("<FocusOut>", commit)
@@ -404,6 +425,7 @@ class Block(ctk.CTkFrame):
                         w._activate_placeholder()
                     except Exception:
                         pass
+                _apply_style(False)
                 _notify("")
 
             def ok():
@@ -414,33 +436,49 @@ class Block(ctk.CTkFrame):
                 w.configure(placeholder_text=cur_def, placeholder_text_color=T.TXT3)
                 cur = str(self.ctx.get(name) or "").strip()
                 w.delete(0, "end")
-                if cur and (not cur_def or cur.lower() != cur_def.lower()):
+                is_custom = bool(cur and (not cur_def or cur.lower() != cur_def.lower()))
+                if is_custom:
                     w.insert(0, cur)
                 else:
                     try:
                         w._activate_placeholder()
                     except Exception:
                         pass
-                w.configure(border_color=T.FIELD_BORDER)
+                _apply_style(is_custom)
 
             self._loaders.append(load)
             e = w
         else:
-            w = entry(c, width)
+            def _get_catalog_def():
+                ev = getattr(self.ctx, "catalogo", None) and self.ctx.catalogo.por_id(self.ctx.event_id)
+                if not ev:
+                    return ""
+                d = str(ev.atajo_def if name == "atajo" else (ev.remap_def if name == "remap" else ""))
+                return "" if d == "—" else d
 
             def commit(_e=None):
-                val = w.get()
-                ok = self._commit(name, val)
-                w.configure(border_color=T.FIELD_BORDER if ok else T.DANGER)
-                _notify(val)
+                val = w.get().strip()
+                cat_def = _get_catalog_def()
+                val_to_commit = "" if (cat_def and val.lower() == cat_def.lower()) else val
+                ok = self._commit(name, val_to_commit)
+                is_custom = bool(val and (not cat_def or val.lower() != cat_def.lower()))
+                _apply_style(is_custom)
+                if not ok:
+                    w.configure(border_color=T.DANGER)
+                _notify(val_to_commit)
 
             w.bind("<FocusOut>", commit)
             w.bind("<Return>", commit)
 
             def load():
+                cur = str(self.ctx.get(name) or "").strip()
+                cat_def = _get_catalog_def()
                 w.delete(0, "end")
-                w.insert(0, str(self.ctx.get(name) or ""))
-                w.configure(border_color=T.FIELD_BORDER)
+                val_to_show = cur if (cur and cur != "—") else cat_def
+                if val_to_show:
+                    w.insert(0, val_to_show)
+                is_custom = bool(cur and cur != "—" and (not cat_def or cur.lower() != cat_def.lower()))
+                _apply_style(is_custom)
 
             self._loaders.append(load)
 
@@ -448,8 +486,12 @@ class Block(ctk.CTkFrame):
                 if on_clear:
                     on_clear()
                 else:
+                    cat_def = _get_catalog_def()
                     w.delete(0, "end")
+                    if cat_def:
+                        w.insert(0, cat_def)
                     self._commit(name, "")
+                _apply_style(False)
                 _notify("")
 
             def ok():
@@ -578,6 +620,12 @@ class A01Base(Block):
             e1.insert(0, str(val_a))
             e2.delete(0, "end")
             e2.insert(0, str(val_r))
+            is_cust_a = bool(cur_a and cur_a != "—" and (not ev or not ev.atajo_def or cur_a.lower() != ev.atajo_def.lower()))
+            is_cust_r = bool(cur_r and cur_r != "—" and (not ev or not ev.remap_def or cur_r.lower() != ev.remap_def.lower()))
+            if hasattr(e1, "_apply_style"):
+                e1._apply_style(is_cust_a)
+            if hasattr(e2, "_apply_style"):
+                e2._apply_style(is_cust_r)
         self._loaders.append(load_base)
         self._loaders.append(self._check_dup)
         e1.bind("<KeyRelease>", lambda _e: self._check_dup(e1.get()), add="+")
@@ -589,6 +637,8 @@ class A01Base(Block):
         ent.delete(0, "end")
         ent.insert(0, def_val)
         self._commit(name, "")
+        if hasattr(ent, "_apply_style"):
+            ent._apply_style(False)
         self._check_dup()
 
     def _check_dup(self, typed=None):
