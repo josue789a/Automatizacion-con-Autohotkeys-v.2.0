@@ -1,0 +1,64 @@
+{
+ "eventos": [
+  {
+   "id": "pincel_tinta",
+   "nombre": "Plumilla / Pincel Tinta (Q)",
+   "grupo": "Pinceles y Trazos",
+   "atajo": ""
+  },
+  {
+   "id": "aerografo_prin",
+   "nombre": "Aerógrafo Principal (W)",
+   "grupo": "Pinceles y Trazos",
+   "atajo": ""
+  },
+  {
+   "id": "pincel_suave",
+   "nombre": "Pincel Suave (Alt + Q)",
+   "grupo": "Pinceles y Trazos",
+   "atajo": ""
+  },
+  {
+   "id": "borrador_capas",
+   "nombre": "Borrador de Capas (E)",
+   "grupo": "Borradores y Mezcla",
+   "atajo": ""
+  },
+  {
+   "id": "borrador_suave",
+   "nombre": "Borrador Suave · Soft Eraser (E doble)",
+   "grupo": "Borradores y Mezcla",
+   "atajo": ""
+  },
+  {
+   "id": "panel_cc",
+   "nombre": "Panel Círculo de Colores (CC)",
+   "grupo": "Paneles y Modos",
+   "atajo": ""
+  },
+  {
+   "id": "gui_frente",
+   "nombre": "Botones al Frente / Solo en CSP",
+   "grupo": "Paneles y Modos",
+   "atajo": ""
+  },
+  {
+   "id": "estab_slider",
+   "nombre": "Deslizador de Estabilización",
+   "grupo": "Herramientas de Precisión",
+   "atajo": ""
+  },
+  {
+   "id": "guardar_layout",
+   "nombre": "Guardar / Aplicar Layout de Paneles",
+   "grupo": "Sistema",
+   "atajo": ""
+  },
+  {
+   "id": "reload",
+   "nombre": "Recargar Script",
+   "grupo": "Sistema",
+   "atajo": ""
+  }
+ ]
+}

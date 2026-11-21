@@ -1,0 +1,274 @@
+﻿
+  xppen_calibrador\ui\blocks.py:41:
+  xppen_calibrador\ui\blocks.py:42:    def __init__(self, master, ctx: Ctx, on_toggle):
+> xppen_calibrador\ui\blocks.py:43:        super().__init__(master, fg_color=T.CARD, corner_radius=12, border_width=1, 
+border_color="#E5E0F0")
+  xppen_calibrador\ui\blocks.py:44:        self.ctx, self.on_toggle = ctx, on_toggle
+  xppen_calibrador\ui\blocks.py:45:        self.expanded, self._built, self._loading, self.available = False, False, 
+False, True
+  xppen_calibrador\ui\blocks.py:48:        self.grid_columnconfigure(0, weight=1)
+  xppen_calibrador\ui\blocks.py:49:        self._header()
+> xppen_calibrador\ui\blocks.py:50:        self.body = ctk.CTkFrame(self, fg_color="transparent", width=0, height=0)
+  xppen_calibrador\ui\blocks.py:51:        ctx.blocks.append(self)
+  xppen_calibrador\ui\blocks.py:52:
+  xppen_calibrador\ui\blocks.py:59:        self.num_badge = ctk.CTkFrame(
+  xppen_calibrador\ui\blocks.py:60:            h, fg_color=T.SOFT, corner_radius=8,
+> xppen_calibrador\ui\blocks.py:61:            width=T.BADGE_W, height=T.BADGE_H)
+  xppen_calibrador\ui\blocks.py:62:        self.num_badge.grid(row=0, column=0, rowspan=2, padx=(0, 10))
+  xppen_calibrador\ui\blocks.py:63:        self.num_badge.grid_propagate(False)
+  xppen_calibrador\ui\blocks.py:79:        self.m_var = tk.IntVar(value=0)
+  xppen_calibrador\ui\blocks.py:80:        self.m_chk = check(h, "", self.m_var, self._master_click)
+> xppen_calibrador\ui\blocks.py:81:        self.m_chk.configure(width=22)
+  xppen_calibrador\ui\blocks.py:82:        if self.MASTER:
+  xppen_calibrador\ui\blocks.py:83:            self.m_chk.grid(row=0, column=2, rowspan=2, padx=(8, 6), sticky="")
+> xppen_calibrador\ui\blocks.py:84:        self.chev = lbl(h, "⌄", 16, T.TXT2, anchor="center", width=22)
+  xppen_calibrador\ui\blocks.py:85:        self.chev.grid(row=0, column=3, rowspan=2, sticky="")
+  xppen_calibrador\ui\blocks.py:86:        for w in (h, self.num_badge, self.l_num, self.l_title, self.l_sub, 
+self.chev):
+  xppen_calibrador\ui\blocks.py:195:        return w
+  xppen_calibrador\ui\blocks.py:196:
+> xppen_calibrador\ui\blocks.py:197:    def f_menu(self, parent, name, items, width=130):
+  xppen_calibrador\ui\blocks.py:198:        """items: [(etiqueta, valor_ini)]"""
+  xppen_calibrador\ui\blocks.py:199:        l2v, v2l = dict(items), {str(v).lower(): l for l, v in items}
+> xppen_calibrador\ui\blocks.py:200:        w = combo(parent, [l for l, _ in items], width=width,
+  xppen_calibrador\ui\blocks.py:201:                  command=lambda lab: self._commit(name, l2v[lab]))
+  xppen_calibrador\ui\blocks.py:202:
+  xppen_calibrador\ui\blocks.py:211:        return w
+  xppen_calibrador\ui\blocks.py:212:
+> xppen_calibrador\ui\blocks.py:213:    def f_stepper(self, parent, name, step=1, width=96, suffix=""):
+  xppen_calibrador\ui\blocks.py:214:        f = FIELDS[name]
+  xppen_calibrador\ui\blocks.py:215:        w = Stepper(parent, f.lo, f.hi, step, width, suffix, on_commit=lambda t: 
+self._commit(name, t))
+  xppen_calibrador\ui\blocks.py:217:        return w
+  xppen_calibrador\ui\blocks.py:218:
+> xppen_calibrador\ui\blocks.py:219:    def f_entry(self, parent, name, width=140, placeholder=""):
+  xppen_calibrador\ui\blocks.py:220:        w = entry(parent, width, placeholder)
+  xppen_calibrador\ui\blocks.py:221:
+  xppen_calibrador\ui\blocks.py:234:
+  xppen_calibrador\ui\blocks.py:235:    def row(self, parent, r, label, widget, label_w=120):
+> xppen_calibrador\ui\blocks.py:236:        lbl(parent, label, 12, T.TXT2, width=label_w).grid(row=r, column=0, 
+sticky="w", pady=3)
+  xppen_calibrador\ui\blocks.py:237:        widget.grid(row=r, column=1, sticky="w", pady=3)
+  xppen_calibrador\ui\blocks.py:238:
+  xppen_calibrador\ui\blocks.py:239:    def inline(self, flow, texto, make, gap=6, chip=False):
+  xppen_calibrador\ui\blocks.py:240:        """Celda etiqueta+control para FlowRow. make(contenedor) crea el 
+control."""
+> xppen_calibrador\ui\blocks.py:241:        c = ctk.CTkFrame(flow, fg_color="transparent", width=0, height=0)
+  xppen_calibrador\ui\blocks.py:242:        if chip:
+  xppen_calibrador\ui\blocks.py:243:            ch = ctk.CTkFrame(c, fg_color=T.SOFT, corner_radius=10)
+  xppen_calibrador\ui\blocks.py:272:        e1 = self.f_entry(ca, "atajo", 110, "Requerido")
+  xppen_calibrador\ui\blocks.py:273:        e1.pack(side="left", padx=(0, 2))
+> xppen_calibrador\ui\blocks.py:274:        ctk.CTkButton(ca, text="✓", width=18, height=18, corner_radius=4,
+  xppen_calibrador\ui\blocks.py:275:                      fg_color="#2F855A", hover_color="#276749", 
+text_color="#FFFFFF",
+> xppen_calibrador\ui\blocks.py:276:                      font=T.font(10, True),
+  xppen_calibrador\ui\blocks.py:277:                      command=lambda: self._commit("atajo", 
+e1.get())).pack(side="left", padx=(0, 2))
+> xppen_calibrador\ui\blocks.py:278:        ctk.CTkButton(ca, text="✕", width=18, height=18, corner_radius=4,
+  xppen_calibrador\ui\blocks.py:279:                      fg_color="#C53030", hover_color="#9B2C2C", 
+text_color="#FFFFFF",
+> xppen_calibrador\ui\blocks.py:280:                      font=T.font(10, True),
+  xppen_calibrador\ui\blocks.py:281:                      command=lambda: self._reset("atajo", e1)).pack(side="left")
+  xppen_calibrador\ui\blocks.py:282:
+  xppen_calibrador\ui\blocks.py:286:        e2 = self.f_entry(cr, "remap", 150, "Opcional")
+  xppen_calibrador\ui\blocks.py:287:        e2.pack(side="left", padx=(0, 2))
+> xppen_calibrador\ui\blocks.py:288:        ctk.CTkButton(cr, text="✓", width=18, height=18, corner_radius=4,
+  xppen_calibrador\ui\blocks.py:289:                      fg_color="#2F855A", hover_color="#276749", 
+text_color="#FFFFFF",
+> xppen_calibrador\ui\blocks.py:290:                      font=T.font(10, True),
+  xppen_calibrador\ui\blocks.py:291:                      command=lambda: self._commit("remap", 
+e2.get())).pack(side="left", padx=(0, 2))
+> xppen_calibrador\ui\blocks.py:292:        ctk.CTkButton(cr, text="✕", width=18, height=18, corner_radius=4,
+  xppen_calibrador\ui\blocks.py:293:                      fg_color="#C53030", hover_color="#9B2C2C", 
+text_color="#FFFFFF",
+> xppen_calibrador\ui\blocks.py:294:                      font=T.font(10, True),
+  xppen_calibrador\ui\blocks.py:295:                      command=lambda: self._reset("remap", e2)).pack(side="left")
+  xppen_calibrador\ui\blocks.py:296:
+  xppen_calibrador\ui\blocks.py:451:        lbl(vol, "Volumen", 11, T.TXT2).pack(side="left", padx=(0, 8))
+  xppen_calibrador\ui\blocks.py:452:        self.vv = tk.IntVar(value=60)
+> xppen_calibrador\ui\blocks.py:453:        self.vl = lbl(vol, "60 %", 11, T.TXT, width=38)
+> xppen_calibrador\ui\blocks.py:454:        sl = ctk.CTkSlider(vol, from_=0, to=100, number_of_steps=100, 
+variable=self.vv, width=96,
+  xppen_calibrador\ui\blocks.py:455:                           progress_color=T.PRIMARY, button_color=T.PRIMARY, 
+button_hover_color=T.PRIMARY_HOVER,
+  xppen_calibrador\ui\blocks.py:456:                           fg_color="#E3DFEC", command=self._vol)
+  xppen_calibrador\ui\blocks.py:481:        self._loaders.append(lambda: self.chip.set(self.ctx.get("pildora_color")))
+  xppen_calibrador\ui\blocks.py:482:        btn(f1, "◎  Ubicar", lambda: self.ctx.bridge.send("SHOW_PILL", 
+self.ctx.event_id),
+> xppen_calibrador\ui\blocks.py:483:            width=100, height=26).pack(side="right")
+  xppen_calibrador\ui\blocks.py:484:
+  xppen_calibrador\ui\blocks.py:485:        f2 = ctk.CTkFrame(p, fg_color="transparent")
+  xppen_calibrador\ui\blocks.py:495:    def _tam(self, parent):
+  xppen_calibrador\ui\blocks.py:496:        items = list(PILDORA_TAMS.items())
+> xppen_calibrador\ui\blocks.py:497:        w = combo(parent, [k for k, _ in items], width=110, command=lambda lab: 
+self._commit("pildora_tam", PILDORA_TAMS.get(lab, 100)) if lab in PILDORA_TAMS else None)
+  xppen_calibrador\ui\blocks.py:498:
+  xppen_calibrador\ui\blocks.py:499:        def load():
+  xppen_calibrador\ui\blocks.py:516:        btn(fr, "✎  Dibujar zona",
+  xppen_calibrador\ui\blocks.py:517:            lambda: self.ctx.bridge.send("DRAW_ZONE", self.ctx.event_id, "cruzar" 
+if self.ctx.get("cruzar") else "auto"),
+> xppen_calibrador\ui\blocks.py:518:            height=26, width=120).pack(side="left", padx=(0, 16))
+  xppen_calibrador\ui\blocks.py:519:        self.f_check(fr, "auto", "Paso → Autoclick").pack(side="left", padx=(0, 
+16))
+  xppen_calibrador\ui\blocks.py:520:        self.f_check(fr, "cruzar", "Paso → Atajo CSP").pack(side="left")
+  xppen_calibrador\ui\widgets.py:9:def lbl(parent, text="", size=12, color=T.TXT, bold=False, wrap=0, anchor="w", 
+**kw):
+  xppen_calibrador\ui\widgets.py:10:    kw.setdefault("height", 0)
+> xppen_calibrador\ui\widgets.py:11:    return ctk.CTkLabel(parent, text=text, font=T.font(size, bold), 
+text_color=color,
+  xppen_calibrador\ui\widgets.py:12:                        anchor=anchor, justify="left", wraplength=wrap, **kw)
+  xppen_calibrador\ui\widgets.py:13:
+  xppen_calibrador\ui\widgets.py:14:
+> xppen_calibrador\ui\widgets.py:15:def ellipsize(text: str, font_obj, max_px: int) -> str:
+> xppen_calibrador\ui\widgets.py:16:    if font_obj.measure(text) <= max_px:
+  xppen_calibrador\ui\widgets.py:17:        return text
+> xppen_calibrador\ui\widgets.py:18:    while text and font_obj.measure(text + "…") > max_px:
+  xppen_calibrador\ui\widgets.py:19:        text = text[:-1]
+  xppen_calibrador\ui\widgets.py:20:    return text.rstrip() + "…"
+  xppen_calibrador\ui\widgets.py:21:
+  xppen_calibrador\ui\widgets.py:22:
+> xppen_calibrador\ui\widgets.py:23:def btn(parent, text, command, primary=False, width=0, height=28, **kw):
+  xppen_calibrador\ui\widgets.py:24:    if primary:
+> xppen_calibrador\ui\widgets.py:25:        return ctk.CTkButton(parent, text=text, command=command, width=width, 
+height=height, corner_radius=14,
+  xppen_calibrador\ui\widgets.py:26:                             fg_color=T.PRIMARY, hover_color=T.PRIMARY_HOVER, 
+text_color="white",
+> xppen_calibrador\ui\widgets.py:27:                             font=T.font(11, True), **kw)
+> xppen_calibrador\ui\widgets.py:28:    return ctk.CTkButton(parent, text=text, command=command, width=width, 
+height=height, corner_radius=14,
+> xppen_calibrador\ui\widgets.py:29:                         fg_color="#F8F6FD", hover_color=T.SOFT, 
+text_color=T.PRIMARY, border_width=1,
+> xppen_calibrador\ui\widgets.py:30:                         border_color="#D8D2E7", font=T.font(11, True), **kw)
+  xppen_calibrador\ui\widgets.py:31:
+  xppen_calibrador\ui\widgets.py:32:
+  xppen_calibrador\ui\widgets.py:33:def check(parent, text, variable, command=None):
+> xppen_calibrador\ui\widgets.py:34:    return ctk.CTkCheckBox(parent, text=text, variable=variable, command=command, 
+font=T.font(12, False),
+  xppen_calibrador\ui\widgets.py:35:                           text_color=T.TXT, fg_color=T.PRIMARY, 
+hover_color=T.PRIMARY_HOVER, border_color="#C7C0D8",
+> xppen_calibrador\ui\widgets.py:36:                           checkmark_color="white", checkbox_width=18, 
+checkbox_height=18, corner_radius=5,
+> xppen_calibrador\ui\widgets.py:37:                           border_width=2)
+  xppen_calibrador\ui\widgets.py:38:
+  xppen_calibrador\ui\widgets.py:39:
+> xppen_calibrador\ui\widgets.py:40:def combo(parent, values, command=None, width=130):
+> xppen_calibrador\ui\widgets.py:41:    return ctk.CTkComboBox(parent, values=list(values), command=command, 
+width=width, height=28, state="readonly",
+> xppen_calibrador\ui\widgets.py:42:                           font=T.font(11), dropdown_font=T.font(11), 
+fg_color="#FAF9FD", border_color="#D8D2E7",
+> xppen_calibrador\ui\widgets.py:43:                           border_width=1, button_color="#F1EDF8", 
+button_hover_color=T.SOFT_HOVER,
+  xppen_calibrador\ui\widgets.py:44:                           text_color=T.TXT, dropdown_fg_color=T.CARD, 
+dropdown_hover_color=T.SOFT,
+  xppen_calibrador\ui\widgets.py:45:                           dropdown_text_color=T.TXT, corner_radius=14)
+  xppen_calibrador\ui\widgets.py:46:
+  xppen_calibrador\ui\widgets.py:47:
+> xppen_calibrador\ui\widgets.py:48:def entry(parent, width=140, placeholder=""):
+> xppen_calibrador\ui\widgets.py:49:    return ctk.CTkEntry(parent, width=width, height=28, font=T.font(11), 
+fg_color="#FAF9FD", text_color=T.TXT,
+> xppen_calibrador\ui\widgets.py:50:                        border_color="#D8D2E7", border_width=1, corner_radius=14,
+  xppen_calibrador\ui\widgets.py:51:                        placeholder_text=placeholder, 
+placeholder_text_color=T.TXT3)
+  xppen_calibrador\ui\widgets.py:52:
+  xppen_calibrador\ui\widgets.py:53:
+  xppen_calibrador\ui\widgets.py:54:def switch(parent, variable, command=None):
+> xppen_calibrador\ui\widgets.py:55:    return ctk.CTkSwitch(parent, text="", variable=variable, command=command, 
+width=38, switch_width=36,
+  xppen_calibrador\ui\widgets.py:56:                         switch_height=20, progress_color=T.PRIMARY, 
+button_color="white",
+  xppen_calibrador\ui\widgets.py:57:                         button_hover_color="#F4F4F8", fg_color="#D8D2E7")
+  xppen_calibrador\ui\widgets.py:61:    """Texto gris de ayuda que ajusta su wraplength al ancho real del 
+contenedor."""
+  xppen_calibrador\ui\widgets.py:62:    def __init__(self, parent, text, size=10, color=T.TXT2):
+> xppen_calibrador\ui\widgets.py:63:        super().__init__(parent, text=text, font=T.font(size), text_color=color, 
+anchor="w",
+  xppen_calibrador\ui\widgets.py:64:                         justify="left", wraplength=180, height=0)
+  xppen_calibrador\ui\widgets.py:65:        self._job = None
+  xppen_calibrador\ui\widgets.py:83:class Stepper(ctk.CTkFrame):
+  xppen_calibrador\ui\widgets.py:84:    """[−] [valor] [+] cápsula unificada redondeada estilo píldora."""
+> xppen_calibrador\ui\widgets.py:85:    def __init__(self, parent, lo, hi, step=1, width=96, suffix="", 
+on_commit=None):
+> xppen_calibrador\ui\widgets.py:86:        super().__init__(parent, fg_color="#FAF9FD", corner_radius=14, 
+border_width=1, border_color="#D8D2E7")
+  xppen_calibrador\ui\widgets.py:87:        self.lo, self.hi, self.step, self.on_commit = lo, hi, step, on_commit
+  xppen_calibrador\ui\widgets.py:88:        self._v = tk.StringVar(value=str(lo))
+> xppen_calibrador\ui\widgets.py:89:        self.minus = ctk.CTkButton(self, text="−", width=22, height=24, 
+corner_radius=10, fg_color="transparent",
+> xppen_calibrador\ui\widgets.py:90:                                   hover_color=T.SOFT, text_color=T.PRIMARY, 
+font=T.font(12, True),
+  xppen_calibrador\ui\widgets.py:91:                                   command=lambda: self._bump(-step))
+> xppen_calibrador\ui\widgets.py:92:        self.ent = ctk.CTkEntry(self, width=max(26, width - 52), height=24, 
+textvariable=self._v, justify="center",
+> xppen_calibrador\ui\widgets.py:93:                                font=T.font(11, True), fg_color="transparent", 
+border_width=0,
+  xppen_calibrador\ui\widgets.py:94:                                text_color=T.TXT)
+> xppen_calibrador\ui\widgets.py:95:        self.plus = ctk.CTkButton(self, text="+", width=22, height=24, 
+corner_radius=10, fg_color="transparent",
+> xppen_calibrador\ui\widgets.py:96:                                  hover_color=T.SOFT, text_color=T.PRIMARY, 
+font=T.font(12, True),
+  xppen_calibrador\ui\widgets.py:97:                                  command=lambda: self._bump(step))
+  xppen_calibrador\ui\widgets.py:98:        self.minus.grid(row=0, column=0, padx=(2, 0), pady=1)
+  xppen_calibrador\ui\widgets.py:125:        super().__init__(parent, fg_color="transparent")
+  xppen_calibrador\ui\widgets.py:126:        self.on_pick, self.hex = on_pick, "7863A6"
+> xppen_calibrador\ui\widgets.py:127:        self.sw = ctk.CTkButton(self, text="", width=34, height=26, 
+corner_radius=7, border_width=1,
+  xppen_calibrador\ui\widgets.py:128:                                border_color=T.FIELD_BORDER, command=self._ask)
+  xppen_calibrador\ui\widgets.py:129:        self.sw.grid(row=0, column=0)
+  xppen_calibrador\ui\widgets.py:158:AUTOSCALE_MIN = 0.80
+  xppen_calibrador\ui\widgets.py:159:
+> xppen_calibrador\ui\widgets.py:160:_ELASTIC = (ctk.CTkEntry, ctk.CTkComboBox, ctk.CTkOptionMenu, ctk.CTkSlider)
+  xppen_calibrador\ui\widgets.py:161:
+  xppen_calibrador\ui\widgets.py:162:
+  xppen_calibrador\ui\widgets.py:265:                        i["cap"] = 2.2
+  xppen_calibrador\ui\widgets.py:266:            if i["el"]:
+> xppen_calibrador\ui\widgets.py:267:                i["el"].configure(width=i["ln"])
+  xppen_calibrador\ui\widgets.py:268:        self.update_idletasks()
+  xppen_calibrador\ui\widgets.py:269:        for i in its:
+  xppen_calibrador\ui\widgets.py:326:                new_w = max(40, round(i["ln"] + share / sc))
+  xppen_calibrador\ui\widgets.py:327:                if i.get("cw") != new_w:      # restaura el ancho natural tras un 
+encogimiento previo
+> xppen_calibrador\ui\widgets.py:328:                    i["el"].configure(width=new_w)
+  xppen_calibrador\ui\widgets.py:329:                    i["cw"] = new_w
+  xppen_calibrador\ui\widgets.py:330:            gap = sx                           # gap fijo, sin dispersión
+  xppen_calibrador\ui\widgets.py:350:        t.attributes("-topmost", True)
+  xppen_calibrador\ui\widgets.py:351:        tk.Label(t, text=text, bg="#1F2430", fg="#FFFFFF", padx=8, pady=3,
+> xppen_calibrador\ui\widgets.py:352:                 font=("Segoe UI", 9)).pack()
+  xppen_calibrador\ui\widgets.py:353:        t.geometry(f"+{w.winfo_rootx()}+{w.winfo_rooty() + w.winfo_height() + 4}")
+  xppen_calibrador\ui\widgets.py:354:        st["t"] = t
+  xppen_calibrador\ui\widgets.py:368:
+  xppen_calibrador\ui\widgets.py:369:def icon_btn(parent, glyph, cmd, size=28, tip=None):
+> xppen_calibrador\ui\widgets.py:370:    b = ctk.CTkButton(parent, text=glyph, width=size, height=size, 
+corner_radius=6,
+> xppen_calibrador\ui\widgets.py:371:                      fg_color="transparent", hover_color=_T.BORDER, 
+border_width=1,
+  xppen_calibrador\ui\widgets.py:372:                      border_color=_T.BORDER, text_color=_T.ACCENT,
+> xppen_calibrador\ui\widgets.py:373:                      font=ctk.CTkFont(size=14), command=cmd)
+  xppen_calibrador\ui\widgets.py:374:    if tip:
+  xppen_calibrador\ui\widgets.py:375:        _tooltip(b, tip)
+  xppen_calibrador\ui\widgets.py:423:
+  xppen_calibrador\ui\widgets.py:424:def _find_entry(w):
+> xppen_calibrador\ui\widgets.py:425:    if isinstance(w, (ctk.CTkEntry, tk.Entry)):
+  xppen_calibrador\ui\widgets.py:426:        return w
+  xppen_calibrador\ui\widgets.py:427:    try:
+  xppen_calibrador\ui\widgets.py:483:          "job": None, "armed": False, "beat": None}
+  xppen_calibrador\ui\widgets.py:484:    orig = None
+> xppen_calibrador\ui\widgets.py:485:    if isinstance(ent, ctk.CTkEntry):
+  xppen_calibrador\ui\widgets.py:486:        try:
+  xppen_calibrador\ui\widgets.py:487:            orig = ent.cget("border_color")
+  xppen_calibrador\ui\widgets.py:605:    """
+  xppen_calibrador\ui\widgets.py:606:    def __init__(self, parent, gap=14, row_gap=8):
+> xppen_calibrador\ui\widgets.py:607:        super().__init__(parent, fg_color="transparent", width=0, height=0)
+  xppen_calibrador\ui\widgets.py:608:        self.gap, self.row_gap = gap, row_gap
+  xppen_calibrador\ui\widgets.py:609:        self.cells: list = []
+  xppen_calibrador\ui\widgets.py:663:    """N celdas en fila; por debajo de `breakpoint` (px lógicos) se apilan."""
+  xppen_calibrador\ui\widgets.py:664:    def __init__(self, parent, n, breakpoint=640, weights=None, uniform="rr", 
+minsize=190, gap=10):
+> xppen_calibrador\ui\widgets.py:665:        super().__init__(parent, fg_color="transparent", width=0, height=0)
+  xppen_calibrador\ui\widgets.py:666:        self.n, self.breakpoint, self.weights = n, breakpoint, weights or [1] * n
+  xppen_calibrador\ui\widgets.py:667:        self.uniform, self.minsize, self.gap = uniform, minsize, gap
+> xppen_calibrador\ui\widgets.py:668:        self.cells = [ctk.CTkFrame(self, fg_color="transparent", width=0, 
+height=0) for _ in range(n)]
+  xppen_calibrador\ui\widgets.py:669:        self._mode, self._job = None, None
+  xppen_calibrador\ui\widgets.py:670:        self.bind("<Configure>", self._sched)
+
+

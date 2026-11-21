@@ -1,7 +1,9 @@
 """Python → AHK por WM_COPYDATA (texto 'CMD|arg|arg'). En no-Windows es un no-op registrado."""
 from __future__ import annotations
 import logging
+import queue
 import sys
+import threading
 
 log = logging.getLogger("calibrador.bridge")
 WM_COPYDATA, SMTO_ABORTIFHUNG, MARKER = 0x4A, 0x2, 0x58504E01
@@ -11,6 +13,7 @@ class AhkBridge:
     def __init__(self, ahk_hwnd: int | None, own_hwnd_getter=lambda: 0):
         self.ahk_hwnd, self._own = ahk_hwnd, own_hwnd_getter
         self.sent: list[str] = []
+        self._q = None
 
     _TITULO_AHK = "XPPEN AHK VERSION ESTABLE.ahk"
     _t_ultimo_intento = 0.0
@@ -65,6 +68,24 @@ class AhkBridge:
         self._t_ultimo_intento = ahora
         self.ahk_hwnd = self._buscar_hwnd_ahk() or 0
         return bool(self.ahk_hwnd)
+
+    def send_async(self, cmd: str, *args) -> None:
+        """No bloquea la UI: encola (FIFO) y un hilo hace el SendMessageTimeoutW."""
+        h = self._own()                      # Tk solo desde el hilo de UI: se cachea el hwnd
+        if h:
+            self._own = (lambda _h=h: _h)
+        if self._q is None:
+            self._q = queue.Queue()
+            threading.Thread(target=self._worker, name="ahk-bridge", daemon=True).start()
+        self._q.put((cmd, args))
+
+    def _worker(self):
+        while True:
+            cmd, args = self._q.get()
+            try:
+                self.send(cmd, *args)
+            except Exception:
+                log.exception("send_async %s", cmd)
 
     def send(self, cmd: str, *args) -> bool:
         text = "|".join([cmd, *[str(a) for a in args]])

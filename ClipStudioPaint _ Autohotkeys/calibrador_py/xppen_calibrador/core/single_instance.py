@@ -16,6 +16,25 @@ from pathlib import Path
 TITULO = "Calibración · rangos, avisos y sistema"
 _MUTEX_NOMBRE = "Local\\XPPEN_CalibradorPy"
 _EVT_NOMBRE = "Local\\XPPEN_CalibradorPy_Recarga"
+_MUTEX_BASE = _MUTEX_NOMBRE
+_EVT_BASE = _EVT_NOMBRE
+
+
+def configurar(ini_path) -> None:
+    """Deriva mutex y evento de recarga del INI. Llamar ANTES de adquirir().
+    ini_path=None -> nombres originales (instancia oficial)."""
+    global _MUTEX_NOMBRE, _EVT_NOMBRE
+    if not ini_path:
+        _MUTEX_NOMBRE, _EVT_NOMBRE = _MUTEX_BASE, _EVT_BASE
+        return
+    import hashlib
+    from pathlib import Path
+    clave = hashlib.sha1(
+        str(Path(ini_path).resolve()).lower().encode("utf-8")
+    ).hexdigest()[:10]
+    _MUTEX_NOMBRE = f"{_MUTEX_BASE}_{clave}"
+    _EVT_NOMBRE = f"{_EVT_BASE}_{clave}"
+
 
 _handle = None
 _evt = None

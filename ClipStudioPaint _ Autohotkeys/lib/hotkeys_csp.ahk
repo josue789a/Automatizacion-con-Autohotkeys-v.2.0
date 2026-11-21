@@ -103,10 +103,39 @@ _ModEnviar(atajo, hud := "", colorHud := "00E5FF") {
     if (atajo = "" || atajo = "off")
         return false
     atajo := _AtajoAEnvio(atajo)
-    SendInput(atajo)
+    if !_CspEstadoEnviar(atajo)      ; k y ^2 mantienen colorEstado global; el resto se envía tal cual
+        SendInput(atajo)
     if (hud != "")
         MostrarHUD(hud, colorHud, 900)
     return true
+}
+; Atajos de CSP que cambian el color global: misma lógica que $k:: y el doble toque de $q::,
+; para que colorEstado (0 primario, 1 secundario, 2 alpha) siga siendo la única fuente de verdad.
+_CspEstadoEnviar(seq) {
+    global colorEstado
+    s := StrLower(Trim(seq))
+    if (s = "k") {
+        if (colorEstado = 2) {
+            SendInput("k")
+            colorEstado := 0
+        } else {
+            if (colorEstado = 1)
+                SendInput("^2")
+            SendInput("k")
+            colorEstado := 2
+        }
+        return true
+    }
+    if (s = "^2") {
+        if (colorEstado = 2) {
+            SendInput("k")
+            colorEstado := 0
+        }
+        SendInput("^2")
+        colorEstado := (colorEstado = 0) ? 1 : 0
+        return true
+    }
+    return false
 }
 _ModAtajo(fila, campo, idEv, def) {
     v := _CompIni(fila, campo, idEv)
@@ -121,23 +150,95 @@ _ModActivo(fila, idEv) {
 _ModActivoCab(fila, idEv) {
     return IniRead(_PosGuiIniPath(), "Particularidades", fila "_" idEv, "") != "0"
 }
-; Toque corto = atajo A, mantener más de N ms = atajo B.
-_ModQuick(idEv, tecla, defCorto, defLargo := "") {
-    if (!_ModActivo("quick", idEv))
-        return _ModEnviar(defCorto)
+; Pulsación Rápida: máquina de estados universal (replica los despachadores a medida de pre-Companion).
+;   1.er toque ........ envía A al instante (cero lag: sin KeyWait previo ni timers)
+;   2.º toque < ms .... suelta A y envía B; la ventana se consume
+;   toque posterior ... vuelve a A (restauración limpia)
+; quick_modo_<id>=largo conserva el modo anterior: toque corto = A, mantener >= ms = B.
+; quick_alphaout_<id>=1: si colorEstado=2, envía k antes de A/B (como E y Q del original).
+_ModQuick(idEv, tecla, defBase, defParticular := "") {
+    static ultimos := Map()
+    global colorEstado
+    cfg := _ModCfg(idEv)
+    if (!cfg.quick)
+        return _ModEnviar(defBase)
     ; Salvaguarda: B vacío u "off" = desactivación explícita (sin espera ni envío fantasma)
-    bTecla := Trim(_ModAtajo("quick", "b", idEv, defLargo))
+    bTecla := (cfg.b != "") ? cfg.b : Trim(defParticular)
     if (bTecla = "" || bTecla = "off")
-        return _ModEnviar(defCorto)
-    v := _CompIni("quick", "ms", idEv)
-    ms := (IsInteger(v) && Integer(v) >= 50 && Integer(v) <= 2000) ? Integer(v) : 250
-    if KeyWait(tecla, "T" (ms / 1000)) {
-        return _ModEnviar(_ModAtajo("quick", "a", idEv, defCorto))
+        return _ModEnviar(defBase)
+    aTecla := (cfg.a != "") ? cfg.a : defBase
+    if (cfg.modo = "largo")
+        return _ModQuickLargo(tecla, aTecla, bTecla, cfg, idEv)
+    now := A_TickCount
+    last := ultimos.Get(idEv, 0)
+    if (last > 0 && now - last < cfg.ms) {
+        ultimos[idEv] := 0
+        _ModSoltar(aTecla)
+        if (cfg.alphaOut && colorEstado = 2 && StrLower(bTecla) != "k") {
+            SendInput("k")
+            colorEstado := 0
+        }
+        _ModEnviar(bTecla, cfg.hud ? idEv : "")
+    } else {
+        ultimos[idEv] := now
+        if (cfg.alphaOut && colorEstado = 2 && StrLower(aTecla) != "k") {
+            SendInput("k")
+            colorEstado := 0
+        }
+        _ModEnviar(aTecla)
     }
-    _ModEnviar(_ModAtajo("quick", "b", idEv, defLargo))
-    KeyWait(tecla)
+    KeyWait(tecla, "T10")   ; el auto-repeat del teclado no debe contar como doble toque
     return true
 }
+_ModQuickLargo(tecla, aTecla, bTecla, cfg, idEv) {
+    if KeyWait(tecla, "T" (cfg.ms / 1000))
+        return _ModEnviar(aTecla)
+    _ModEnviar(bTecla, cfg.hud ? idEv : "")
+    KeyWait(tecla)
+    if (cfg.ret)
+        _ModEnviar(bTecla)
+    return true
+}
+; Equivale al {z up}/{e up} del original antes de la particularidad. Inocuo si la tecla no está abajo.
+_ModSoltar(atajo) {
+    if IsObject(atajo)
+        return
+    a := Trim(atajo)
+    if RegExMatch(a, "^[A-Za-z0-9]$|^F\d{1,2}$")
+        SendInput("{" StrLower(a) " up}")
+}
+; Config por evento cacheada (cero IniRead por pulsación). Se invalida al recargar el INI o si cambia su mtime.
+_ModCfg(idEv, reset := false) {
+    static cache := Map(), mt := ""
+    if (reset) {
+        cache := Map()
+        mt := ""
+        return ""
+    }
+    ini := _PosGuiIniPath()
+    m := ""
+    try m := FileGetTime(ini, "M")
+    if (m != mt) {
+        cache := Map()
+        mt := m
+    }
+    if cache.Has(idEv)
+        return cache[idEv]
+    atajo := Trim(IniRead(ini, "Remapeos", "atajo_" idEv, ""))
+    v := _CompIni("quick", "ms", idEv)
+    ms := (IsInteger(v) && Integer(v) >= 50 && Integer(v) <= 2000) ? Integer(v) : 250
+    cfg := {quick: _ModActivo("quick", idEv)
+          , a: Trim(_ModAtajo("quick", "a", idEv, atajo))
+          , b: Trim(_ModAtajo("quick", "b", idEv, ""))
+          , ms: ms
+          , modo: StrLower(Trim(_CompIni("quick", "modo", idEv)))
+          , ret: (Trim(_CompIni("quick", "ret", idEv)) != "0")
+          , alphaOut: (Trim(_CompIni("quick", "alphaout", idEv)) = "1")
+          , hud: _ModActivo("hud", idEv)}
+    cache[idEv] := cfg
+    return cfg
+}
+_ModCfgInvalidar() => _ModCfg("", true)
 _ModLado() {
     static lado := Map()
     return lado
@@ -194,6 +295,7 @@ _RemapNormalizar(txt) {
     txt := Trim(txt)
     if (txt = "" || StrLower(txt) = "off")
         return ""
+    txt := StrReplace(txt, "&", "+")
     partes := StrSplit(txt, "+", " `t")
     principal := _RemapNombreTecla(partes.Pop())
     if (principal = "")
@@ -238,6 +340,10 @@ _AtajoAEnvio(a) {
     return a
 }
 
+_RDiag(msg) {   ; TEMP-DIAG
+    try FileAppend(A_Now "." A_MSec " " msg "`n", A_ScriptDir "\logs\remap_diag.log")
+}
+
 ; Contexto HotIf: CSP activo + teclas sostenidas (Space, etc.) presionadas.
 ; Regla HW: GetKeyState(k) logico, sin "P", para soportar keydials/drivers sinteticos.
 _RemapCtx(held) {
@@ -251,17 +357,49 @@ _RemapCtx(held) {
     _RemapCtxCache[clave] := fn
     return fn
 }
+
+; Contexto del combo nativo ~RButton & <tecla>: AHK ya garantiza RButton abajo.
+_RemapCtxNativo() {
+    global _RemapCtxCache
+    if (!_RemapCtxCache.Has("#nativo"))
+        _RemapCtxCache["#nativo"] := (*) => CspLibre()
+    return _RemapCtxCache["#nativo"]
+}
+; Alt físico O Alt del botón 1 del stylus (Alt+B); RButton físico O el del botón 2
+_TeclaSostenida(k) {
+    if GetKeyState(k)
+        return true
+    kl := StrLower(k)
+    if (kl = "alt" || kl = "lalt" || kl = "ralt" || kl = "!")
+        return !!stylus.altActive
+    if (kl = "rbutton")
+        return !!stylus.rButtonHeld
+    return false
+}
+
 _RemapCtxOk(held) {
-    if !CspLibre()
+    if !CspLibre() {
+        if (held.Length && WinActive("ahk_exe CLIPStudioPaint.exe"))   ; TEMP-DIAG
+            _RDiag("CTX no: !CspLibre arm=" Cap_Armado())
         return false
-    for k in held
-        if !GetKeyState(k)
+    }
+    for k in held {
+        if !_TeclaSostenida(k) {
+            _RDiag("CTX no: '" k "' no sostenida flag=" stylus.rButtonHeld " logico=" GetKeyState(k))   ; TEMP-DIAG
             return false
+        }
+    }
     return true
 }
 
 ; Handler común de todos los hotkeys dinámicos.
 _RemapDisparar(idEv, tecla, held, *) {
+    p := "?"   ; TEMP-DIAG
+    try p := GetKeyState(tecla, "P")
+    _RDiag("DISPARO2 " idEv " P=" p " dt=" A_TimeSincePriorHotkey)
+    try FileAppend(A_Now " DISPARO " idEv " tecla=" tecla " held=" held.Length " pausado=" _PtsEvPausado(idEv) "`n", A_ScriptDir "\logs\remap_diag.log") ; TEMP-DIAG
+    if (stylus.rButtonHeld || GetKeyState("RButton"))
+        stylus.comboUsado := true
     if _PtsEvPausado(idEv) {
         ; Pausado: la tecla conserva su función nativa. {Blind} respeta los modificadores físicos.
         ; El hotkey usa "$" (hook), así que este Send no reentra.
@@ -269,14 +407,27 @@ _RemapDisparar(idEv, tecla, held, *) {
         try SendInput("{Blind}{" tecla "}")
         return
     }
-    for k in held
+    for k in held {
+        if (StrLower(k) = "rbutton")
+            try stylus.comboUsado := true
+    }
+    for k in held {
+        if (StrLower(k) = "rbutton")
+            continue   ; combo nativo ~RButton &: no soltar el botón del lápiz (como el legado)
         SendInput("{" k " up}")
-    if _ModActivo("toggle", idEv)
-        return _ModToggle(idEv)
+    }
+    _FlushPendentes()   ; los despachadores originales vaciaban primero los pendientes (Q a 50 ms, Alt+S/A)
+    if _ModActivo("toggle", idEv) {
+        r := _ModToggle(idEv)
+        KeyWait(tecla, "T10")   ; el auto-repeat no debe alternar A/B
+        return r
+    }
     atajo := IniRead(_PosGuiIniPath(), "Remapeos", "atajo_" idEv, "")
     if _ModActivo("quick", idEv)
         return _ModQuick(idEv, tecla, atajo)
-    return _ModEnviar(atajo, _ModActivo("hud", idEv) ? idEv : "")
+    r := _ModEnviar(atajo)
+    try _AvisoEvento(idEv)
+    return r
 }
 
 _RemapDescargarHotkeys() {
@@ -306,8 +457,9 @@ _RemapEsHotkeyReal(txt) {
     ; Separadores de etiqueta de UI
     if InStr(t, "/") && !RegExMatch(t, "^/$")
         return false
-    ; Espacios: solo válido el combo "A & B" (ej: RButton & e)
-    if RegExMatch(t, "\s") && !RegExMatch(t, "^\S+ & \S+$")
+    ; Compactar delimitadores válidos (+ y &) para comprobar si quedan espacios libres
+    t_comp := RegExReplace(t, "\s*(\+|&)\s*", "$1")
+    if InStr(t_comp, " ")
         return false
     ; Palabras de control de UI
     if RegExMatch(t, "i)píldora|pildora|slider|hover|menú|menu |panel")
@@ -315,11 +467,30 @@ _RemapEsHotkeyReal(txt) {
     return true
 }
 
+; === INTERRUPTOR MAESTRO LEGADO ([Modo] legado=0|1; ausente = 1) ===
+; static en vez de global: no depende del orden de auto-ejecución.
+_LegadoEstado(nuevo?) {
+    static on := true
+    if IsSet(nuevo)
+        on := !!nuevo
+    return on
+}
+_LegadoActivo() => _LegadoEstado()
+_LegadoRecargar() {
+    try v := IniRead(_PosGuiIniPath(), "Modo", "legado", "1")
+    catch
+        v := "1"
+    _LegadoEstado(Trim(v) != "0")
+}
+
 _RemapCargarHotkeys() {
-    global _RemapRegistrados
+    global _RemapRegistrados, _RButtonEvento
     if (!IsSet(_RemapRegistrados) || !IsObject(_RemapRegistrados))
         _RemapRegistrados := []
     _RemapDescargarHotkeys()
+    _RButtonEvento := ""
+    _LegadoRecargar()
+    _ModCfgInvalidar()
     ini := _PosGuiIniPath()
     try sec := IniRead(ini, "Remapeos")
     catch
@@ -330,21 +501,49 @@ _RemapCargarHotkeys() {
             ids[m[1]] := true
     }
     for idEv in ids {
+        if (IniRead(ini, "EventosEliminados", idEv, "") = "1")   ; borrado en el Calibrador: sin hotkey
+            continue
         remap := Trim(IniRead(ini, "Remapeos", "remap_" idEv, ""))
         atajo := Trim(IniRead(ini, "Remapeos", "atajo_" idEv, ""))
-        modul := _ModActivo("toggle", idEv) || _ModActivo("quick", idEv)
-        disparo := (remap != "" && StrLower(remap) != "off") ? remap : (modul ? atajo : "")
+        if _ModActivo("quick", idEv) {
+            bQuick := Trim(_ModAtajo("quick", "b", idEv, ""))
+            aQuick := Trim(_ModAtajo("quick", "a", idEv, atajo))
+            if (remap = "" || StrLower(remap) = StrLower(bQuick) || StrLower(remap) = StrLower(aQuick))
+                disparo := (aQuick != "") ? aQuick : atajo
+            else
+                disparo := remap
+        } else if _ModActivo("toggle", idEv) {
+            bTog := Trim(_ModAtajo("toggle", "b", idEv, ""))
+            aTog := Trim(_ModAtajo("toggle", "a", idEv, atajo))
+            if (remap = "" || StrLower(remap) = StrLower(bTog) || StrLower(remap) = StrLower(aTog))
+                disparo := (aTog != "") ? aTog : atajo
+            else
+                disparo := remap
+        } else {
+            disparo := (remap != "" && StrLower(remap) != "off") ? remap : atajo
+        }
         if (disparo != "" && !_RemapEsHotkeyReal(disparo))
             continue
         n := _RemapNormalizar(disparo)
         if !IsObject(n)
             continue
-        ctx := _RemapCtx(n.held)
+        if (StrLower(n.principal) = "rbutton" && n.held.Length = 0) {
+            _RButtonEvento := idEv   ; el RButton estático despacha en 'up'; el dinámico quedaría tapado
+            continue
+        }
+        hk := n.hk
+        if (n.held.Length = 1 && n.mods = "" && StrLower(n.held[1]) = "rbutton") {
+            ; Combo de stylus: prefijo nativo con paso (misma semántica que el legado)
+            hk := "~RButton & " n.principal
+            ctx := _RemapCtxNativo()
+        } else
+            ctx := _RemapCtx(n.held)
         cb := _RemapDisparar.Bind(idEv, n.principal, n.held)
         try {
             HotIf(ctx)
-            Hotkey(n.hk, cb, "On")
-            _RemapRegistrados.Push({hk: n.hk, ctx: ctx})
+            Hotkey(hk, cb, "On")
+            _RemapRegistrados.Push({hk: hk, ctx: ctx})
+            try FileAppend(A_Now " REG " idEv " hk=" hk "`n", A_ScriptDir "\logs\remap_diag.log") ; TEMP-DIAG
         } catch {
             static _ultHudInv := 0
             if (A_TickCount - _ultHudInv > 3000) {
@@ -611,13 +810,16 @@ _EscrituraInactividadCheck() {
 ~*RWin::Send("{Blind}{vkE8}")
 #SuspendExempt False
 
+; === INFRA STYLUS: RButton universal (independiente del legado) ===
 #HotIf CspLibre()
 RButton:: {
+    _RDiag("RB down csp=" WinActive("ahk_exe CLIPStudioPaint.exe") " arm=" Cap_Armado())
     stylus.rButtonHeld := true
     stylus.comboUsado := false
     stylus.upSinteticoTick := 0
 }
 RButton up:: {
+    _RDiag("RB up ctx held=" stylus.rButtonHeld " combo=" stylus.comboUsado)
     elapsed := (stylus.upSinteticoTick > 0) ? (A_TickCount - stylus.upSinteticoTick) : 9999
     if (elapsed < UP_SINTETICO_MS) {
         stylus.rButtonHeld := true
@@ -625,13 +827,27 @@ RButton up:: {
         return
     }
     stylus.rButtonHeld := false
-    if (!stylus.comboUsado)
-        SendInput("{RButton}")   ; cuentagotas al soltar en CSP
+    if (!stylus.comboUsado) {
+        if (_RButtonEvento != "")
+            _RemapDisparar(_RButtonEvento, "RButton", [])
+        else
+            SendInput("{RButton}")   ; cuentagotas al soltar en CSP
+    }
 }
 Space & RButton:: {
     stylus.comboUsado := true
     _InvSeleccionConGUI()
 }
+#HotIf
+~RButton up:: {
+    if (stylus.rButtonHeld && !CspLibre()
+        && (stylus.upSinteticoTick = 0 || A_TickCount - stylus.upSinteticoTick >= UP_SINTETICO_MS)) {
+        _RDiag("RB up FUERA de contexto: reset rButtonHeld")
+        stylus.rButtonHeld := false
+        stylus.comboUsado := false
+    }
+}
+#HotIf CspLibre()
 Numpad0:: {
     hcOn := _ToggleHistorialColor()
     ActualizarHCGUI()
@@ -715,6 +931,7 @@ _InvSeleccionConGUI() {
     }
     Send("c")
 }
+#HotIf CspLibre() && _LegadoActivo()
 x:: {
     if stylus.altActive
         return
@@ -735,6 +952,7 @@ x:: {
         sel.estado := 0
     }
 }
+#HotIf CspLibre() && _LegadoActivo()
 $^z:: _DeshacerRehacer()
 $^y:: {
     SendInput("^y")
@@ -742,6 +960,7 @@ $^y:: {
     _RachaConteo("redo")
     _HapticoRacha("redo")
 }
+#HotIf CspLibre()
 _MaskRButton() {
     stylus.comboUsado := true
     if (stylus.botonSostenido)
@@ -801,7 +1020,9 @@ _DeshacerRehacer() {
         _HapticoRacha("undo")
     }
 }
+#HotIf CspLibre() && _LegadoActivo()
 $^z up:: stylus.botonSostenido := false
+#HotIf CspLibre() && _LegadoActivo()
 !z:: {
     SendInput("^c")
     _SonarUI("copiar")
@@ -815,7 +1036,7 @@ $^z up:: stylus.botonSostenido := false
     _HapticoRacha("redo")
 }
 !^z up:: stylus.botonSostenido := false
-#HotIf !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe")
+#HotIf !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo()
 z:: {
     SendInput("^c")
     _SonarUI("copiar")
@@ -894,7 +1115,7 @@ $Space:: {
     _SonarUI("flip")
 }
 #HotIf
-#HotIf CspLibre()
+#HotIf CspLibre() && _LegadoActivo()
 $a:: {
     _FlushPendentes()
     if stylus.altActive
@@ -910,14 +1131,14 @@ $a:: {
         MostrarHUD("LAYER CURRENT (1)","00E5FF",950)
     }
 }
-#HotIf CspLibre()
+#HotIf CspLibre() && _LegadoActivo()
 ~RButton & a:: {
     if !_ComboInicio()
         return
     EnviarNtilde()
     MostrarHUD("REFERENCE LAYER","AA44FF",1680)
 }
-#HotIf CspLibre()
+#HotIf CspLibre() && _LegadoActivo()
 $e:: {
     _FlushPendentes()
     global colorEstado
@@ -959,7 +1180,7 @@ $e:: {
     Stab_ResetUniversal("e")
     MostrarToolTipE("ERASER  (1)")
 }
-#HotIf CspLibre()
+#HotIf CspLibre() && _LegadoActivo()
 ~RButton & e:: {
     if !_ComboInicio()
         return
@@ -967,7 +1188,7 @@ $e:: {
     _SonarUI("borrador")
     MostrarHUD("ERASER LAZO","FF4444",1200)
 }
-#HotIf CspLibre()
+#HotIf CspLibre() && _LegadoActivo()
 ^e:: {
     MostrarHUD("ALL LAYERS ERASER","FF4444",800)
     Send("{F5}")
@@ -980,6 +1201,7 @@ $e:: {
     Send("y")
     MostrarBadgeCombo("ALT + Q","SOFT BRUSH","FF6B00",2200)
 }
+#HotIf CspLibre()
 ~LAlt & 1::
 ~RAlt & 1:: {
     opacidad.nivel := Min(opacidad.nivel + 10,100)
@@ -990,11 +1212,13 @@ $e:: {
     opacidad.nivel := Max(opacidad.nivel - 10,10)
     _EnviarOpacidad()
 }
+#HotIf CspLibre() && _LegadoActivo()
 !Home:: {
     Send("{PageDown}")
     MostrarHUD("ACCESO RÁPIDO","AA8844",800)
 }
 !-:: _CicloO()
+#HotIf CspLibre() && _LegadoActivo()
 $w:: {
     if (GetKeyState("Alt") || stylus.altActive) {
         EnviarMenor()
@@ -1073,7 +1297,9 @@ $z:: {
 $z up:: {
     Z.estaAbajo := false
 }
+#HotIf CspLibre()
 ~r:: SetTimer(LienzoHUD_ChequeoR, -140)
+#HotIf CspLibre() && _LegadoActivo()
 $q:: {
     if (GetKeyState("Alt") || stylus.altActive) {
         Send("y")
@@ -1117,6 +1343,7 @@ $q:: {
     Q.pendiente := true
     SetTimer(__Q_SEND_NORMAL,-50)
 }
+#HotIf CspLibre()
 _FlushPendentes() {
     if Q.pendiente {
         SetTimer(__Q_SEND_NORMAL,0)
@@ -1142,6 +1369,7 @@ _ToggleLayerVis() {
     else
         _AvisoEvento("capa_mostrar", "👁 SHOW LAYER", "SPACE + E", "44DD88", 0)
 }
+#HotIf CspLibre() && _LegadoActivo()
 +q:: {
     Send("y")
     MostrarHUD("SOFT (Y)","00E5FF",800)
@@ -1156,6 +1384,7 @@ _ToggleLayerVis() {
     else
         MostrarTooltipToggle("HOVER PAUSADO","⏸","rojo")
 }
+#HotIf CspLibre()
 _FadeAlpha(hwnd,hasta,pasos := 6,delayMs := 0) {
     global g_sweepActivo
     if g_sweepActivo {
@@ -1264,7 +1493,7 @@ _ToggleHoverPaneles() {
     _SetAR(target)
     return target
 }
-#HotIf CspLibre() && (IsSet(stylus) && stylus.altActive)
+#HotIf CspLibre() && (IsSet(stylus) && stylus.altActive) && _LegadoActivo()
 $!x:: {
     now := A_TickCount
     if (now - AltB_a_state.lastPress < 300) {
@@ -1292,6 +1521,7 @@ __AltX_SEND_NORMAL() {
     Stab_ResetUniversal("d")
     MostrarHUD("COLOR MIX  (D)","FF8C42",950)
 }
+#HotIf CspLibre() && _LegadoActivo()
 !s:: {
     if !stylus.altActive
         return
@@ -1309,6 +1539,7 @@ __AltX_SEND_NORMAL() {
     AltB_s_state.timerRunning := 1
     SetTimer(__AltS_SEND_NORMAL,-250)
 }
+#HotIf CspLibre()
 __AltS_SEND_NORMAL() {
     if !AltB_s_state.timerRunning
         return
@@ -1318,6 +1549,7 @@ __AltS_SEND_NORMAL() {
     _AltRestaurar(seguiaSostenido)
     MostrarHUD("LAYER CURRENT (1)","00E5FF",950)
 }
+#HotIf CspLibre() && _LegadoActivo()
 $s:: {
     if stylus.altActive
         return
@@ -1364,6 +1596,7 @@ $s:: {
     Stab_ResetUniversal("s")
     SetTimer(() => MostrarHUD("LASSO","FF6B00",950),-1)
 }
+#HotIf CspLibre()
 ; Alpha transparente (CSP: applicationchangemaincolorandtransparent = K)
 $k:: {
     global colorEstado
@@ -1445,6 +1678,7 @@ $Escape:: {
     }
     Send("{Escape}")
 }
+#HotIf CspLibre() && _LegadoActivo()
 +r:: {
     MostrarHUD("REFLEJAR HORIZONTAL","00E5FF",1500)
     Send("+r")
@@ -1454,8 +1688,9 @@ Tab::
 F3:: AccionEnfoque()
 ~f:: {
 }
-; [DESACTIVADO] ~RButton & s retirado por solicitud: bloqueaba S (herramienta Lazo) del stylus.
 #HotIf CspLibre()
+; [DESACTIVADO] ~RButton & s retirado por solicitud: bloqueaba S (herramienta Lazo) del stylus.
+#HotIf CspLibre() && _LegadoActivo()
 ~RButton & q:: {
     if !_ComboInicio()
         return
@@ -1465,13 +1700,14 @@ F3:: AccionEnfoque()
 #HotIf
 #HotIf CspLibre()
 ; Shift sostenido: Space + -
+#HotIf CspLibre() && _LegadoActivo()
 ~Space & -:: {
     if (!shiftSostenido.activo && !WinActive("ahk_exe CLIPStudioPaint.exe"))
         return   ; no anclar Shift fuera de CSP; sí permitir soltarlo
     _FlushPendentes()
     ShiftAnclado_Toggle()
 }
-#HotIf GetKeyState("Space") && CspLibre()
+#HotIf GetKeyState("Space") && CspLibre() && _LegadoActivo()
 *e:: _SpaceE_Dispatch()
 #HotIf CspLibre()
 
@@ -1686,19 +1922,19 @@ _HudSFTReafirmar() {
         return
     try DllCall("SetWindowPos", "Ptr", _sftHud.Hwnd, "Ptr", -1, "int", 0, "int", 0, "int", 0, "int", 0, "uint", 0x0001 | 0x0002 | 0x0010)
 }
-#HotIf CspLibre()
+#HotIf CspLibre() && _LegadoActivo()
 ~RButton & w:: {
     if !_ComboInicio()
         return
     EnviarNtilde()
     MostrarBadgeCombo("RButton + W","DIFU MIXER 2","00E5FF",2200)
 }
-#HotIf CspLibre()
+#HotIf CspLibre() && _LegadoActivo()
 !w:: {
     EnviarMenor()
     MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 2","00E5FF",2200)
 }
-#HotIf CspLibre()
+#HotIf CspLibre() && _LegadoActivo()
 ~RButton & -:: {
     if !_ComboInicio()
         return
@@ -1739,12 +1975,14 @@ _HudSFTReafirmar() {
     Send("{F11}")
     MostrarHUD("Advanced fill","AA8844",800)
 }
+#HotIf CspLibre()
 _EnviarOpacidad() {
     key := (opacidad.nivel = 100) ? "0" : String(opacidad.nivel // 10)
     SendInput("+" key)
     ActualizarDialGUI()
     MostrarHUD("OPACIDAD " opacidad.nivel "%","00E5FF",900)
 }
+#HotIf CspLibre() && _LegadoActivo()
 ~RButton & 3::
 ~RButton & 4::
 ~RButton & 5::
@@ -1787,6 +2025,7 @@ _EnviarOpacidad() {
         ActualizarDialGUI()
     }
 }
+#HotIf CspLibre() && _LegadoActivo()
 NumpadDiv:: {
     dial.modo := (dial.modo = 1) ? 2 : 1
     ActualizarDialGUI()
@@ -1919,10 +2158,12 @@ Numpad8:: {
     MostrarHUD("Capa: " tipos[tecla],"AA44FF",500)
     Send("^!" tecla)
 }
+#HotIf CspLibre()
 $Numpad6:: {
     Send("{Insert}")
     MostrarHUD("Grayscale Toggle","888888",800)
 }
+#HotIf CspLibre() && _LegadoActivo()
 *Backspace:: {
     if GetKeyState("Space","P") {
         Send("8")
@@ -1931,6 +2172,7 @@ $Numpad6:: {
     }
     Send("{Backspace}")
 }
+#HotIf CspLibre()
 ~*Space:: {
     spc.downTick := A_TickCount
     LienzoHUD_ChequeoSpace()
@@ -1978,7 +2220,7 @@ $^!+F9:: {
     try MostrarHUD("Nueva ventana (" z "): " r, "9A7BFF", 1400)
 }
 $^!+F8:: NvToggleModo()
-#HotIf CspLibre()
+#HotIf CspLibre() && _LegadoActivo()
 !f:: {
     global _bSmearAbajo
     if !stylus.altActive
@@ -2020,3 +2262,16 @@ $^!+F8:: NvToggleModo()
 }
 #HotIf
 #HotIf
+
+; === INFRA: Alt+Q -> pincel_suave (Y), sin fuga a CSP (bote de pintura) ===
+#HotIf CspLibre() && !_LegadoActivo()
+!q:: _AltQSoftBrush()
+
+#HotIf CspLibre() && !_LegadoActivo() && stylus.altActive
+$q:: _AltQSoftBrush()
+
+#HotIf
+_AltQSoftBrush() {
+    Send("y")
+    MostrarBadgeCombo("ALT + Q", "SOFT BRUSH", "FF6B00", 2200)
+}

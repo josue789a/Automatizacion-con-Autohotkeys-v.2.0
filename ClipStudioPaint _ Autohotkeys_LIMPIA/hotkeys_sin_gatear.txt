@@ -1,0 +1,9 @@
+lib\calibrador_py.ahk:564 | *RButton | #HotIf _CalPyCapEstado().on
+lib\calibrador_py.ahk:568 | *RButton up | #HotIf _CalPyCapEstado().on
+lib\captura_overlay.ahk:687 | ^!+F11 | #HotIf Cap_DemoOn()
+lib\hotkeys_csp.ahk:528 | ^s | #HotIf EsEditorTexto()
+lib\hotkeys_csp.ahk:533 | ^g | #HotIf EsEditorTexto()
+tools\probes\tmp_probe.ahk:5 | ~RButton | #HotIf WinActive("ahk_exe python.exe") || WinActive("ahk_exe pythonw.exe")
+tools\probes\tmp_probe.ahk:6 | ~RButton up | #HotIf WinActive("ahk_exe python.exe") || WinActive("ahk_exe pythonw.exe")
+tools\probes\tmp_probe.ahk:7 | ~LButton | #HotIf WinActive("ahk_exe python.exe") || WinActive("ahk_exe pythonw.exe")
+tools\probes\tmp_probe.ahk:8 | ~LButton up | #HotIf WinActive("ahk_exe python.exe") || WinActive("ahk_exe pythonw.exe")

@@ -3019,9 +3019,9 @@ _AccOnWheel(wParam, lParam, msg, hwnd) {
     ; Obtener ventana bajo el cursor
     hUnder := DllCall("user32\WindowFromPoint", "Int64", pt, "Ptr")
     
-    ; Permitir si el cursor está en el viewport O si el cursor está en el editor de eventos (g)
+    ; Permitir si el cursor está en el viewport (ACC.vp) O si el cursor está en el editor principal (ACC.main)
     esViewport := (hUnder = ACC.vp.Hwnd || DllCall("user32\IsChild", "Ptr", ACC.vp.Hwnd, "Ptr", hUnder))
-    esEditor := (hUnder = ACC.g.Hwnd || DllCall("user32\IsChild", "Ptr", ACC.g.Hwnd, "Ptr", hUnder))
+    esEditor := (hUnder = ACC.main.Hwnd || DllCall("user32\IsChild", "Ptr", ACC.main.Hwnd, "Ptr", hUnder))
     
     if (!esViewport && !esEditor)
         return

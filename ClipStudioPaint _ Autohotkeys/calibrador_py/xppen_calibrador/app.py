@@ -39,7 +39,7 @@ TABS = (("⚡", "Eventos y particularidades"), ("✎", "Zonas y rangos"), ("⚙"
 
 
 class CalibradorApp(ctk.CTk):
-    def __init__(self, ini_path, perfil="1", modo="Normal", ahk_hwnd=0, render="ctk"):
+    def __init__(self, ini_path, perfil="1", modo="Normal", ahk_hwnd=0, render="ctk", catalogo_path=None):
         ctk.set_appearance_mode("light")
         super().__init__(fg_color=T.BG)
         self.render_mode = render
@@ -49,10 +49,11 @@ class CalibradorApp(ctk.CTk):
         self.minsize(940, 600)
         self.store = IniFile(ini_path).load()
         self.draft = Draft(self.store, perfil)
-        self.catalogo = Catalogo(self.store, DATA_DIR).load()
+        self.catalogo = Catalogo(self.store, DATA_DIR, catalogo_path).load()
         self.bridge = AhkBridge(ahk_hwnd, self._own_hwnd)
-        set_captura_bridge(self.bridge.send)
+        set_captura_bridge(self.bridge.send_async)
         self.ctx = Ctx(self.draft, self.bridge, self.catalogo, self._on_dirty)
+        self.ctx.on_rename = self._rename_event
         self.modo = modo.capitalize()
         self.theme_store = IniFile(Path(ini_path).with_name("theme.ini")).load()
         self.tc = TabCtx(self.draft, self.store, self.bridge, self.theme_store, DATA_DIR, lambda: self.modo,
@@ -349,7 +350,7 @@ class CalibradorApp(ctk.CTk):
             self.editor.show_event(ev)
             self._on_dirty()
             try:
-                self.bridge.send("SELECT_EVENT", id_ev, ev.nombre)
+                self.bridge.send_async("SELECT_EVENT", id_ev, ev.nombre)
             except Exception:
                 pass
 
@@ -370,15 +371,37 @@ class CalibradorApp(ctk.CTk):
     def _add_event(self):
         cid, nombre = self.catalogo.siguiente_custom()
         lista = [c for c in (self.store.get("EventosCustom", "lista", "") or "").split(",") if c.strip()]
+        if cid not in lista:
+            lista.append(cid)
+        patches = [
+            ("EventosCustom", "lista", ",".join(lista)),
+            ("EventosCustom", cid, f"{nombre}|Personalizados"),
+            ("EventosEliminados", cid, None),
+        ]
+        lista_elim = [c for c in (self.store.get("EventosEliminados", "lista", "") or "").split(",") if c.strip()]
+        if cid in lista_elim:
+            lista_elim_nueva = [c for c in lista_elim if c != cid]
+            patches.append(("EventosEliminados", "lista", ",".join(lista_elim_nueva)))
         try:
-            self.store.save_patches([("EventosCustom", "lista", ",".join([*lista, cid])), ("EventosCustom", cid, f"{nombre}|Personalizados")])
+            self.store.save_patches(patches)
         except OSError as e:
             self.footer.flash(str(e), False)
             return
-        self.bridge.send("RELOAD_INI", "catalogo")
+        self._quiet_until = time.monotonic() + 1.5
+        self.bridge.send_async("RELOAD_INI", "catalogo")
         self.catalogo.load()
         self.cat_panel.rebuild()
         self.cat_panel.select(cid)
+
+    def _rename_event(self, eid, nuevo) -> bool:
+        if not self.catalogo.renombrar_custom(eid, nuevo):
+            return False
+        self._quiet_until = time.monotonic() + 1.5
+        self.bridge.send_async("RELOAD_INI", "catalogo")
+        self.cat_panel.rebuild()
+        self.cat_panel.select(eid)
+        self._on_dirty()
+        return True
 
     # ── guardado ───────────────────────────────────────────
     def save(self) -> bool:
@@ -400,7 +423,8 @@ class CalibradorApp(ctk.CTk):
             return False
         self.draft.clear()
         self._refresh_tabs()
-        self.bridge.send("RELOAD_INI")
+        self._quiet_until = time.monotonic() + 1.5
+        self.bridge.send_async("RELOAD_INI")
         self.footer.flash(f"✓ {len(patches)} cambio{'s' if len(patches) != 1 else ''} guardado{'s' if len(patches) != 1 else ''}")
         self._on_dirty()
         return True
@@ -434,12 +458,18 @@ class CalibradorApp(ctk.CTk):
 
     def _poll(self):
         try:
+            if time.monotonic() < getattr(self, "_quiet_until", 0.0):
+                self.after(600, self._poll)
+                return
             for st in (self.store, self.theme_store):
                 p = st.path
                 if p.exists():
                     s_ = p.stat()
                     if st.signature and (s_.st_mtime_ns, s_.st_size) != st.signature:
+                        _t0 = time.perf_counter()
                         self.reload_all()
+                        log.info("poll→reload_all (%s) %.0f ms", p.name,
+                                 (time.perf_counter() - _t0) * 1000)
                         break
         except OSError:
             pass

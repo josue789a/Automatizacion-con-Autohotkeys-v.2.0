@@ -1,0 +1,182 @@
+diff --git a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/blocks.py b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/blocks.py
+--- a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/blocks.py
++++ b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/blocks.py
+@@ -3,7 +3,7 @@
+ import tkinter as tk
+ import customtkinter as ctk
+ from . import theme as T
+-from .widgets import (lbl, btn, check, combo, entry, switch, Hint, Stepper, ColorChip, ResponsiveRow, FlowRow)
++from .widgets import (lbl, btn, check, combo, entry, switch, Hint, Stepper, ColorChip, ResponsiveRow, FlowRow, EvenRow)
+ from ..core.ini_schema import FIELDS, PILDORA_TAMS
+ 
+ 
+@@ -239,6 +239,35 @@
+         self._loaders.append(load)
+         return w
+ 
++    def f_entry_default(self, parent, name, width=56, defecto="1000", vacio="auto"):
++        """Entry con valor de fábrica visible en gris.
++
++        - Sin valor propio (INI == `vacio`, p. ej. "auto"): el campo se ve
++          vacío y muestra `defecto` en gris (placeholder).
++        - Con valor propio: el número se muestra en negro (texto normal).
++        - Confirmar en blanco guarda `vacio` y vuelve al valor de fábrica.
++
++        Reutilizable en cualquier bloque; A02Hud lo usa para la duración.
++        """
++        w = entry(parent, width)
++        w.configure(placeholder_text=str(defecto), placeholder_text_color=T.TXT3)
++
++        def commit(_e=None):
++            raw = w.get().strip()
++            ok = self._commit(name, vacio if raw == "" else raw)
++            w.configure(border_color=T.FIELD_BORDER if ok else T.DANGER)
++        w.bind("<FocusOut>", commit)
++        w.bind("<Return>", commit)
++
++        def load():
++            cur = str(self.ctx.get(name) or "").strip()
++            w.delete(0, "end")
++            if cur and cur.lower() != str(vacio).lower():
++                w.insert(0, cur)            # valor propio -> negro
++            w.configure(border_color=T.FIELD_BORDER)
++        self._loaders.append(load)
++        return w
++
+     def f_key_entry(self, parent, name, width=90, on_clear=None):
+         """Campo estándar para captura de atajos de teclado (hasta 4 teclas).
+         Incluye Entry con fuente condensada, attach_keycapture y dúo compacto ✓/✕."""
+@@ -409,11 +438,9 @@
+         t_entry.pack(side="left", padx=(0, 18))
+ 
+         lbl(f2, "Duración", 11, T.TXT2).pack(side="left", padx=(0, 6))
+-        d = self.f_entry(f2, "hud_dur", 56, "1000")
++        d = self.f_entry_default(f2, "hud_dur", 56, "1000")
+         d.pack(side="left", padx=(0, 4))
+-        lbl(f2, "ms", 11, T.TXT2).pack(side="left", padx=(0, 10))
+-
+-        lbl(f2, "Auto (1000 ms) o 100-10000 ms", 9, T.TXT3).pack(side="left")
++        lbl(f2, "ms", 11, T.TXT2).pack(side="left")
+ 
+         def load_txt():
+             cur_t = self.ctx.get("hud_texto")
+@@ -487,18 +514,31 @@
+ 
+     def build(self, p):
+         p.grid_columnconfigure(0, weight=1)
+-        # Fila única compacta
+-        f1 = ctk.CTkFrame(p, fg_color="transparent")
++        # Fila única: 4 celdas con huecos iguales y elásticos
++        f1 = EvenRow(p, min_gap=10)
+         f1.grid(row=0, column=0, sticky="ew")
+-        self.f_check(f1, "pildora", "Píldora").pack(side="left", padx=(0, 14))
+-        lbl(f1, "Nombrar:", 11, T.TXT2).pack(side="left", padx=(0, 4))
+-        self.f_entry(f1, "pildora_nombre", 70, "Ej: Hc").pack(side="left", padx=(0, 14))
+-        lbl(f1, "Tamaño:", 11, T.TXT2).pack(side="left", padx=(0, 4))
+-        self.f_menu(f1, "pildora_modo_tam", self.PILDORA_MODOS, 105).pack(side="left", padx=(0, 14))
+-        lbl(f1, "Icono:", 11, T.TXT2).pack(side="left", padx=(0, 4))
+-        btn(f1, "📁", self._importar_icono, width=28, height=24).pack(side="left", padx=(0, 6))
+-        self._ico_lbl = lbl(f1, "Sin icono", 11, T.TXT3)
++
++        c0 = ctk.CTkFrame(f1, fg_color="transparent")
++        self.f_check(c0, "pildora", "Píldora").pack(side="left")
++        f1.add(c0)
++
++        c1 = ctk.CTkFrame(f1, fg_color="transparent")
++        lbl(c1, "Nombrar:", 11, T.TXT2).pack(side="left", padx=(0, 4))
++        self.f_entry(c1, "pildora_nombre", 70, "Ej: Hc").pack(side="left")
++        f1.add(c1)
++
++        c2 = ctk.CTkFrame(f1, fg_color="transparent")
++        lbl(c2, "Tamaño:", 11, T.TXT2).pack(side="left", padx=(0, 4))
++        self.f_menu(c2, "pildora_modo_tam", self.PILDORA_MODOS, 105).pack(side="left")
++        f1.add(c2)
++
++        c3 = ctk.CTkFrame(f1, fg_color="transparent")
++        lbl(c3, "Icono:", 11, T.TXT2).pack(side="left", padx=(0, 4))
++        btn(c3, "📁", self._importar_icono, width=28, height=24).pack(side="left", padx=(0, 6))
++        self._ico_lbl = lbl(c3, "Sin icono", 11, T.TXT3)
+         self._ico_lbl.pack(side="left")
++        f1.add(c3)
++
+         self._loaders.append(self._refrescar_icono)
+ 
+     def _importar_icono(self):
+@@ -534,15 +574,25 @@
+ 
+     def build(self, p):
+         p.grid_columnconfigure(0, weight=1)
+-        fr = ctk.CTkFrame(p, fg_color="transparent")
++        # Fila única: 3 celdas con huecos iguales y elásticos
++        fr = EvenRow(p, min_gap=12)
+         fr.grid(row=0, column=0, sticky="ew")
+-        btn(fr, "✎  Dibujar zona",
++
++        g0 = ctk.CTkFrame(fr, fg_color="transparent")
++        btn(g0, "✎  Dibujar zona",
+             lambda: self.ctx.bridge.send("CAL_ZONE", self.ctx.event_id, "panel", "cruzar" if self.ctx.get("cruzar") else "auto"),
+-            height=26, width=120).pack(side="left", padx=(0, 16))
+-        self.f_check(fr, "auto", "Paso → Autoclick").pack(side="left", padx=(0, 16))
+-        self.f_check(fr, "cruzar", "Paso → Atajo CSP").pack(side="left", padx=(0, 6))
+-        c_cz, e_cz = self.f_key_entry(fr, "atajo", 90, on_clear=lambda: self._reset("atajo", e_cz))
++            height=26, width=120).pack(side="left")
++        fr.add(g0)
++
++        g1 = ctk.CTkFrame(fr, fg_color="transparent")
++        self.f_check(g1, "auto", "Paso → Autoclick").pack(side="left")
++        fr.add(g1)
++
++        g2 = ctk.CTkFrame(fr, fg_color="transparent")
++        self.f_check(g2, "cruzar", "Paso → Atajo CSP").pack(side="left", padx=(0, 6))
++        c_cz, e_cz = self.f_key_entry(g2, "atajo", 90, on_clear=lambda: self._reset("atajo", e_cz))
+         c_cz.pack(side="left")
++        fr.add(g2)
+ 
+     def after_change(self, name):
+         if name == "cruzar" and self.ctx.get("cruzar") and self.ctx.get("auto"):
+diff --git a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/widgets.py b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/widgets.py
+--- a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/widgets.py
++++ b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/widgets.py
+@@ -391,6 +391,42 @@
+         self.configure(height=max(1, int((y - sy) / sc)))
+ 
+ 
++class EvenRow(ctk.CTkFrame):
++    """Fila de celdas con huecos iguales y elásticos.
++
++    Uso:
++        fr = EvenRow(parent, min_gap=10)
++        fr.grid(row=0, column=0, sticky="ew")
++        fr.add(celda1); fr.add(celda2); fr.add(celda3)
++
++    - Con espacio de sobra, **todos** los huecos crecen por igual (weight=1).
++    - Con poco espacio, se comprimen hasta `min_gap`.
++    - No salta de fila (a diferencia de FlowRow): prioriza comprimir.
++    """
++
++    def __init__(self, parent, min_gap=10, **kw):
++        kw.setdefault("fg_color", "transparent")
++        kw.setdefault("width", 0)
++        kw.setdefault("height", 0)
++        super().__init__(parent, **kw)
++        self.min_gap = max(0, int(min_gap))
++        self.cells: list = []
++
++    def add(self, widget):
++        self.cells.append(widget)
++        self._layout()
++        return widget
++
++    def _layout(self):
++        n = len(self.cells)
++        for i, w in enumerate(self.cells):
++            w.grid(row=0, column=2 * i, sticky="w")
++            self.grid_columnconfigure(2 * i, weight=0, minsize=0)
++        for i in range(n - 1):
++            self.grid_columnconfigure(2 * i + 1, weight=1, minsize=self.min_gap)
++        self.grid_rowconfigure(0, weight=0)
++
++
+ # ── Icono compacto (cabeceras de bloque) ──
+ def _tooltip(w, text):
+     st = {"t": None, "j": None}

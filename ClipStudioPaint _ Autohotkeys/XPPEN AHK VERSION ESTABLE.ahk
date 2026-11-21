@@ -1,6 +1,11 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 #Warn All, OutputDebug
+; --- Globals de entorno: DEBEN existir antes de cualquier llamada a _PosGuiIniPath() ---
+global POSGUI_INI_OVERRIDE := ""
+global SANDBOX_ACTIVO := false
+global _gDurCache := Map()
+
 if !A_IsAdmin {
     try Run('*RunAs "' A_ScriptFullPath '"')
     ExitApp()
@@ -39,6 +44,7 @@ stylus := {altActive:false,rButtonHeld:false,comboUsado:false,upSinteticoTick:0,
 sel := {estado:0,estadoAltX:false,estadoC:0,guiActivo:false,sRapido:false}
 colorEstado := 0
 UP_SINTETICO_MS := 70
+global _RButtonEvento := ""
 S_RAPIDO_MS := 400
 ESTAB_MIN := 7
 ESTAB_MAX := 75
@@ -197,6 +203,7 @@ _ConstruirTrayMenu() {
     A_TrayMenu.Add("Perfil de equipo", mPerf)
     A_TrayMenu.Add("[Global] Nueva ventana", (*) => _NvBotonCrearVentana())
     A_TrayMenu.Add("Calibrador de Zonas", (*) => _EjecutarAccionHub("puntos"))
+    A_TrayMenu.Add("Calibrador Pruebas (En Blanco)", (*) => AbrirCalibradorVacio())
     A_TrayMenu.Add("Calibrador Clásico (Antiguo)", (*) => AbrirPanelPuntos())
     A_TrayMenu.Add("Proyecto Arte", mArte)
     A_TrayMenu.Add("Brief del Proyecto", (*) => _AbrirBriefProyecto())

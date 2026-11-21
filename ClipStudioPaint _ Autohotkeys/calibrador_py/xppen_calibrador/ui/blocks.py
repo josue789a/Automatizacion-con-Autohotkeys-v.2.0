@@ -14,6 +14,11 @@ class Ctx:
         self.event_id: str | None = None
         self.blocks: list["Block"] = []
         self.listeners: list = []
+        self.on_rename = None
+
+    def rename_event(self, eid, nuevo) -> bool:
+        cb = self.on_rename
+        return bool(cb(eid, nuevo)) if callable(cb) else False
 
     def add_listener(self, cb):
         """Suscriptores avisados tras cada cambio real (p. ej. cabeceras de grupo)."""
@@ -58,6 +63,7 @@ class Block(ctk.CTkFrame):
     MASTER_DEFAULT = ""                              # flag que se enciende al activar el maestro
     ESENCIAL = False                                 # True = siempre cuenta como contenido del grupo
     KEYS: tuple[str, ...] = ()                       # campos propios (sin MASTER) que indican configuración
+    VISUAL_ESTADO = False                            # True solo en bloques del grupo B (lo activa EditorPanel)
 
     def __init__(self, master, ctx: Ctx, on_toggle):
         super().__init__(master, fg_color=T.CARD, corner_radius=12, border_width=1, border_color="#E5E0F0")
@@ -179,6 +185,7 @@ class Block(ctk.CTkFrame):
     def _sync_master(self):
         nv = 1 if self.master_on() else 0
         if getattr(self, "_last_m_val", None) == nv and self.m_var.get() == nv:
+            self.update_visual_state()
             return
         self._last_m_val = nv
         if self.m_var.get() != nv:
@@ -187,6 +194,32 @@ class Block(ctk.CTkFrame):
             (self.m_chk.select if nv else self.m_chk.deselect)()
         except Exception:
             pass
+        self.update_visual_state()
+
+    def update_visual_state(self):
+        """Atenúa el bloque si está disponible pero sin nada configurado.
+        No actúa si no está disponible: eso lo controla set_available()."""
+        if not self.VISUAL_ESTADO or not self.available:
+            return
+        try:
+            on = bool(self.configurado())
+        except Exception:
+            on = True
+
+        def _cfg(w, **kw):
+            if w is None:
+                return
+            try:
+                w.configure(**kw)
+            except Exception:
+                pass
+
+        _cfg(self, border_color="#E5E0F0" if on else T.MUTED_BG,
+             fg_color=T.CARD if on else "#FAFAFE")
+        _cfg(getattr(self, "num_badge", None), fg_color=T.SOFT if on else T.MUTED_BG)
+        _cfg(getattr(self, "l_num", None), text_color=T.PRIMARY if on else T.MUTED_TXT)
+        _cfg(getattr(self, "l_title", None), text_color=T.TXT if on else T.MUTED_TXT)
+        _cfg(getattr(self, "l_sub", None), text_color=T.TXT2 if on else T.MUTED_TXT2)
 
     # ── refresco ───────────────────────────────────────────
     def refresh(self):
@@ -617,6 +650,54 @@ class Block(ctk.CTkFrame):
         attach_keycapture(e, on_clear=clear_h, on_commit=commit_h, get_history=hist.history_tuple)
         return c, e
 
+    def f_readonly_key_box(self, parent, text_fn, width=90):
+        """Box Tipo II: Predeterminado imposible de tocar (gris, solo lectura, en cascada)."""
+        from .widgets import KEY_W
+        width = max(width, KEY_W)
+        c = ctk.CTkFrame(parent, fg_color="transparent")
+        w = ctk.CTkEntry(
+            c,
+            width=width,
+            height=28,
+            font=T.font_cap(11),
+            fg_color="#FAF9FD",
+            text_color=T.TXT3,
+            border_color=T.FIELD_BORDER,
+            border_width=1,
+        )
+        w.pack(side="left", padx=(0, 2))
+
+        # Bloqueo total de interacción física
+        def _block_ev(_e=None):
+            return "break"
+
+        for ev_name in ("<ButtonPress>", "<ButtonRelease>", "<Double-Button-1>",
+                        "<FocusIn>", "<KeyPress>", "<KeyRelease>", "<Button-3>"):
+            w.bind(ev_name, _block_ev)
+
+        try:
+            w.configure(cursor="arrow")
+            if hasattr(w, "_entry") and w._entry:
+                w._entry.configure(cursor="arrow")
+        except Exception:
+            pass
+
+        def load():
+            val = str(text_fn() or "").strip()
+            st0 = None
+            try:
+                st0 = w.cget("state")
+                w.configure(state="normal")
+            except Exception:
+                pass
+            w.delete(0, "end")
+            if val and val != "—":
+                w.insert(0, val)
+            w.configure(state="readonly")
+
+        self._loaders.append(load)
+        return c, w
+
     def row(self, parent, r, label, widget, label_w=120):
         lbl(parent, label, 12, T.TXT2, width=label_w).grid(row=r, column=0, sticky="w", pady=3)
         widget.grid(row=r, column=1, sticky="w", pady=3)
@@ -686,7 +767,27 @@ class A01Base(Block):
                 e2._apply_style(is_cust_r)
         self._loaders.append(load_base)
         self._loaders.append(self._check_dup)
-        e1.bind("<KeyRelease>", lambda _e: self._check_dup(e1.get()), add="+")
+
+        def _on_atajo_type(_e=None):
+            val = e1.get().strip()
+            self._sync_atajo_change(val)
+        e1.bind("<KeyRelease>", _on_atajo_type, add="+")
+
+    def _sync_atajo_change(self, val):
+        cur = str(self.ctx.get("atajo") or "").strip()
+        if val != cur:
+            self.ctx.set("atajo", val)
+            self._commit("atajo", val)
+            self._check_dup(val)
+            self.ctx.refresh_all()
+            if hasattr(self, "editor") and self.editor:
+                self.editor._update_group_state()
+
+    def _on_key_commit(self, name, value):
+        if name == "atajo":
+            self.ctx.refresh_all()
+            if hasattr(self, "editor") and self.editor:
+                self.editor._update_group_state()
 
     def _reset(self, name, ent):
         ev = self.ctx.catalogo.por_id(self.ctx.event_id)
@@ -698,6 +799,8 @@ class A01Base(Block):
         if hasattr(ent, "_apply_style"):
             ent._apply_style(False)
         self._check_dup()
+        if name == "atajo":
+            self.ctx.refresh_all()
 
     def _check_dup(self, typed=None):
         mine = (typed if isinstance(typed, str) else self.ctx.get("atajo")).strip().lower()
@@ -783,8 +886,22 @@ class A02Hud(Block):
         f2.grid(row=1, column=0, sticky="ew", pady=(6, 0))
 
         lbl(f2, "Texto del evento", 11, T.TXT2).pack(side="left", padx=(0, 6))
-        t_entry = self.f_entry(f2, "hud_texto", 240, "Por defecto: nombre del evento")
+        t_entry = entry(f2, 240, "Por defecto: nombre del evento")
         t_entry.pack(side="left", padx=(0, 18))
+
+        def commit_txt(_e=None):
+            ev = self.ctx.catalogo.por_id(self.ctx.event_id)
+            if ev is not None and ev.custom:
+                val = t_entry.get().strip()
+                ok = True
+                if val and val != ev.nombre:
+                    ok = self.ctx.rename_event(ev.id, val)
+                t_entry.configure(border_color=T.FIELD_BORDER if ok else T.DANGER)
+                return
+            ok = self._commit("hud_texto", t_entry.get())
+            t_entry.configure(border_color=T.FIELD_BORDER if ok else T.DANGER)
+        t_entry.bind("<FocusOut>", commit_txt)
+        t_entry.bind("<Return>", commit_txt)
 
         lbl(f2, "Duración", 11, T.TXT2).pack(side="left", padx=(0, 6))
         d = self.f_entry_default(f2, "hud_dur", 56, _dur_defecto)
@@ -792,11 +909,11 @@ class A02Hud(Block):
         lbl(f2, "ms", 11, T.TXT2).pack(side="left")
 
         def load_txt():
-            cur_t = self.ctx.get("hud_texto")
+            cur_t = str(self.ctx.get("hud_texto") or "")
             ev = self.ctx.catalogo.por_id(self.ctx.event_id)
-            if not cur_t and ev:
-                t_entry.delete(0, "end")
-                t_entry.insert(0, ev.nombre)
+            txt = ev.nombre if (ev is not None and (ev.custom or not cur_t)) else cur_t
+            t_entry.delete(0, "end")
+            t_entry.insert(0, txt)
         self._loaders.append(load_txt)
 
         def _probar_hud():
@@ -1039,8 +1156,9 @@ class B03Modulacion(Block):
         ra2 = ctk.CTkFrame(a, fg_color="transparent")
         ra2.grid(row=1, column=0, sticky="w")
         lbl(ra2, "A:", 11, T.TXT2).pack(side="left", padx=(0, 4))
-        c_qa, _ = self.f_key_entry(ra2, "quick_a", 90, defecto=self._tecla_base)
+        c_qa, e_qa = self.f_readonly_key_box(ra2, self._tecla_base, 90)
         c_qa.pack(side="left", padx=(0, 8))
+        self._box_qa = e_qa
         lbl(ra2, "B:", 11, T.TXT2).pack(side="left", padx=(0, 4))
         c_qb, e_qb = self.f_key_entry(ra2, "quick_b", 90)
         c_qb.pack(side="left")
@@ -1090,8 +1208,9 @@ class B03Modulacion(Block):
         rb2 = ctk.CTkFrame(b, fg_color="transparent")
         rb2.pack(fill="x")
         lbl(rb2, "A:", 11, T.TXT2).pack(side="left", padx=(0, 4))
-        c_ta, _ = self.f_key_entry(rb2, "toggle_a", 90, defecto=self._tecla_base)
+        c_ta, e_ta = self.f_readonly_key_box(rb2, self._tecla_base, 90)
         c_ta.pack(side="left", padx=(0, 8))
+        self._box_ta = e_ta
         lbl(rb2, "B:", 11, T.TXT2).pack(side="left", padx=(0, 4))
         c_tb, _ = self.f_key_entry(rb2, "toggle_b", 90)
         c_tb.pack(side="left")
@@ -1112,22 +1231,58 @@ class B03Modulacion(Block):
         bad = self.ctx.get("toggle") and not str(self.ctx.get("toggle_b") or "").strip()
         self.warn.configure(text="⚠ Requiere Tecla B" if bad else "")
 
+    def refresh_cascada_a(self):
+        val = self._tecla_base()
+        for w in (getattr(self, "_box_qa", None), getattr(self, "_box_ta", None)):
+            if w is not None:
+                try:
+                    w.configure(state="normal")
+                    w.delete(0, "end")
+                    if val and val != "—":
+                        w.insert(0, str(val))
+                    w.configure(state="readonly")
+                except Exception:
+                    pass
+
+    def _sync_master(self):
+        super()._sync_master()
+        if hasattr(self, "editor") and self.editor:
+            self.editor._update_group_state()
+
     def after_change(self, name):
         super().after_change(name)
         if self._built:
             self._warn()
 
     def _on_key_commit(self, name, value):
-        """B vacío => desmarca el checkbox asociado y lo compromete al draft."""
+        """Cascada inversa: al definir B (con A ya presente), activa automáticamente la particularidad y el maestro."""
         chk_name = getattr(self, "_B_LINKS", {}).get(name)
-        if chk_name and not str(value or "").strip():
-            self._uncheck(chk_name)
+        if chk_name:
+            val_str = str(value or "").strip()
+            if val_str:
+                self._check(chk_name)
+            else:
+                self._uncheck(chk_name)
+
+    def _check(self, chk_name):
+        w = getattr(self, "_chk_widgets", {}).get(chk_name)
+        if w is not None:
+            if hasattr(w, "_var"):
+                w._var.set(1)
+            w._last_val = 1
+            try:
+                w.select()
+            except Exception:
+                pass
+        self._commit(chk_name, 1)
+        self._sync_master()
 
     def _uncheck(self, chk_name):
         w = getattr(self, "_chk_widgets", {}).get(chk_name)
         if w is not None:
             if hasattr(w, "_var"):
                 w._var.set(0)
+            w._last_val = 0
             try:
                 w.deselect()
             except Exception:

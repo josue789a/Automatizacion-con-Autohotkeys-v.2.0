@@ -126,7 +126,7 @@ _CapPyActivo() {
 _CapCfgLeer() {
     e := _CapEstado()
     c := {timeoutMs: 5000, settleMs: 30, permitirEsc: false, cancelarFuera: true, log: false, pillX: "", pillY: ""}
-    ini := A_ScriptDir "\posiciones_gui.ini"
+    ini := _PosGuiIniPath()
     try c.timeoutMs := Max(1000, Integer(IniRead(ini, "Captura", "timeout_ms", "5000")))
     try c.settleMs := Max(0, Integer(IniRead(ini, "Captura", "settle_ms", "30")))
     try c.permitirEsc := (IniRead(ini, "Captura", "permitir_esc", "0") = "1")
@@ -747,7 +747,7 @@ Cap_DemoOn(*) {
     static v := -1
     if (v = -1) {
         v := false
-        try v := (IniRead(A_ScriptDir "\posiciones_gui.ini", "Captura", "demo", "0") = "1")
+        try v := (IniRead(_PosGuiIniPath(), "Captura", "demo", "0") = "1")
     }
     return v
 }

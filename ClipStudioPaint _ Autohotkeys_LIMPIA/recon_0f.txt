@@ -1,0 +1,424 @@
+﻿
+=== comportamientos.ahk L168: _CompSliderLeer ===
+168: _CompSliderLeer(campo) {                                ; E4
+169:     global PERFIL, ESTAB_ALPHA_H, ESTAB_ALPHA_F
+170:     v := IniRead(_PosGuiIniPath(), "Estab_p" PERFIL, campo, "")
+171:     if (v != "")
+172:         return v
+173:     if (campo = "tecla_bajar")
+174:         return "j"
+175:     if (campo = "tecla_subir")
+176:         return "-"
+177:     if (campo = "snaps")
+178:         return "7,15,35,55,75"
+179:     return Round((campo = "alphaH" ? ESTAB_ALPHA_H : ESTAB_ALPHA_F) / 2.55)
+180: }
+=== comportamientos.ahk L63: _CompIni ===
+63: _CompIni(key, campo, idEv, reset := false) {          ; lectura cacheada (el loop de hover la llama cada tick)
+64:     static cache := Map()
+65:     if (reset) {
+66:         cache.Clear()
+67:         return ""
+68:     }
+69:     k := key "_" campo "_" idEv
+70:     if (!cache.Has(k))
+71:         cache[k] := IniRead(_PosGuiIniPath(), "Particularidades", k, "")
+72:     return cache[k]
+73: }
+=== comportamientos.ahk L92: _CompIni ===
+92:     _CompIni("", "", "", true)                        ; invalida la caché
+93:     if (idEv = "panel_ds") {
+94:         if (key = "pildora") {
+95:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), dsGui.g)
+96:         } else if (key = "hover") {
+97:             act := colorV.dsVis
+98:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+99:         }
+100:     } else if (idEv = "panel_cc") {
+101:         if (key = "pildora") {
+102:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), ccGui.g)
+103:         } else if (key = "hover") {
+104:             act := colorCC.dsVis
+105:             try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+106:         }
+107:     } else if (idEv = "history_lock") {
+108:         if (key = "pildora") {
+109:             act := (IsSet(hist) && HasProp(hist, "abierto") && hist.abierto)
+110:             try WinSetTransparent(_CompOp("pildora", act ? "op_act" : "op_rep", idEv, _AlphaTema("pill", 235)), lockGui.g)
+111:         }
+112:     } else if (idEv = "gui_frente") {
+113:         if (key = "pildora") {
+114:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), frenteGui.g)
+115:         }
+116:     } else if (idEv = "estab_slider") {
+117:         if (key = "pildora") {
+118:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), estabBtnGui.g)
+119:         }
+120:     } else if (idEv = "reload") {
+121:         if (key = "pildora") {
+122:             try WinSetTransparent(_CompOp("pildora", "op_rep", idEv, _AlphaTema("pill", 235)), reloadGui.g)
+123:         }
+124:     }
+125: }
+=== comportamientos.ahk L74: _CompOp ===
+74: _CompOp(key, campo, idEv, def) {                      ; opacidad Win32 0-255
+75:     v := _CompIni(key, campo, idEv)
+76:     return (IsInteger(v) && Integer(v) >= 1 && Integer(v) <= 255) ? Integer(v) : def
+77: }
+=== comportamientos.ahk L78: _CompBorde ===
+78: _CompBorde(key, idEv, def) {
+79:     v := _CompIni(key, "borde", idEv)
+80:     return (v = "") ? def : (v = "1")
+81: }
+=== estab_slider.ahk L402: _EstabMarcas ===
+402: _EstabMarcas() {                                        ; E4: marcas desde INI, cacheadas
+403:     global PERFIL, ESTAB_MARCAS_C
+404:     if (!IsSet(ESTAB_MARCAS_C) || !IsObject(ESTAB_MARCAS_C)) {
+405:         m := [7, 15, 35, 55, 75]
+406:         s := IniRead(_PosGuiIniPath(), "Estab_p" PERFIL, "snaps", "")
+407:         if (s != "") {
+408:             p := StrSplit(s, ","), t := [], ok := (p.Length = 5)
+409:             for x in p {
+410:                 if (!ok || !IsInteger(x)) {
+411:                     ok := false
+412:                     break
+413:                 }
+414:                 t.Push(Integer(x))
+415:             }
+416:             if (ok)
+417:                 m := t
+418:         }
+419:         ESTAB_MARCAS_C := m
+420:     }
+421:     return ESTAB_MARCAS_C
+422: }
+=== XPPEN AHK VERSION ESTABLE.ahk L150: _PillSincronizarDinamicas ===
+150: _PillSincronizarDinamicas()
+151: _EspacialIniciar()
+152: _ConstruirTrayMenu()
+153: 
+154: _ConstruirTrayMenu() {
+155:     A_TrayMenu.Delete()                       ; limpia cualquier entrada previa y estandares en AHK v2
+156: 
+157:     mModo := Menu()
+158:     mModo.Add("Modo 1 · Normal",  (*) => EstablecerModoTrabajo("Normal"))
+159:     mModo.Add("Modo 2 · Enfoque", (*) => EstablecerModoTrabajo("Enfoque"))
+160:     if (IsSet(enfoque) && IsObject(enfoque) && HasProp(enfoque, "activo") && enfoque.activo)
+161:         mModo.Check("Modo 2 · Enfoque")
+162:     else
+163:         mModo.Check("Modo 1 · Normal")
+164: 
+165:     mPerf := Menu()
+166:     if (IsSet(PERFILES) && IsObject(PERFILES)) {
+167:         for idx, nom in PERFILES {
+168:             mPerf.Add(nom, _CambiarPerfilTray.Bind(idx))
+169:             if (idx = PERFIL)
+170:                 mPerf.Check(nom)
+171:         }
+172:     }
+173: 
+174:     mArte := Menu()
+175:     mArte.Add("Proyectos / Cargar más proyectos", _AbrirProyectoArte)
+176:     mArte.Add("Brief del Proyecto", (*) => _AbrirBriefProyecto())
+177:     mArte.Add("Estado / Configuración CSP",
+178:               (*) => _AbrirRutaTray(EnvGet("APPDATA") "\OrganizadorArt\config.json"))
+179: 
+180:     A_TrayMenu.Add("Modo de Trabajo", mModo)
+181:     A_TrayMenu.Add("Perfil de equipo", mPerf)
+182:     A_TrayMenu.Add("[Global] Nueva ventana", (*) => _NvBotonCrearVentana())
+183:     A_TrayMenu.Add("Calibrador de Zonas", (*) => _EjecutarAccionHub("puntos"))
+184:     A_TrayMenu.Add("Proyecto Arte", mArte)
+185:     A_TrayMenu.Add("Brief del Proyecto", (*) => _AbrirBriefProyecto())
+186:     A_TrayMenu.Add()
+187:     A_TrayMenu.Add("Recargar Script", (*) => Reload())
+188:     A_TrayMenu.Add("Salir", (*) => ExitApp())
+189: }
+=== XPPEN_NO_ADMIN.ahk L152: _PillSincronizarDinamicas ===
+152: _PillSincronizarDinamicas()
+153: _EspacialIniciar()
+154: _ConstruirTrayMenu()
+155: 
+156: _ConstruirTrayMenu() {
+157:     A_TrayMenu.Delete()                       ; limpia cualquier entrada previa y estandares en AHK v2
+158: 
+159:     mModo := Menu()
+160:     mModo.Add("Modo 1 · Normal",  (*) => EstablecerModoTrabajo("Normal"))
+161:     mModo.Add("Modo 2 · Enfoque", (*) => EstablecerModoTrabajo("Enfoque"))
+162:     if (IsSet(enfoque) && IsObject(enfoque) && HasProp(enfoque, "activo") && enfoque.activo)
+163:         mModo.Check("Modo 2 · Enfoque")
+164:     else
+165:         mModo.Check("Modo 1 · Normal")
+166: 
+167:     mPerf := Menu()
+168:     if (IsSet(PERFILES) && IsObject(PERFILES)) {
+169:         for idx, nom in PERFILES {
+170:             mPerf.Add(nom, _CambiarPerfilTray.Bind(idx))
+171:             if (idx = PERFIL)
+172:                 mPerf.Check(nom)
+173:         }
+174:     }
+175: 
+176:     mArte := Menu()
+177:     mArte.Add("Proyectos / Cargar más proyectos", _AbrirProyectoArte)
+178:     mArte.Add("Brief del Proyecto", (*) => _AbrirBriefProyecto())
+179:     mArte.Add("Estado / Configuración CSP",
+180:               (*) => _AbrirRutaTray(EnvGet("APPDATA") "\OrganizadorArt\config.json"))
+181: 
+182:     A_TrayMenu.Add("Modo de Trabajo", mModo)
+183:     A_TrayMenu.Add("Perfil de equipo", mPerf)
+184:     A_TrayMenu.Add("[Global] Nueva ventana", (*) => _NvBotonCrearVentana())
+185:     A_TrayMenu.Add("Calibrador de Zonas", (*) => _EjecutarAccionHub("puntos"))
+186:     A_TrayMenu.Add("Proyecto Arte", mArte)
+187:     A_TrayMenu.Add("Brief del Proyecto", (*) => _AbrirBriefProyecto())
+188:     A_TrayMenu.Add()
+189:     A_TrayMenu.Add("Recargar Script", (*) => Reload())
+190:     A_TrayMenu.Add("Salir", (*) => ExitApp())
+191: }
+=== calibrador.ahk L3376: _PillSincronizarDinamicas ===
+3376:         _PillSincronizarDinamicas()
+3377:     try _EspacialCargar()
+3378:     _SonarUI("calib")
+3379:     _AccRefrescarResumen()
+3380:     ptsEd.st.Value := "Particularidad '" tipo "' actualizada para '" idEv "'."
+3381: }
+=== calibrador.ahk L3973: _PillSincronizarDinamicas ===
+3973:     _PillSincronizarDinamicas()               ; crea la píldora si pildora_<idEv>=1
+3974:     pd := _PillDin()
+3975:     esRigida := !(pd.Has(idEv))
+3976:     if esRigida {
+3977:         g := _PillGuiRigida(idEv)
+3978:     } else {
+3979:         p := pd[idEv]
+3980:         g := HasProp(p, "g") && (p.g is Gui) ? p.g : _PillGuiDe(p)
+3981:     }
+3982:     if !g {
+3983:         ToolTip("Activa [x] Píldora Táctil para este evento")
+3984:         SetTimer(() => ToolTip(), -1800)
+3985:         return
+3986:     }
+3987:     if esRigida {
+3988:         g.Show("NA")                          ; rígida: solo se muestra/parpadea, no se reubica
+3989:     } else {
+3990:         ; Centro del área de trabajo del monitor bajo el cursor
+3991:         CoordMode("Mouse", "Screen")
+3992:         MouseGetPos(&mx, &my)
+3993:         idx := MonitorGetPrimary()
+3994:         Loop MonitorGetCount() {
+3995:             MonitorGet(A_Index, &l, &t, &r, &b)
+3996:             if (mx >= l && mx < r && my >= t && my < b) {
+3997:                 idx := A_Index
+3998:                 break
+3999:             }
+4000:         }
+4001:         MonitorGetWorkArea(idx, &l, &t, &r, &b)
+4002:         g.GetPos(, , &w, &h)
+4003:         nx := l + (r - l - w) // 2
+4004:         ny := t + (b - t - h) // 2
+4005:         g.Show("NA x" nx " y" ny)
+4006:         try GuardarPosicionGUI("Pildora_" idEv, g.Hwnd)   ; firma (nombre, hwnd)
+4007:     }
+4008:     ; Parpadeo de localización (restaura la opacidad previa; evita 0 para no perder el puntero)
+4009:     hw := g.Hwnd
+4010:     prev := WinGetTransparent("ahk_id " hw)
+4011:     est := {n: 0}
+4012:     Parpadeo() {
+4013:         est.n += 1
+4014:         if (est.n > 6) {
+4015:             SetTimer(Parpadeo, 0)
+4016:             WinSetTransparent(prev = "" ? 255 : prev, "ahk_id " hw)
+4017:             return
+4018:         }
+4019:         WinSetTransparent(Mod(est.n, 2) ? 255 : 70, "ahk_id " hw)
+4020:     }
+4021:     SetTimer(Parpadeo, 120)
+4022: }
+=== calibrador.ahk L4857: _PillSincronizarDinamicas ===
+4857:     _PillSincronizarDinamicas()
+4858:     _PtsEvFilas()
+4859: }
+=== companion_flotantes.ahk L1937: _PillSincronizarDinamicas ===
+1937: _PillSincronizarDinamicas() {
+1938:     ini := _PosGuiIniPath()
+1939:     pd := _PillDin()
+1940:     rigidos := _PillIdsRigidos()
+1941:     deseados := Map()
+1942:     for ev in _PtsEventosDefs() {            ; [id, nombre, grupo]; incluye [EventosCustom]
+1943:         idEv := ev[1]
+1944:         if rigidos.Has(idEv)
+1945:             continue
+1946:         if (IniRead(ini, "Particularidades", "pildora_" idEv, "0") = "1") {
+1947:             deseados[idEv] := true
+1948:             _PillCrearDinamica(idEv, ev[2], IniRead(ini, "Remapeos", "atajo_" idEv, ""))
+1949:         }
+1950:     }
+1951:     viejos := []
+1952:     for idEv in pd
+1953:         if !deseados.Has(idEv)
+1954:             viejos.Push(idEv)
+1955:     for idEv in viejos
+1956:         _PillDestruirDinamica(idEv)
+1957: }
+=== calibrador.ahk L3952: _PillGuiRigida ===
+3952: _PillGuiRigida(idEv) {
+3953:     global dsGui, ccGui, lockGui, frenteGui, estabBtnGui, reloadGui
+3954:     o := 0
+3955:     switch idEv {
+3956:         case "panel_ds":     o := IsSet(dsGui) ? dsGui : 0
+3957:         case "panel_cc":     o := IsSet(ccGui) ? ccGui : 0
+3958:         case "history_lock": o := IsSet(lockGui) ? lockGui : 0
+3959:         case "gui_frente":   o := IsSet(frenteGui) ? frenteGui : 0
+3960:         case "estab_slider": o := IsSet(estabBtnGui) ? estabBtnGui : 0
+3961:         case "reload":       o := IsSet(reloadGui) ? reloadGui : 0
+3962:         default: return ""
+3963:     }
+3964:     g := IsObject(o) ? o.g : 0
+3965:     return (IsObject(g) && (g is Gui)) ? g : ""
+3966: }
+=== calibrador.ahk L3942: _PillGuiDe ===
+3942: _PillGuiDe(p) {
+3943:     if (p is Gui)
+3944:         return p
+3945:     for nom in ["g", "gui", "ventana"]
+3946:         if HasProp(p, nom) && (p.%nom% is Gui)
+3947:             return p.%nom%
+3948:     return ""
+3949: }
+=== companion_flotantes.ahk L1827: _PillDin ===
+1827: _PillDin() {
+1828:     static m := Map()
+1829:     return m
+1830: }
+=== companion_flotantes.ahk L1088: NvSetGlobal ===
+1088:     NvSetGlobal(modo)
+1089: }
+=== companion_lienzos.ahk L271: NvSetGlobal ===
+271: NvSetGlobal(modo) {
+272:     e := NvEstado()
+273:     e.modoGlobal := modo
+274:     e.fijas.Clear()
+275:     _NvPersistirTodo()                                ; fijas vaciadas: limpia modos individuales del INI
+276:     try IniWrite(modo, _PosGuiIniPath(), "NvConfig", "modoGlobal")
+277:     _NvRefrescar()
+278: }
+=== companion_lienzos.ahk L298: NvSetGlobal ===
+298:     NvSetGlobal(_NvEstadoVisual(NvEstado()) = "on" ? "h_off" : "h_on")
+299: }
+=== companion_lienzos.ahk L307: NvSetGlobal ===
+307:     NvSetGlobal(m = "total" ? "desact_25" : "h_on")
+308: }
+=== calibrador.ahk L1212: _NvPanTexto ===
+1212: _NvPanTexto() {
+1213:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1214:     pes := IniRead(ini, sec, "NvPestana", "")
+1215:     ; En Enfoque, si no hay franja propia, heredar visualmente la de Modo Normal
+1216:     if (_NvZonaVacia(pes) && _ZonaSuf() != "")
+1217:         pes := IniRead(ini, _ZonaSec("Rangos", 1), "NvPestana", "")
+1218:     avisoPes := _NvZonaVacia(pes)
+1219:         ? "Franja de pestañas: sin calibrar (se usa el cálculo automático del marco)  |  "
+1220:         : "Franja de pestañas ✔  |  "
+1221:     cont := 0, prox := 0
+1222:     Loop 8 {
+1223:         if (!_NvZonaVacia(IniRead(ini, sec, "NvZona" A_Index, "")))
+1224:             cont++
+1225:         else if (!prox)
+1226:             prox := A_Index
+1227:     }
+1228:     sigue := prox ? "Próximo: Nueva ventana " prox : "8/8 ocupadas"
+1229:     return avisoPes "Lienzos: " cont "/8 · " sigue "  (👁 Ver zonas para previsualizar)"
+1230: }
+=== calibrador.ahk L1468: _NvPanPestana ===
+1468: _NvPanPestana(st := 0) {
+1469:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1470:     r := _PtsDibujarRango("FRANJA DE PESTAÑAS de CSP (donde aparece la pestaña nueva, 2.ª con 1 sola abierta). NO es un lienzo", "FFD166", false)
+1471:     if (!r)
+1472:         return
+1473:     IniWrite(Format("{},{},{},{}", r.x, r.y, r.w, r.h), ini, sec, "NvPestana")
+1474:     h := WinExist("ahk_class " _NvCfg()["claseMarco"])
+1475:     if h {
+1476:         WinGetPos(&fx, &fy, &fw, &fh, "ahk_id " h)
+1477:         IniWrite(Format("{},{},{},{}", fx, fy, fw, fh), ini, sec, "NvPestanaMarco")
+1478:     }
+1479:     CargarPuntos()
+1480:     _PtsRefrescar()
+1481:     if (IsObject(ptsEd) && HasProp(ptsEd, "lvNv") && IsObject(ptsEd.lvNv))
+1482:         _NvPanRefrescarTabla()
+1483:     if (IsObject(ptsEd) && HasProp(ptsEd, "stNvZonas") && IsObject(ptsEd.stNvZonas))
+1484:         ptsEd.stNvZonas.Text := "✔ Franja de pestañas guardada (no cuenta como lienzo)  |  " _NvPanTexto()
+1485:     if (IsObject(st))
+1486:         st.Text := "Franja de pestañas guardada."
+1487:     if (ptsEd.ovl.Length > 0)
+1488:         MostrarZonasCalibracion(0)
+1489: }
+=== calibrador.ahk L1496: _NvPanPestana ===
+1496:         _NvPanPestana(HasProp(ptsEd, "stNvZonas") ? ptsEd.stNvZonas : 0)
+1497:     } else if (row >= 2 && row <= 9) {
+1498:         numZ := row - 1
+1499:         r := _PtsDibujarRango("Dibuja la zona para la nueva ventana " numZ, "9A7BFF", false)
+1500:         if (!r)
+1501:             return
+1502:         IniWrite(Format("{},{},{},{}", r.x, r.y, r.w, r.h), ini, sec, "NvZona" numZ)
+1503:         CargarPuntos()
+1504:         _PtsRefrescar()
+1505:         _NvPanRefrescarTabla()
+1506:         if (IsObject(ptsEd) && HasProp(ptsEd, "stNvZonas") && IsObject(ptsEd.stNvZonas))
+1507:             ptsEd.stNvZonas.Text := _NvPanTexto()
+1508:         if (ptsEd.ovl.Length > 0)
+1509:             MostrarZonasCalibracion(0)
+1510:     }
+1511: }
+=== calibrador.ahk L1406: _NvPanDibujar ===
+1406: _NvPanDibujar(st := 0) {
+1407:     ini := _PosGuiIniPath(), sec := _ZonaSec("Rangos")
+1408:     libre := _NvPanProximoLibre()
+1409:     reemplaza := !libre
+1410:     if (reemplaza) {
+1411:         libre := 1                 ; sin libres: reemplaza la ventana 1
+1412:         titulo := "Las 8 ventanas están ocupadas: dibuja para REEMPLAZAR «Nueva ventana 1»"
+1413:     } else
+1414:         titulo := "Dibuja el lienzo " libre " de 8  (Nueva ventana " libre ")"
+1415:     r := _PtsDibujarRango(titulo, "9A7BFF", false)
+1416:     if (!r)
+1417:         return
+1418:     IniWrite(Format("{},{},{},{}", r.x, r.y, r.w, r.h), ini, sec, "NvZona" libre)
+1419:     CargarPuntos()
+1420:     _PtsRefrescar()
+1421:     if (IsObject(ptsEd) && HasProp(ptsEd, "lvNv") && IsObject(ptsEd.lvNv))
+1422:         _NvPanRefrescarTabla()
+1423:     msg := "✔ Nueva ventana " libre (reemplaza ? " reemplazada" : " guardada") " (lienzo " libre "/8)"
+1424:     if (IsObject(ptsEd) && HasProp(ptsEd, "stNvZonas") && IsObject(ptsEd.stNvZonas))
+1425:         ptsEd.stNvZonas.Text := msg "  |  " _NvPanTexto()
+1426:     if (IsObject(st))
+1427:         st.Text := msg
+1428:     if (ptsEd.ovl.Length > 0)
+1429:         MostrarZonasCalibracion(0)
+1430: }
+=== calibrador.ahk L4250: _PtsToggleVerZonas ===
+4250: _PtsToggleVerZonas(*) {
+4251:     if (ptsEd.ovl.Length > 0)
+4252:         OcultarZonasCalibracion()
+4253:     else
+4254:         MostrarZonasCalibracion(0)
+4255: }
+=== estab_slider.ahk: orientación, rango y dibujo ===
+14: a := IniRead(ini,"Estab_p" PERFIL,"alphaH","")
+17: a := IniRead(ini,"Estab_p" PERFIL,"alphaF","")
+100: a := estabGui.horiz ? (activo ? ESTAB_ALPHA_ACT : ESTAB_ALPHA_H) : 235
+111: estabGui.horiz := (w > h)
+112: if estabGui.horiz {
+114: ; Mismo criterio que en vertical: si el knob da para la cifra dentro
+148: if estabGui.horiz {
+173: sig := estabGui.ancho "x" estabGui.alto "x" estabGui.horiz "x" panelBlk.locked "x" _Tema("color","accent.estab","") "x" (HasProp(estabGui,"estabTrackOn") ? estabGui.estabTrackOn : "")
+200: _SonarUI("slider", estabGui.valor)
+205: _SonarUI("slider", estabGui.valor)
+331: ori := (r.w > r.h) ? "HORIZONTAL" : "VERTICAL"
+448: if estabGui.horiz
+453: _HapticoSlider(estabGui.previsto)
+458: if estabGui.horiz
+523: ori := estabGui.horiz ? "HORIZONTAL" : "VERTICAL"
+879: plano := estabGui.horiz ? th : tw
+894: kx := estabGui.horiz ? (tx + tw * val / 100.0) : (tx + tw / 2.0)
+895: ky := estabGui.horiz ? (ty + th / 2.0) : (ty + th - th * val / 100.0)
+911: largo := estabGui.horiz ? (kx - ix) : ((iy + ih) - ky)
+912: largo := Min(largo, estabGui.horiz ? iw : ih)
+915: ruta := estabGui.horiz ? _EstabPildora(ix,iy,largo,ih,rr) : _EstabPildora(ix,(iy + ih) - largo,iw,largo,rr)
+927: if estabGui.horiz {

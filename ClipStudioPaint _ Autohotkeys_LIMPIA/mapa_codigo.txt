@@ -1,0 +1,3488 @@
+=== CALIBRADOR_LIMPIO.ahk  (16 líneas)
+   13: #Include "XPPEN_NO_ADMIN.ahk"
+
+=== XPPEN AHK VERSION ESTABLE.ahk  (300 líneas)
+  131: AsegurarAtajosGlobales() {
+  169: _ConstruirTrayMenu() {
+  207: _CambiarPerfilTray(nuevo, *) {
+  211: _AbrirProyectoArte(*) {
+  226: _AbrirBriefProyecto(*) {
+  257: _AbrirRutaTray(ruta) {
+  273: #Include %A_ScriptDir%\lib\core_config.ahk
+  274: #Include %A_ScriptDir%\lib\theme_gfx.ahk
+  275: #Include %A_ScriptDir%\lib\audio.ahk
+  276: #Include %A_ScriptDir%\lib\sonido_evento.ahk
+  277: #Include %A_ScriptDir%\lib\comportamientos.ahk
+  278: #Include %A_ScriptDir%\lib\hud_badges.ahk
+  279: #Include %A_ScriptDir%\lib\gui_builder.ahk
+  280: #Include %A_ScriptDir%\lib\companion.ahk
+  281: #Include %A_ScriptDir%\lib\estab_slider.ahk
+  282: #Include %A_ScriptDir%\lib\calibrador.ahk
+  283: #Include %A_ScriptDir%\lib\calibrador_panel.ahk
+  284: #Include %A_ScriptDir%\lib\calibrador_py.ahk
+  285: #Include %A_ScriptDir%\lib\hotkeys_csp.ahk
+  286: #Include %A_ScriptDir%\lib\espacial.ahk
+  287: #Include %A_ScriptDir%\lib\diag.ahk   ; medicion F1 de Enfoque (DiagLog/_DiagMs); sin Diag_Iniciar no cambia comportamiento
+  292: ^+!h:: {
+  298: #HotIf
+  299: ^!+q:: ExitApp()
+
+=== XPPEN AHK VERSION ESTABLE_20261118_002249.bak.ahk  (285 líneas)
+  154: _ConstruirTrayMenu() {
+  192: _CambiarPerfilTray(nuevo, *) {
+  196: _AbrirProyectoArte(*) {
+  211: _AbrirBriefProyecto(*) {
+  242: _AbrirRutaTray(ruta) {
+  258: #Include %A_ScriptDir%\lib\core_config.ahk
+  259: #Include %A_ScriptDir%\lib\theme_gfx.ahk
+  260: #Include %A_ScriptDir%\lib\audio.ahk
+  261: #Include %A_ScriptDir%\lib\sonido_evento.ahk
+  262: #Include %A_ScriptDir%\lib\comportamientos.ahk
+  263: #Include %A_ScriptDir%\lib\hud_badges.ahk
+  264: #Include %A_ScriptDir%\lib\gui_builder.ahk
+  265: #Include %A_ScriptDir%\lib\companion.ahk
+  266: #Include %A_ScriptDir%\lib\estab_slider.ahk
+  267: #Include %A_ScriptDir%\lib\calibrador.ahk
+  268: #Include %A_ScriptDir%\lib\calibrador_panel.ahk
+  269: #Include %A_ScriptDir%\lib\calibrador_py.ahk
+  270: #Include %A_ScriptDir%\lib\hotkeys_csp.ahk
+  271: #Include %A_ScriptDir%\lib\espacial.ahk
+  272: #Include %A_ScriptDir%\lib\diag.ahk   ; medicion F1 de Enfoque (DiagLog/_DiagMs); sin Diag_Iniciar no cambia comportamiento
+  277: ^+!h:: {
+  283: #HotIf
+  284: ^!+q:: ExitApp()
+
+=== XPPEN_NO_ADMIN.ahk  (309 líneas)
+  133: AsegurarAtajosGlobales() {
+  171: _ConstruirTrayMenu() {
+  209: _CambiarPerfilTray(nuevo, *) {
+  213: _AbrirProyectoArte(*) {
+  228: _AbrirBriefProyecto(*) {
+  259: _AbrirRutaTray(ruta) {
+  282: #Include %A_ScriptDir%\lib\core_config.ahk
+  283: #Include %A_ScriptDir%\lib\theme_gfx.ahk
+  284: #Include %A_ScriptDir%\lib\audio.ahk
+  285: #Include %A_ScriptDir%\lib\sonido_evento.ahk
+  286: #Include %A_ScriptDir%\lib\comportamientos.ahk
+  287: #Include %A_ScriptDir%\lib\hud_badges.ahk
+  288: #Include %A_ScriptDir%\lib\gui_builder.ahk
+  289: #Include %A_ScriptDir%\lib\companion.ahk
+  290: #Include %A_ScriptDir%\lib\estab_slider.ahk
+  291: #Include %A_ScriptDir%\lib\calibrador.ahk
+  292: #Include %A_ScriptDir%\lib\calibrador_panel.ahk
+  293: #Include %A_ScriptDir%\lib\calibrador_py.ahk
+  294: #Include %A_ScriptDir%\lib\hotkeys_csp.ahk
+  295: #Include %A_ScriptDir%\lib\espacial.ahk
+  296: #Include %A_ScriptDir%\lib\diag.ahk
+  297: #Include %A_ScriptDir%\lib\salida.ahk
+  300: #HotIf
+  301: ^!+q:: {
+
+=== XPPEN_NO_ADMIN_20261118_002249.bak.ahk  (294 líneas)
+  156: _ConstruirTrayMenu() {
+  194: _CambiarPerfilTray(nuevo, *) {
+  198: _AbrirProyectoArte(*) {
+  213: _AbrirBriefProyecto(*) {
+  244: _AbrirRutaTray(ruta) {
+  267: #Include %A_ScriptDir%\lib\core_config.ahk
+  268: #Include %A_ScriptDir%\lib\theme_gfx.ahk
+  269: #Include %A_ScriptDir%\lib\audio.ahk
+  270: #Include %A_ScriptDir%\lib\sonido_evento.ahk
+  271: #Include %A_ScriptDir%\lib\comportamientos.ahk
+  272: #Include %A_ScriptDir%\lib\hud_badges.ahk
+  273: #Include %A_ScriptDir%\lib\gui_builder.ahk
+  274: #Include %A_ScriptDir%\lib\companion.ahk
+  275: #Include %A_ScriptDir%\lib\estab_slider.ahk
+  276: #Include %A_ScriptDir%\lib\calibrador.ahk
+  277: #Include %A_ScriptDir%\lib\calibrador_panel.ahk
+  278: #Include %A_ScriptDir%\lib\calibrador_py.ahk
+  279: #Include %A_ScriptDir%\lib\hotkeys_csp.ahk
+  280: #Include %A_ScriptDir%\lib\espacial.ahk
+  281: #Include %A_ScriptDir%\lib\diag.ahk
+  282: #Include %A_ScriptDir%\lib\salida.ahk
+  285: #HotIf
+  286: ^!+q:: {
+
+=== test_debug_acc.ahk  (12 líneas)
+    4: #Include "XPPEN_NO_ADMIN.ahk"
+
+=== calibrador_py\tests\test_corrida2.py  (169 líneas)
+   17: def ini(tmp_path, request):
+   24: def theme(tmp_path):
+   31: def test_draft_key_sucio_y_limpio(ini):
+   39: def test_draft_key_ausente_con_default_no_ensucia(ini):
+   48: def test_zonas_guardar_y_leer(ini):
+   59: def test_zonas_delta_solo_configuradas_y_por_defecto(ini):
+   68: def test_zonas_validacion():
+   74: def test_15_temas_con_5_swatches():
+   79: def test_tema_activo_detectado_del_theme_ini_real(theme):
+   84: def test_aplicar_tema_cambia_solo_sus_6_lineas(theme):
+   94: def test_backup_manual_y_restaurar(ini):
+  104: def test_campos_sistema_roundtrip():
+  112: def app(tmp_path):
+  127: def test_ui_edicion_de_celda_y_footer(app):
+  136: def test_ui_sistema_guarda_checks_y_escalas(app):
+  145: def test_ui_temas_aplicar_escribe_theme_ini(app):
+  151: def test_ui_cadena_de_zonas_con_ahk_simulado(app):
+  154: class Fake:
+  156: def __init__(self): self.sent = []
+  157: def send(self, cmd, *a):
+
+=== calibrador_py\tests\test_ini_store.py  (72 líneas)
+   10: def ini(tmp_path, request):
+   15: def test_roundtrip_identico(ini):
+   20: def test_guardar_sin_parches_no_toca(ini):
+   23: def test_un_parche_cambia_solo_su_linea(ini):
+   30: def test_bom_y_crlf_preservados(ini):
+   37: def test_clave_nueva_va_al_final_de_su_seccion(ini):
+   43: def test_seccion_nueva_y_claves_ajenas_intactas(ini):
+   51: def test_claves_sin_distinguir_mayusculas(ini):
+   56: def test_valor_vacio_se_conserva(ini):
+   59: def test_find_section_of(ini):
+   62: def test_cambio_externo_durante_guardado(ini, monkeypatch):
+   70: def test_respaldo_creado(ini):
+
+=== calibrador_py\tests\test_keycapture.py  (18 líneas)
+    4: def _ev(ks, kc, ch=""):
+    7: def test_orden_canonico():
+   12: def test_tokens():
+
+=== calibrador_py\tests\test_particularidades_defaults.py  (74 líneas)
+    5: def test_borrador_suave_quick_l():
+   11: def test_toggle_deseleccion():
+   16: def test_evento_nuevo_sin_defaults():
+   21: def test_todos_los_quick_tienen_umbral_valido():
+   27: def test_draft_get_particularidades_default(tmp_path):
+   48: def test_draft_schema_hud_y_snd(tmp_path):
+
+=== calibrador_py\tests\test_zonas_custom.py  (45 líneas)
+    9: def draft_vacio(tmp_path):
+   16: def test_custom_sin_zona_aparece_en_tabla(draft_vacio):
+   28: def test_custom_no_duplica_si_ya_tiene_hud(draft_vacio):
+   36: def test_desambiguacion_nombres_repetidos(draft_vacio):
+
+=== calibrador_py\xppen_calibrador\__init__.py  (0 líneas)
+
+=== calibrador_py\xppen_calibrador\__main__.py  (80 líneas)
+   10: def main(argv=None) -> int:
+   44: def dump_schema(a) -> int:
+
+=== calibrador_py\xppen_calibrador\app.py  (419 líneas)
+   33: class CalibradorApp(ctk.CTk):
+   34: def __init__(self, ini_path, perfil="1", modo="Normal", ahk_hwnd=0):
+   83: def _tabbar(self):
+  102: def _refrescar_btn_anclar(self):
+  108: def _toggle_anclar(self):
+  119: def _on_restart(self):
+  125: def _poll_recarga(self):
+  147: def _reiniciar_proceso(self):
+  163: def _instalar_switch_sin_barrido(self):
+  173: def show_tab_congelado(k, *a, **kw):
+  191: def _show_placeholder(self):
+  204: def show_tab(self, i):
+  234: def _prebuild_pages(self, n=0):
+  244: def _ensure_page(self, i):
+  253: def _precargar(self, k=1):
+  257: def _page_eventos(self):
+  268: def _page_tab(self, cls):
+  276: def _select(self, id_ev):
+  282: def _on_dirty(self):
+  291: def _set_modo(self, modo):
+  296: def _add_event(self):
+  310: def save(self) -> bool:
+  334: def save_and_close(self):
+  338: def _ocultar_residente(self):
+  342: def _close(self):
+  352: def _refresh_tabs(self, external=False):
+  356: def reload_all(self):
+  364: def _poll(self):
+  378: def _own_hwnd(self) -> int:
+  384: def _nac_rect(self):
+  403: def _center(self):
+
+=== calibrador_py\xppen_calibrador\core\__init__.py  (0 líneas)
+
+=== calibrador_py\xppen_calibrador\core\ahk_bridge.py  (88 líneas)
+   10: class AhkBridge:
+   11: def __init__(self, ahk_hwnd: int | None, own_hwnd_getter=lambda: 0):
+   18: def _buscar_hwnd_ahk(self) -> int:
+   39: def _cb(h, _lp):
+   55: def conectado(self) -> bool:
+   69: def send(self, cmd: str, *args) -> bool:
+   78: class CDS(ctypes.Structure):
+
+=== calibrador_py\xppen_calibrador\core\catalogo.py  (106 líneas)
+   44: class Evento:
+   53: def tiene(self, bloque: str) -> bool:
+   59: class Catalogo:
+   60: def __init__(self, store: IniFile, data_dir: Path):
+   65: def load(self) -> "Catalogo":
+   91: def por_id(self, id_ev: str) -> Evento | None:
+   94: def grupos(self) -> list[str]:
+  101: def siguiente_custom(self) -> tuple[str, str]:
+
+=== calibrador_py\xppen_calibrador\core\draft.py  (105 líneas)
+    7: class Draft:
+    8: def __init__(self, store: IniFile, perfil: str):
+   12: def resolve(self, name: str, id_ev: str) -> tuple[str, str]:
+   23: def _default_raw(self, name: str, sec: str, key: str, id_ev: str) -> str | None:
+   36: def _stored(self, name: str, sec: str, key: str, id_ev: str = "") -> str:
+   42: def get(self, name: str, id_ev: str):
+   52: def explicito(self, name: str, id_ev: str) -> bool:
+   62: def set(self, name: str, id_ev: str, value) -> bool:
+   76: def get_key(self, sec: str, key: str, default: str = "") -> str:
+   83: def set_key(self, sec: str, key: str, val, default: str | None = None) -> None:
+   94: def discard_key(self, sec: str, key: str) -> None:
+   98: def count(self) -> int:
+  101: def patches(self) -> list[tuple[str, str, str]]:
+  104: def clear(self) -> None:
+
+=== calibrador_py\xppen_calibrador\core\draft_20261116_164800.bak.py  (70 líneas)
+    7: class Draft:
+    8: def __init__(self, store: IniFile, perfil: str):
+   12: def resolve(self, name: str, id_ev: str) -> tuple[str, str]:
+   19: def _stored(self, name: str, sec: str, key: str) -> str:
+   22: def get(self, name: str, id_ev: str):
+   27: def set(self, name: str, id_ev: str, value) -> bool:
+   41: def get_key(self, sec: str, key: str, default: str = "") -> str:
+   48: def set_key(self, sec: str, key: str, val, default: str | None = None) -> None:
+   59: def discard_key(self, sec: str, key: str) -> None:
+   63: def count(self) -> int:
+   66: def patches(self) -> list[tuple[str, str, str]]:
+   69: def clear(self) -> None:
+
+=== calibrador_py\xppen_calibrador\core\ini_schema.py  (171 líneas)
+   43: class Field:
+  123: def to_ui(name: str, raw) -> object:
+  152: def to_ini(name: str, value) -> str | None:
+
+=== calibrador_py\xppen_calibrador\core\ini_store.py  (217 líneas)
+   21: class IniFile:
+   22: def __init__(self, path: str | os.PathLike):
+   33: def load(self) -> "IniFile":
+   61: def _locate(self, section: str, key: str):
+   81: def get(self, section: str, key: str, default=None):
+   87: def find_section_of(self, key: str) -> str | None:
+   99: def sections(self) -> list[str]:
+  102: def keys(self, section: str) -> list[str]:
+  113: def set(self, section: str, key: str, value: str) -> None:
+  133: def to_bytes(self) -> bytes:
+  138: def _backup(self, keep: int = 5) -> None:
+  155: def backup_dir(self) -> Path:
+  158: def backups(self) -> list[Path]:
+  162: def backup_now(self, keep: int = 10) -> Path:
+  174: def restore_last(self) -> Path:
+  188: def save_patches(self, patches: list[tuple[str, str, str]], retries: int = 6) -> None:
+
+=== calibrador_py\xppen_calibrador\core\particularidades_defaults.py  (61 líneas)
+   55: def particularidad_default(evento_id: str, campo: str, fallback=None):
+   60: def tiene_particularidad_nativa(evento_id: str) -> bool:
+
+=== calibrador_py\xppen_calibrador\core\single_instance.py  (178 líneas)
+   26: def mtime_codigo() -> float:
+   36: def _win():
+   55: def _pid_ventana() -> int:
+   67: def _inicio_proceso(pid: int) -> float:
+   84: def _terminar(pid: int) -> bool:
+   95: def _obsoleta(pid: int) -> bool:
+  103: def _avisar_no_reemplazable(pid: int) -> None:
+  114: def adquirir() -> bool:
+  154: def consumir_recarga() -> bool:
+  166: def liberar() -> None:
+
+=== calibrador_py\xppen_calibrador\core\temas.py  (77 líneas)
+   22: class Tema:
+   28: def cargar(data_dir: Path) -> list[Tema]:
+   41: def parches(tema: Tema) -> list[tuple[str, str, str]]:
+   45: def activo(store: IniFile, temas: list[Tema]) -> int | None:
+   59: def _rgb(h: str) -> tuple[int, int, int]:
+   63: def mezclar(a: str, b: str, t: float) -> str:
+   68: def texto_sobre(h: str) -> str:
+   74: def muestras(t: Tema) -> list[str]:
+
+=== calibrador_py\xppen_calibrador\core\zonas.py  (262 líneas)
+   18: class Zona:
+   25: def zid(self) -> str:
+   70: def seccion(modo: int, perfil: str = "1") -> str:
+   75: def claves(z: Zona) -> list[str]:
+   79: def _int(txt: str) -> int:
+   86: def leer(d: Draft, modo: int, z: Zona) -> tuple[int, int, int, int]:
+  106: def escribir(d: Draft, modo: int, z: Zona, x: int, y: int, w: int, h: int) -> None:
+  114: def configurada(r: tuple[int, int, int, int]) -> bool:
+  118: def contar(d: Draft, modo: int) -> int:
+  122: def a_ui(r) -> tuple[int, int, int, int]:
+  130: def sec_desc(perfil: str = "1") -> str:
+  134: def clave_desc(z: Zona) -> str:
+  138: def leer_desc(d: Draft, z: Zona) -> str:
+  143: def escribir_desc(d: Draft, z: Zona, txt: str) -> None:
+  149: def validar_celda(col: str, txt: str) -> int | None:
+  160: def _ids_custom(d: Draft) -> list[str]:
+  171: def _nombre_evento(d: Draft, catalogo, ev_id: str) -> str:
+  198: def obtener_todas_zonas(d: Draft, modo: int, catalogo=None) -> list[Zona]:
+  235: def editar_celda(d: Draft, modo: int, z: Zona, col: str, v: int) -> None:
+  241: def desplazar_todas(d: Draft, modo: int, dx: int, dy: int) -> int:
+  252: def por_defecto(d: Draft, modo: int, zonas=ZONAS) -> None:
+  258: def descartar(d: Draft, modo: int, z: Zona) -> None:
+
+=== calibrador_py\xppen_calibrador\ui\__init__.py  (0 líneas)
+
+=== calibrador_py\xppen_calibrador\ui\blocks.py  (820 líneas)
+   10: class Ctx:
+   12: def __init__(self, draft, bridge, catalogo, on_dirty):
+   17: def eid(self, name: str) -> str:
+   20: def get(self, name):
+   23: def explicito(self, name) -> bool:
+   30: def set(self, name, value) -> bool:
+   36: def refresh_all(self):
+   44: class Block(ctk.CTkFrame):
+   49: def __init__(self, master, ctx: Ctx, on_toggle):
+   61: def _header(self):
+   97: def toggle(self):
+  103: def prewarm(self):
+  108: def set_expanded(self, on: bool):
+  118: def set_available(self, ok: bool):
+  129: def master_on(self) -> bool:
+  132: def master_apply(self, on: bool):
+  142: def _master_click(self):
+  146: def _sync_master(self):
+  152: def refresh(self):
+  164: def build(self, parent):            # subclases
+  168: def _commit(self, name, value) -> bool:
+  179: def pre_validate(self, name, value):
+  182: def after_change(self, name):
+  188: def refresh_master_only(self):
+  192: def f_check(self, parent, name, text):
+  198: def f_switch(self, parent, name):
+  204: def f_menu(self, parent, name, items, width=130):
+  210: def load():
+  220: def f_stepper(self, parent, name, step=1, width=38, suffix=""):
+  233: def f_entry(self, parent, name, width=140, placeholder=""):
+  236: def commit(_e=None):
+  242: def load():
+  249: def f_entry_default(self, parent, name, width=56, defecto="1000", vacio="auto"):
+  262: def commit(_e=None):
+  269: def load():
+  284: def f_stepper_default(self, parent, name, step=1, width=48, suffix=""):
+  300: def load():
+  309: def _commit_stepper_default(self, name, w, texto):
+  321: def f_key_entry(self, parent, name, width=90, on_clear=None):
+  335: def clear():
+  349: def row(self, parent, r, label, widget, label_w=120):
+  353: def inline(self, flow, texto, make, gap=6, chip=False):
+  368: def _cols(parent, weights=(1,)):
+  374: class A01Base(Block):
+  377: def build(self, p):
+  399: def load_base():
+  413: def _reset(self, name, ent):
+  422: def _check_dup(self, typed=None):
+  439: class A02Hud(Block):
+  444: def _test_hud(self):
+  449: def master_on(self):
+  452: def master_apply(self, on):
+  460: def after_change(self, name):
+  463: def build(self, p):
+  495: def load_txt():
+  503: def _probar_hud():
+  518: class A03Sonido(Block):
+  523: def _test_snd(self):
+  527: def build(self, p):
+  554: def _vol(self, v):
+  560: class B01Presencia(Block):
+  565: def build(self, p):
+  594: def _importar_icono(self):
+  603: def _refrescar_icono(self):
+  608: def _tam(self, parent):
+  612: def load():
+  621: class B02Disparador(Block):
+  625: def build(self, p):
+  647: def after_change(self, name):
+  655: class B03Modulacion(Block):
+  659: def build(self, p):
+  693: def _alinear(*_):
+  728: def _warn(self):
+  732: def after_change(self, name):
+  738: class B04Deslizador(Block):
+  741: def build(self, p):
+  774: def _draw_slider(self):
+  777: def _draw_focus(self):
+  780: def pre_validate(self, name, value):
+  792: class B05Ventanas(Block):
+  796: def build(self, p):
+
+=== calibrador_py\xppen_calibrador\ui\cards.py  (92 líneas)
+   13: class TabCtx:
+   25: def send(self, cmd: str, *args, ok_msg: str | None = None) -> bool:
+   34: class Card(ctk.CTkFrame):
+   36: def __init__(self, master, title: str, icon: str = "", sub: str = "", accent: str = T.ACCENT, compact: bool = False):
+   44: class BarFrame(tk.Frame):
+   45: def configure(self, cnf=None, **kw):
+   64: class CheckGrid(ctk.CTkFrame):
+   66: def __init__(self, master, items, get, set_, cols=2, tint=None, readonly=False, pady=5):
+   84: def _click(self, key, var):
+   88: def refresh(self):
+
+=== calibrador_py\xppen_calibrador\ui\ctk_patches.py  (25 líneas)
+    5: def _apply():
+   10: def _cb(self, *a):
+
+=== calibrador_py\xppen_calibrador\ui\lite.py  (115 líneas)
+    8: def c(col):
+   15: def scale(widget, px):
+   28: def tk_font(widget, ctkfont):
+   44: def _dispatch(e):
+   57: class LiteScroll(tk.Frame):
+   64: def __init__(self, master, bg, unit_px=12, sb_kw=None):
+   87: def sb_px(self):
+   91: def set_height(self, h):
+   95: def _sched(self):
+   99: def _apply(self):
+  106: def _wheel(self, e):
+  112: def _on_destroy(self, e):
+
+=== calibrador_py\xppen_calibrador\ui\panels.py  (393 líneas)
+   13: class CatalogoPanel(ctk.CTkFrame):
+   14: def __init__(self, master, catalogo, on_select, on_add):
+   71: def _c(col):
+   76: def _rrect(self, x1, y1, x2, y2, r, **kw):
+   81: def _wheel(self, e):
+   90: def _on_resize(self, e):
+   94: def rebuild(self):
+  104: def _sched(self, _e=None):
+  109: def _filter(self):
+  127: def _render_canvas(self, keep=True):
+  161: def _hov(self, i, enter):
+  169: def select(self, id_ev: str, notify=True):
+  175: def _paint(self):
+  189: class EditorPanel(ctk.CTkFrame):
+  190: def __init__(self, master, ctx: Ctx):
+  250: def _toggle_group(self, key, chev):
+  263: def _count(e, _c=_cnt):
+  277: def _on_toggle(self, block):
+  289: def _schedule_prewarm(self, delay=150):
+  293: def _prewarm(self):
+  304: def _queue_sync(self):
+  315: def _sync_scroll_late(self):
+  319: def _sync_scroll(self):
+  336: def show_event(self, ev):
+  364: class Footer(ctk.CTkFrame):
+  365: def __init__(self, master, on_save, on_save_close, on_restart, on_modo, modo_inicial="Normal"):
+  385: def set_info(self, nombre: str | None, dirty: int, icon: str = "ⓘ"):
+  389: def flash(self, text: str, ok=True):
+
+=== calibrador_py\xppen_calibrador\ui\tab_sistema.py  (186 líneas)
+   17: def perfil_label(valor: str) -> str:
+   21: class PerfilForm(ctk.CTkFrame):
+   23: def __init__(self, master, tc: TabCtx, tint=None, readonly=False):
+   49: def _d(self):
+   52: def refresh(self):
+   69: def _perfil(self, label: str):
+   74: def _commit(self, name: str):
+   83: class SistemaTab(ctk.CTkFrame):
+   84: def __init__(self, master, tc: TabCtx):
+  138: def _set_pil(self, k, v):
+  142: def _set_acc(self, k, v):
+  146: def refresh(self):
+  153: def _estado_backup(self):
+  162: def _backup(self):
+  171: def _restaurar(self):
+
+=== calibrador_py\xppen_calibrador\ui\tab_temas.py  (282 líneas)
+   16: class _RowBg:
+   18: def __init__(self, lst, i): self.l, self.i = lst, i
+   19: def configure(self, **kw):
+   22: def bind(self, *a, **k): pass
+   25: class _RowName:
+   27: def __init__(self, lst, i): self.l, self.i = lst, i
+   28: def configure(self, **kw):
+   31: def bind(self, *a, **k): pass
+   34: class TemasList:
+   38: def __init__(self, parent, temas, on_select):
+   55: def set_bg(self, i, color):
+   61: def set_name(self, i, color, font):
+   74: def _sched(self, _e=None):
+   78: def _layout(self):
+  104: def _click(self, e):
+  111: class _Chip:
+  112: def __init__(self, strip, i): self.s, self.i = strip, i
+  113: def configure(self, **kw):
+  118: class MuestrasStrip:
+  120: def __init__(self, parent, n=8, h=30):
+  129: def set(self, i, color):
+  132: def _sched(self, _e=None):
+  136: def _layout(self):
+  145: class TemasTab(ctk.CTkFrame):
+  146: def __init__(self, master, tc: TabCtx):
+  160: def _build_izq(self):
+  190: def _cols(f):
+  196: def _build_der(self):
+  226: def refresh(self):
+  232: def on_external_change(self):
+  235: def select(self, i: int):
+  239: def _aplicado(self) -> int | None:
+  242: def _pintar(self):
+  265: def _probar(self):
+  271: def _aplicar(self):
+
+=== calibrador_py\xppen_calibrador\ui\tab_zonas.py  (640 líneas)
+   19: class _Null:
+   21: def configure(self, *a, **k): pass
+   22: def bind(self, *a, **k): pass
+   25: class _RowProxy:
+   27: def __init__(self, tbl, zid): self.t, self.zid = tbl, zid
+   28: def configure(self, **kw):
+   31: def bind(self, *a, **k): pass
+   34: class _Cell:
+   36: def __init__(self, tbl, zid, col): self.t, self.zid, self.col = tbl, zid, col
+   37: def get(self): return self.t.vals[(self.zid, self.col)]
+   38: def delete(self, *a): self.t._set(self.zid, self.col, "")
+   39: def insert(self, _i, txt): self.t._set(self.zid, self.col, str(txt))
+   40: def configure(self, *a, **k): pass
+   42: def _entry(self): return self.t._ed if self.t._ed_key == (self.zid, self.col) else None
+   45: class ZonasTable:
+   49: def __init__(self, parent, zonas, cols, on_select, on_commit):
+   92: def _set(self, zid, col, txt):
+  105: def set_zonas(self, nuevas_zonas):
+  122: def paint_row(self, zid, color):
+  126: def _apply_sel(self, zid):
+  136: def _sched_layout(self, _e=None):
+  140: def _fit(self, txt, px: int) -> str:
+  151: def _layout(self):
+  212: def _hit(self, ex, ey):
+  226: def _on_motion(self, e):
+  238: def _on_click(self, e):
+  249: def _ensure_visible(self, r):
+  259: def _open_editor(self, z, col):
+  283: def _tab(self, step):
+  300: def _close_editor(self, commit):
+  314: class ZonasTab(ctk.CTkFrame):
+  315: def __init__(self, master, tc: TabCtx):
+  337: def _etiquetas(self):
+  342: def _build_selector(self):
+  350: def _build_tabla(self):
+  358: def _cols(f):
+  364: def _build_acciones(self):
+  378: def _build_herramientas(self):
+  405: def _d(self):
+  408: def refresh(self):
+  432: def _tiene_foco(self, e) -> bool:
+  438: def on_external_change(self):
+  445: def info_text(self) -> str:
+  450: def select(self, zid: str):
+  454: def _paint(self):
+  461: def _zona_sel(self) -> Z.Zona | None:
+  467: def _on_seg(self, label: str):
+  473: def _commit(self, z: Z.Zona, col: str):
+  494: def _dibujar(self):
+  500: def _cadena(self):
+  513: def _firma(self):
+  520: def _chain_next(self):
+  534: def _chain_send(self, z):
+  538: def _chain_poll(self):
+  551: def _stop_chain(self, msg: str, ok: bool = True):
+  559: def _ver(self):
+  562: def _defecto(self):
+  570: def _delta(self, eje: str, txt: str) -> bool:
+  580: def _aplicar_delta(self):
+  593: def _panel(self):
+  597: def _ajustar(self):
+  606: def nudge(self, z: Z.Zona, dx=0, dy=0, dw=0, dh=0):
+  615: class Ajuste(ctk.CTkToplevel):
+  617: def __init__(self, tab: ZonasTab, z: Z.Zona):
+  639: def _go(self, a):
+
+=== calibrador_py\xppen_calibrador\ui\tab_zonas_20261116_151330.bak.py  (574 líneas)
+   19: class _Null:
+   21: def configure(self, *a, **k): pass
+   22: def bind(self, *a, **k): pass
+   25: class _RowProxy:
+   27: def __init__(self, tbl, zid): self.t, self.zid = tbl, zid
+   28: def configure(self, **kw):
+   31: def bind(self, *a, **k): pass
+   34: class _Cell:
+   36: def __init__(self, tbl, zid, col): self.t, self.zid, self.col = tbl, zid, col
+   37: def get(self): return self.t.vals[(self.zid, self.col)]
+   38: def delete(self, *a): self.t._set(self.zid, self.col, "")
+   39: def insert(self, _i, txt): self.t._set(self.zid, self.col, str(txt))
+   40: def configure(self, *a, **k): pass
+   42: def _entry(self): return self.t._ed if self.t._ed_key == (self.zid, self.col) else None
+   45: class ZonasTable:
+   49: def __init__(self, parent, zonas, cols, on_select, on_commit):
+   88: def _set(self, zid, col, txt):
+   97: def paint_row(self, zid, color):
+  101: def _apply_sel(self, zid):
+  111: def _sched_layout(self, _e=None):
+  115: def _layout(self):
+  163: def _hit(self, ex, ey):
+  174: def _on_motion(self, e):
+  186: def _on_click(self, e):
+  197: def _ensure_visible(self, r):
+  207: def _open_editor(self, z, col):
+  230: def _tab(self, step):
+  247: def _close_editor(self, commit):
+  261: class ZonasTab(ctk.CTkFrame):
+  262: def __init__(self, master, tc: TabCtx):
+  284: def _etiquetas(self):
+  289: def _build_selector(self):
+  297: def _build_tabla(self):
+  305: def _cols(f):
+  311: def _build_acciones(self):
+  325: def _build_herramientas(self):
+  352: def _d(self):
+  355: def refresh(self):
+  376: def _tiene_foco(self, e) -> bool:
+  382: def on_external_change(self):
+  389: def info_text(self) -> str:
+  394: def select(self, zid: str):
+  398: def _paint(self):
+  405: def _zona_sel(self) -> Z.Zona | None:
+  411: def _on_seg(self, label: str):
+  417: def _commit(self, z: Z.Zona, col: str):
+  432: def _dibujar(self):
+  438: def _cadena(self):
+  451: def _firma(self):
+  458: def _chain_next(self):
+  472: def _chain_poll(self):
+  485: def _stop_chain(self, msg: str, ok: bool = True):
+  493: def _ver(self):
+  496: def _defecto(self):
+  504: def _delta(self, eje: str, txt: str) -> bool:
+  514: def _aplicar_delta(self):
+  527: def _panel(self):
+  531: def _ajustar(self):
+  540: def nudge(self, z: Z.Zona, dx=0, dy=0, dw=0, dh=0):
+  549: class Ajuste(ctk.CTkToplevel):
+  551: def __init__(self, tab: ZonasTab, z: Z.Zona):
+  573: def _go(self, a):
+
+=== calibrador_py\xppen_calibrador\ui\theme.py  (35 líneas)
+   19: def init_fonts(root) -> None:
+   29: def font(size: int = 12, bold: bool = False) -> ctk.CTkFont:
+   33: def font_cap(size: int = 11) -> ctk.CTkFont:
+
+=== calibrador_py\xppen_calibrador\ui\widgets.py  (861 líneas)
+    9: def lbl(parent, text="", size=12, color=T.TXT, bold=False, wrap=0, anchor="w", **kw):
+   15: def ellipsize(text: str, font_obj, max_px: int) -> str:
+   23: def btn(parent, text, command, primary=False, width=0, height=28, **kw):
+   33: def check(parent, text, variable, command=None):
+   40: def combo(parent, values, command=None, width=130):
+   52: def duo_ok_clear(parent, on_ok, on_clear, width=16, height=KEY_H):
+   61: def _mk(txt, color, cmd, rely):
+   79: def entry(parent, width=140, placeholder=""):
+   85: def switch(parent, variable, command=None):
+   91: class Hint(ctk.CTkLabel):
+   93: def __init__(self, parent, text, size=10, color=T.TXT2):
+   99: def _sched(self, _e=None):
+  104: def _fit(self):
+  114: class Stepper(ctk.CTkFrame):
+  124: def __init__(self, parent, lo, hi, step=1, width=38, on_commit=None, suffix=""):
+  154: def _paint(item, color):
+  157: def _motion(ev):
+  161: def _leave(_ev):
+  165: def _click(ev):
+  177: def set(self, value):
+  184: def set_default(self, texto):
+  195: def _value(self):
+  201: def _focus_in(self, _e=None):
+  209: def _typed(self, _e=None):
+  214: def _bump(self, d):
+  221: def _commit(self, _e=None):
+  228: class ColorChip(ctk.CTkFrame):
+  229: def __init__(self, parent, on_pick):
+  238: def set(self, hexv: str):
+  243: def _ask(self):
+  268: def _scale_of(w):
+  275: def _find_elastic(w):
+  285: def _as_queue(top, e):
+  297: def _as_apply(top):
+  314: class FlowRow(ctk.CTkFrame):
+  318: def __init__(self, master, *a, **kw):
+  330: def add(self, w, grow=False, **_):
+  336: def clear(self):
+  340: def reflow(self):
+  345: def _hook_scale(self):
+  355: def _on_cfg(self, e):
+  359: def _queue(self):
+  363: def _measure(self, its, sc):
+  378: def _layout(self):
+  395: def lo(i):
+  445: class EvenRow(ctk.CTkFrame):
+  458: def __init__(self, parent, min_gap=10, **kw):
+  466: def add(self, widget):
+  471: def _layout(self):
+  482: def _tooltip(w, text):
+  485: def show():
+  497: def hide(*_):
+  510: def icon_btn(parent, glyph, cmd, size=28, tip=None):
+  540: def _key_name(ev):
+  556: def _win_down():
+  565: def _find_entry(w):
+  584: def _tok_de(ev):
+  595: def _acorde_txt(pico):
+  603: def set_captura_bridge(send):
+  607: def _cap_send(cmd):
+  616: def attach_keycapture(host, on_clear=None):
+  632: def accent(on):
+  639: def put(txt):
+  643: def cancel_job():
+  651: def reset_state():
+  657: def press(tok):
+  667: def release(tok):
+  673: def kdown(ev):
+  681: def kup(ev):
+  689: def mdown(ev):
+  700: def mup(ev):
+  710: def mmotion(ev):
+  720: def beat():
+  726: def focus_in(_e=None):
+  733: def focus_out(_e=None):
+  757: class _FlowRowLegacy(ctk.CTkFrame):
+  763: def __init__(self, parent, gap=14, row_gap=8):
+  771: def add(self, widget):
+  776: def _sched(self, _e=None):
+  781: def reflow(self):
+  819: class ResponsiveRow(ctk.CTkFrame):
+  821: def __init__(self, parent, n, breakpoint=640, weights=None, uniform="rr", minsize=190, gap=10):
+  830: def _sched(self, _e=None):
+  835: def _check(self):
+  843: def _layout(self, mode):
+
+=== lib\audio.ahk  (300 líneas)
+    5: _SonarUI(evento, val := 0) {
+   33: _SonarWav(nombreWav, fb := "") {
+   47: _SonarFast(evento) {
+   64: _CrearTonoRAM(f0, f1, ms, vol := 0.85) {
+  103: _AudCache() {
+  108: _AudVol() {
+  113: _AudPlay(buf) {
+  119: _AudTonoBuf(id, f0, f1, ms, vol := 0.50) {
+  127: _AudWavBuf(nombre) {
+  144: _AudEscalarWav(buf, vol) {
+  171: _SliderBuf(banda) {
+  175: _HapticoSlider(v) {
+  191: _CrearTonoSuave(f0, f1, ms, vol := 0.18, preMs := 0, postMs := 30) {
+  222: _RachaBuf(clave, nivel, pre := 0) {
+  233: _HapticoRacha(clave) {
+  259: _AudPrecargar() {
+  270: _GdipRes() {
+  274: _GdipLiberarFuentes() {
+  284: _AudReiniciar() {
+  291: _AudAlSalir(*) {
+
+=== lib\calibrador.ahk  (5303 líneas)
+    4: _PtsModoMarcar() {
+   26: PtsModo_Set(m) {
+   42: _PtsRefrescarDiferido() {
+   60: _PtsModoCambiar(m) {
+   80: _PtsModoVigilar() {
+  100: PtsModo_SincronizarCSP() {        ; la llama AccionEnfoque tras conmutar enfoque.activo
+  114: _AyudaEstado() {
+  119: AyudaRegistrar(ctrl, texto) {
+  129: AyudaIniciar() {
+  137: _MostrarAyudaContextual(wParam, lParam, msg, hwnd) {
+  148: _AyudaMostrar(ch) {
+  155: _AyudaVigilar() {
+  165: AbrirPanelPuntos() {
+  782: _PtsLayCuenta(g) {                 ; nº de controles creados hasta ahora (marca el inicio/fin de cada pestaña)
+  788: _PtsLayInit(g,lyM,tb,lv,lvEv,ov,u) {
+  897: _PtsLayRedim(gg, minMax, w, h) {
+  927: _PtsAjustarVentana(g) {
+  945: _PtsFirmaMonitores() {
+  954: _PtsMonInfo(i) {
+  959: _PtsHwndCSP() {
+  967: _PtsMonNacim() {
+ 1009: _PtsFijarMinimo(g) {
+ 1023: _PtsFinMovimiento(wParam, lParam, msg, hwnd) {
+ 1030: _PtsDisplayChange(wParam, lParam, msg, hwnd) {
+ 1037: _PtsReencajar(*) {
+ 1070: _PtsTopToggle(*) {
+ 1080: _PtsAutoMin() {                    ; modo Normal: al tomar el foco CSP, la ventana se minimiza
+ 1107: _PtsUIEscala() {
+ 1127: _PtsHubToggle(clave,*) {
+ 1130: _PtsClicAutoToggle(chk, *) {
+ 1135: _PtsTemaMarcar(seleccionarFila := true) {
+ 1175: _PtsTemaSel(lv, fila, selected := true, *) {
+ 1184: _PtsTemaFocus(lv, fila, *) {
+ 1191: _PtsTemaDobleClick(lv, fila, *) {
+ 1203: _PtsTemaProbarSel(*) {
+ 1221: _PtsTemaAplicarSel(*) {
+ 1237: _PtsTemaAplicar(p, reselect := false, *) {
+ 1248: _PtsZonaDefs() {
+ 1272: _NvZonaVacia(v) {
+ 1286: _NvPanTexto() {
+ 1306: _NvPanRefrescarTabla() {
+ 1343: _NvPanCargarOpac(row, ini, sec, clave) {
+ 1367: _NvPanSel(lv, row, sel) {
+ 1398: _NvPanAplicarValores(*) {
+ 1471: _NvPanProximoLibre() {
+ 1480: _NvPanDibujar(st := 0) {
+ 1506: _NvPanBorrar(st := 0) {
+ 1542: _NvPanPestana(st := 0) {
+ 1565: _NvPanDobleClick(lv, row) {
+ 1587: _PtsDefPorClave(k) {
+ 1596: _PtsBuscarCambio(ctrl, *) {
+ 1602: _PtsEvFiltroOk(nombre, grupo := "") {
+ 1608: _PtsEvFiltroAplicar() {
+ 1617: _PtsEvEncabezado(ctrl, item, selected) {
+ 1632: _PtsAccPanel(id) {
+ 1640: _PtsGrupoSync(idGrp, miembros, *) {
+ 1672: _PtsDrawItemAcento(wParam, lParam, msg, hwnd) {
+ 1695: _PtsEventosDefs() {
+ 1757: _PtsEventoSlug(txt) {
+ 1768: _PtsGruposBase() {
+ 1772: _PtsNuevoNombreDef() {
+ 1784: _PtsSlugUnico(nombre) {
+ 1800: _PtsNuevoEvento() {
+ 1872: _PtsWizFin(d, usarConfig) {
+ 1893: _PtsEvCrear(r) {
+ 1936: _PtsEvWizAplicarCfg(slug, r) {
+ 1955: _PtsEvLimpiarPend(slug) {
+ 1964: _PtsJoin(arr, sep) {
+ 1971: _PtsEstabRect(foco) {
+ 1984: _PtsRectDe(d) {
+ 2007: _PtsAplicarZona(d,r) {
+ 2083: _RgGuardarMirror() {
+ 2100: _PtsZonasVivo(d := 0) {
+ 2112: _PtsDestello(d := 0) {
+ 2131: _PtsDibujarRango(texto,color := "9A7BFF",permitirPunto := false,ses := "") {
+ 2256: _PtsFilaActual() {
+ 2266: _PtsOvlLimpiarRefAnterior() {
+ 2274: _PtsOvlAtenuar(on, dActual := 0) {
+ 2322: _PtsDibujarSel(encadenar := false) {
+ 2356: _PtsLvEntero(fila, col) {
+ 2366: _PtsAjustarZona() {
+ 2403: _PtsCamposDe(*) {
+ 2405: _PtsSel(ctrl,item,selected) {
+ 2413: _PtsRefrescar() {
+ 2422: _PtsDesplazar(*) {
+ 2441: _PtsDefecto(*) {
+ 2456: _PtsZonaPausable(d) {
+ 2461: _PtsZonaEliminable(d) {
+ 2465: _PtsMenuZona(ctrl, item, esDerecho, *) {
+ 2486: _PtsPausarAlternar(d) {
+ 2499: _PtsEliminar(d) {
+ 2582: _GuardarDuracionesHUD(dA, dM, dB) {
+ 2612: _PtsDurPropia(id) {
+ 2617: _PtsDurEfectiva(id,z) {
+ 2630: _PtsEvDurAplicar(*) {
+ 2664: _PtsEvDobleClick(ctrl, rowNumber) {
+ 2705: _PtsEvDurRefrescar() {
+ 2724: _PtsZonaTxt(z) {
+ 2728: _AccPx(v) {
+ 2736: _LyY(k) {                                          ; cadena monótona, sin solapes
+ 2749: _AccFila(altoLog) {
+ 2760: _LyEncab(x0, cw, yTop, nn, titulo, sub) {
+ 2772: _LyHudCtl(c := 0) {
+ 2778: _LyHudPrev(v := 0) {
+ 2784: _PtsHudChkClick(chk, *) {
+ 2796: _PtsHudChkSync(*) {
+ 2809: _AccInit(g, tab, x0, cw, fnUiP, lvEv := 0) {
+ 2830: _AccNuevo(id, titulo, yTop, resumen := 0, abiertoDef := true, fijo := false) {
+ 2841: _R(ctrl) {                        ; registra el control en el panel en construcción
+ 2845: _AccPie(ctrl) {                   ; control que sigue al último panel (stEv)
+ 2849: _AccFin() {
+ 2870: _AccPanel(id) {
+ 2876: _AccY0() {
+ 2883: _AccSbSync() {
+ 2893: _AccOnVScroll(wParam, lParam, msg, hwnd) {
+ 2916: _AccOnWheel(wParam, lParam, msg, hwnd) {
+ 2949: _AccFit() {
+ 2954: _AccWorkArea(&wt, &wb) {
+ 2972: _AccDisponible() {
+ 2985: _AccAltoDe(p) {
+ 2990: _AccFinPaneles() {
+ 2997: _AccAjustar(prioId := "") {
+ 3007: _AccGrupoDef(padre, hijos) {
+ 3015: _AccPanelOculto(p) {
+ 3023: _AccToggle(id, *) {
+ 3031: _AccPintarCab(p) {
+ 3037: _AccRefrescarResumen() {
+ 3047: _PtsRectCliente(hCtl, hPar, &x, &y, &w, &h) {
+ 3057: _AccRelayout(*) {
+ 3155: _AccResumen1() {
+ 3162: _AccResumen2() {
+ 3168: _AccResumen3() {
+ 3185: _PtsNomEvento(idEv) {
+ 3198: _PtsEvTextoGuardar(*) {
+ 3217: _PtsEvTextoReset(*) {
+ 3234: _PtsEvLeer() {
+ 3244: _PtsEvActivoLeer(k) {
+ 3252: _PtsEvActivo(k) {
+ 3259: _PtsEvActivoSet(k, on) {
+ 3267: _PtsEvFormatoTxt(k, c) {
+ 3272: _PtsEvSlugFila(fila) {
+ 3280: _PtsEvSyncEstado(ctrl) {
+ 3301: _PtsEvEstadoCambio(ctrl, *) {
+ 3321: _PtsEvAgruparOn() {
+ 3328: _PtsEvToggleAgrupar(*) {
+ 3335: _PtsEvGrupoInsertar(nom) {
+ 3353: _PtsEvGruposPreparar(defs) {
+ 3376: _PtsEvAsignaGrupo(nf, grp) {
+ 3389: _PtsEvGuardar(k,f,z,op) {
+ 3399: _PtsEvAtajoDefault(idEv) {
+ 3415: _PtsEvRemapDefault(idEv) {
+ 3433: _PtsEvCaps(idEv) {
+ 3465: _PtsEvResumen(idEv, c) {
+ 3500: _PtsEvRemapGuardar(*) {
+ 3515: _PtsEvRemapReset(*) {
+ 3531: _PtsExcluirCruzarAuto(tipo, idEv) {
+ 3543: _PtsEvPartToggle(tipo, ctrl, *) {
+ 3571: _PtsEvFilas() {
+ 3648: _PtsEvObtenerSeleccionados(lv) {
+ 3659: _PtsEvSel(ctrl,item,selected) {
+ 3726: _PtsEvCambio(*) {
+ 3754: _PtsEvProbar(*) {
+ 3770: _PtsOcultarGuiAnclado() {
+ 3788: _PtsMostrarGuiAnclado(row) {
+ 3907: _PtsEvToggleAnclar(*) {
+ 3921: _PtsEvReubicarZona(*) {
+ 3961: _DzLog(msg) {
+ 3965: _PtsEditarRangoInteractivo(titulo, idEv, rectIni := "", ses := "") {
+ 4030: _SyncBotonesExt() {
+ 4075: NcHit(wParam, lParam, msg, hwnd) {
+ 4148: _PtsAlphaChange(*) {
+ 4157: _PtsAlphaFChange(*) {
+ 4167: _PtsDibujarZonaEstab(foco := false) {
+ 4184: _PtsEvIdSel() {
+ 4200: _PtsExcluirOpuesto(tipo, idEv) {
+ 4211: _PillGuiDe(p) {
+ 4221: _PillGuiRigida(idEv) {
+ 4237: _PtsPildoraUbicar(idEv := "", *) {
+ 4282: Parpadeo() {
+ 4294: _PtsPildoraBtnAgregar(x, y, w := 210) {
+ 4304: _PtsDibujarZonaEvento(key := "") {
+ 4340: _PtsReiniciar(*) {
+ 4347: _PtsMoverBotones(ctrl) {
+ 4351: _PtsReubicar(*) {
+ 4355: ReubicarBotones() {
+ 4395: _PtsUltimoBackupIni() {
+ 4412: _PtsSelloLibre() {
+ 4420: _PtsBakRefrescar() {
+ 4432: _PtsBackupIni(*) {
+ 4450: _PtsRestaurarIni(*) {
+ 4473: _PtsCambiarPerfil(ctrl,*) {
+ 4476: _PtsCerrar(*) {
+ 4520: _PtsToggleVerZonas(*) {
+ 4526: MostrarZonasCalibracion(ms := 0) {
+ 4583: OcultarZonasCalibracion() {
+ 4599: _PtsZid(id) {
+ 4608: _PtsPushZonaSesion(lista) {
+ 4634: _PtsMostrarZonasEspaciales() {
+ 4673: _PtsOcultarZonasEspaciales() {
+ 4683: _PtsZonasEspacialesVisibles() {
+ 4688: _PtsAlternarZonasEspaciales() {
+ 4695: _CrearRectOverlay(x,y,w,h,color,texto := "") {
+ 4706: _OvlEtiquetas() {
+ 4710: _OvlBarrerHuerfanas() {
+ 4722: _OvlEtiqueta(gBox,x,y,ow,oh,color,texto) {
+ 4752: _OvlDestruir(g) {
+ 4766: _PtsEvLvRojo(lp) {
+ 4794: _PtsTemaLvNotify(wParam, lParam, msg, hwnd) {
+ 4832: _PtsColorRef(hex) {
+ 4838: _PtsTextoContraste(hex) {
+ 4848: _KgEst() {
+ 4853: _KgAttach(ctl, onCapture := "") {
+ 4871: _KgFocus(ctl, *) {
+ 4877: _KgMods() {
+ 4890: _KgJoin(p) {
+ 4897: _KgOnKey(wParam, lParam, msg, hwnd) {
+ 4943: _KgOnUp(wParam, lParam, msg, hwnd) {
+ 4956: _KgOnChar(wParam, lParam, msg, hwnd) {
+ 4961: _KgNotify(d, txt) {
+ 4968: _PtsInd() {
+ 4972: _PtsIndInit(edA, indA, edR, indR, lbA, lbR) {
+ 4985: _PtsIndSet(clave, estado, tip := "") {
+ 4998: _PtsAtajoColision(col, txt) {
+ 5008: _PtsIndRefrescar(avisar := false) {
+ 5043: _PtsIndOk(*) {
+ 5058: _PtsAtajoAviso(ctl, txt) {
+ 5063: _PtsStRestaurar(st, prev) {
+ 5067: _PtsGuardarCambios(*) {
+ 5090: _PtsEvSecciones(ini) {
+ 5103: _PtsEvIniClaves(ini, sec, slug) {
+ 5135: _PtsEvNombreDe(slug) {
+ 5142: _PtsEvSlugDeFila(row) {
+ 5154: _PtsEvSlugsSel() {
+ 5165: _PtsEvSeleccionarSlug(slug) {
+ 5178: _PtsEvContextMenu(lv, item, isRight, x, y) {
+ 5196: _PtsEvEliminar(*) {
+ 5236: _PtsEvDuplicar(*) {
+ 5271: _PtsEvColDeClick(lv) {
+ 5280: _PtsEvDobleClickCol(lv, row) {
+ 5291: _PtsEvEnfocarCampo(ctl, enAcordeon := true) {
+
+=== lib\calibrador_20261115_015808.bak.ahk  (4451 líneas)
+    4: _PtsModoMarcar() {
+   26: PtsModo_Set(m) {
+   42: _PtsRefrescarDiferido() {
+   60: _PtsModoCambiar(m) {
+   80: _PtsModoVigilar() {
+  100: PtsModo_SincronizarCSP() {        ; la llama AccionEnfoque tras conmutar enfoque.activo
+  114: _AyudaEstado() {
+  119: AyudaRegistrar(ctrl, texto) {
+  129: AyudaIniciar() {
+  137: _MostrarAyudaContextual(wParam, lParam, msg, hwnd) {
+  148: _AyudaMostrar(ch) {
+  155: _AyudaVigilar() {
+  165: AbrirPanelPuntos() {
+  758: _PtsLayCuenta(g) {                 ; nº de controles creados hasta ahora (marca el inicio/fin de cada pestaña)
+  764: _PtsLayInit(g,lyM,tb,lv,lvEv,ov,u) {
+  887: _PtsLayRedim(gg, minMax, w, h) {
+  917: _PtsAjustarVentana(g) {
+  935: _PtsFirmaMonitores() {
+  944: _PtsMonInfo(i) {
+  949: _PtsHwndCSP() {
+  957: _PtsMonNacim() {
+  999: _PtsFijarMinimo(g) {
+ 1013: _PtsFinMovimiento(wParam, lParam, msg, hwnd) {
+ 1020: _PtsDisplayChange(wParam, lParam, msg, hwnd) {
+ 1027: _PtsReencajar(*) {
+ 1060: _PtsTopToggle(*) {
+ 1070: _PtsAutoMin() {                    ; modo Normal: al tomar el foco CSP, la ventana se minimiza
+ 1097: _PtsUIEscala() {
+ 1117: _PtsHubToggle(clave,*) {
+ 1120: _PtsClicAutoToggle(chk, *) {
+ 1125: _PtsTemaMarcar(seleccionarFila := true) {
+ 1165: _PtsTemaSel(lv, fila, selected := true, *) {
+ 1174: _PtsTemaFocus(lv, fila, *) {
+ 1181: _PtsTemaDobleClick(lv, fila, *) {
+ 1193: _PtsTemaProbarSel(*) {
+ 1211: _PtsTemaAplicarSel(*) {
+ 1227: _PtsTemaAplicar(p, reselect := false, *) {
+ 1238: _PtsZonaDefs() {
+ 1263: _NvZonaVacia(v) {
+ 1277: _NvPanTexto() {
+ 1292: _NvPanRefrescarTabla() {
+ 1329: _NvPanCargarOpac(row, ini, sec, clave) {
+ 1353: _NvPanSel(lv, row, sel) {
+ 1384: _NvPanAplicarValores(*) {
+ 1456: _NvPanDibujar(st := 0) {
+ 1498: _NvPanBorrar(st := 0) {
+ 1533: _NvPanPestana(st := 0) {
+ 1553: _NvPanDobleClick(lv, row) {
+ 1575: _PtsDefPorClave(k) {
+ 1582: _PtsEventosDefs() {
+ 1644: _PtsEventoSlug(txt) {
+ 1655: _PtsGruposBase() {
+ 1659: _PtsNuevoNombreDef() {
+ 1671: _PtsSlugUnico(nombre) {
+ 1687: _PtsNuevoEvento() {
+ 1759: _PtsWizFin(d, usarConfig) {
+ 1780: _PtsEvCrear(r) {
+ 1823: _PtsEvWizAplicarCfg(slug, r) {
+ 1842: _PtsEvLimpiarPend(slug) {
+ 1851: _PtsJoin(arr, sep) {
+ 1858: _PtsEstabRect(foco) {
+ 1871: _PtsRectDe(d) {
+ 1894: _PtsAplicarZona(d,r) {
+ 1970: _RgGuardarMirror() {
+ 1987: _PtsZonasVivo(d := 0) {
+ 1999: _PtsDestello(d := 0) {
+ 2018: _PtsDibujarRango(texto,color := "9A7BFF",permitirPunto := false) {
+ 2125: _PtsFilaActual() {
+ 2135: _PtsOvlLimpiarRefAnterior() {
+ 2143: _PtsOvlAtenuar(on, dActual := 0) {
+ 2191: _PtsDibujarSel(encadenar := false) {
+ 2225: _PtsLvEntero(fila, col) {
+ 2235: _PtsAjustarZona() {
+ 2272: _PtsCamposDe(*) {
+ 2274: _PtsSel(ctrl,item,selected) {
+ 2282: _PtsRefrescar() {
+ 2291: _PtsDesplazar(*) {
+ 2310: _PtsDefecto(*) {
+ 2325: _PtsZonaPausable(d) {
+ 2330: _PtsZonaEliminable(d) {
+ 2334: _PtsMenuZona(ctrl, item, esDerecho, *) {
+ 2355: _PtsPausarAlternar(d) {
+ 2368: _PtsEliminar(d) {
+ 2451: _GuardarDuracionesHUD(dA, dM, dB) {
+ 2481: _PtsDurPropia(id) {
+ 2486: _PtsDurEfectiva(id,z) {
+ 2499: _PtsEvDurAplicar(*) {
+ 2533: _PtsEvDobleClick(ctrl, rowNumber) {
+ 2574: _PtsEvDurRefrescar() {
+ 2592: _PtsZonaTxt(z) {
+ 2596: _AccPx(v) {
+ 2599: _AccInit(g, tab, x0, cw, fnUiP, lvEv := 0) {
+ 2620: _AccNuevo(id, titulo, yTop, resumen := 0, abiertoDef := true) {
+ 2631: _R(ctrl) {                        ; registra el control en el panel en construcción
+ 2635: _AccPie(ctrl) {                   ; control que sigue al último panel (stEv)
+ 2639: _AccFin() {
+ 2658: _AccPanel(id) {
+ 2664: _AccY0() {
+ 2671: _AccSbSync() {
+ 2681: _AccOnVScroll(wParam, lParam, msg, hwnd) {
+ 2704: _AccOnWheel(wParam, lParam, msg, hwnd) {
+ 2725: _AccFit() {
+ 2730: _AccWorkArea(&wt, &wb) {
+ 2748: _AccDisponible() {
+ 2761: _AccAltoDe(p) {
+ 2766: _AccFinPaneles() {
+ 2773: _AccAjustar(prioId := "") {
+ 2783: _AccToggle(id, *) {
+ 2791: _AccPintarCab(p) {
+ 2797: _AccRefrescarResumen() {
+ 2807: _PtsRectCliente(hCtl, hPar, &x, &y, &w, &h) {
+ 2817: _AccRelayout(*) {
+ 2902: _AccResumen1() {
+ 2909: _AccResumen2() {
+ 2915: _AccResumen3() {
+ 2932: _PtsNomEvento(idEv) {
+ 2945: _PtsEvTextoGuardar(*) {
+ 2964: _PtsEvTextoReset(*) {
+ 2981: _PtsEvLeer() {
+ 2988: _PtsEvGuardar(k,f,z,op) {
+ 2998: _PtsEvAtajoDefault(idEv) {
+ 3014: _PtsEvRemapDefault(idEv) {
+ 3032: _PtsEvCaps(idEv) {
+ 3049: _PtsEvResumen(idEv, c) {
+ 3071: _PtsEvRemapGuardar(*) {
+ 3085: _PtsEvRemapReset(*) {
+ 3100: _PtsEvPartToggle(tipo, ctrl, *) {
+ 3115: _PtsEvFilas() {
+ 3177: _PtsEvObtenerSeleccionados(lv) {
+ 3188: _PtsEvSel(ctrl,item,selected) {
+ 3248: _PtsEvCambio(*) {
+ 3276: _PtsEvProbar(*) {
+ 3292: _PtsOcultarGuiAnclado() {
+ 3310: _PtsMostrarGuiAnclado(row) {
+ 3429: _PtsEvToggleAnclar(*) {
+ 3443: _PtsEvReubicarZona(*) {
+ 3483: _PtsEditarRangoInteractivo(titulo, idEv, rectIni := "") {
+ 3538: NcHit(wParam, lParam, msg, hwnd) {
+ 3589: _PtsAlphaChange(*) {
+ 3598: _PtsAlphaFChange(*) {
+ 3608: _PtsDibujarZonaEstab(foco := false) {
+ 3623: _PtsReiniciar(*) {
+ 3630: _PtsMoverBotones(ctrl) {
+ 3634: _PtsReubicar(*) {
+ 3638: ReubicarBotones() {
+ 3678: _PtsUltimoBackupIni() {
+ 3695: _PtsSelloLibre() {
+ 3703: _PtsBakRefrescar() {
+ 3715: _PtsBackupIni(*) {
+ 3733: _PtsRestaurarIni(*) {
+ 3756: _PtsCambiarPerfil(ctrl,*) {
+ 3759: _PtsCerrar(*) {
+ 3801: _PtsToggleVerZonas(*) {
+ 3807: MostrarZonasCalibracion(ms := 0) {
+ 3857: OcultarZonasCalibracion() {
+ 3871: _CrearRectOverlay(x,y,w,h,color,texto := "") {
+ 3882: _OvlEtiquetas() {
+ 3886: _OvlBarrerHuerfanas() {
+ 3898: _OvlEtiqueta(gBox,x,y,ow,oh,color,texto) {
+ 3928: _OvlDestruir(g) {
+ 3942: _PtsEvLvRojo(lp) {
+ 3966: _PtsTemaLvNotify(wParam, lParam, msg, hwnd) {
+ 4004: _PtsColorRef(hex) {
+ 4010: _PtsTextoContraste(hex) {
+ 4020: _KgEst() {
+ 4025: _KgAttach(ctl, onCapture := "") {
+ 4043: _KgFocus(ctl, *) {
+ 4049: _KgMods() {
+ 4062: _KgJoin(p) {
+ 4069: _KgOnKey(wParam, lParam, msg, hwnd) {
+ 4115: _KgOnUp(wParam, lParam, msg, hwnd) {
+ 4128: _KgOnChar(wParam, lParam, msg, hwnd) {
+ 4133: _KgNotify(d, txt) {
+ 4140: _PtsInd() {
+ 4144: _PtsIndInit(edA, indA, edR, indR, lbA, lbR) {
+ 4157: _PtsIndSet(clave, estado, tip := "") {
+ 4170: _PtsAtajoColision(col, txt) {
+ 4180: _PtsIndRefrescar(avisar := false) {
+ 4208: _PtsIndOk(*) {
+ 4220: _PtsAtajoAviso(ctl, txt) {
+ 4224: _PtsGuardarCambios(*) {
+ 4242: _PtsEvSecciones(ini) {
+ 4255: _PtsEvIniClaves(ini, sec, slug) {
+ 4287: _PtsEvNombreDe(slug) {
+ 4294: _PtsEvSlugDeFila(row) {
+ 4306: _PtsEvSlugsSel() {
+ 4317: _PtsEvSeleccionarSlug(slug) {
+ 4330: _PtsEvContextMenu(lv, item, isRight, x, y) {
+ 4348: _PtsEvEliminar(*) {
+ 4384: _PtsEvDuplicar(*) {
+ 4419: _PtsEvColDeClick(lv) {
+ 4428: _PtsEvDobleClickCol(lv, row) {
+ 4439: _PtsEvEnfocarCampo(ctl, enAcordeon := true) {
+
+=== lib\calibrador_20261115_024309.bak.ahk  (4474 líneas)
+    4: _PtsModoMarcar() {
+   26: PtsModo_Set(m) {
+   42: _PtsRefrescarDiferido() {
+   60: _PtsModoCambiar(m) {
+   80: _PtsModoVigilar() {
+  100: PtsModo_SincronizarCSP() {        ; la llama AccionEnfoque tras conmutar enfoque.activo
+  114: _AyudaEstado() {
+  119: AyudaRegistrar(ctrl, texto) {
+  129: AyudaIniciar() {
+  137: _MostrarAyudaContextual(wParam, lParam, msg, hwnd) {
+  148: _AyudaMostrar(ch) {
+  155: _AyudaVigilar() {
+  165: AbrirPanelPuntos() {
+  760: _PtsLayCuenta(g) {                 ; nº de controles creados hasta ahora (marca el inicio/fin de cada pestaña)
+  766: _PtsLayInit(g,lyM,tb,lv,lvEv,ov,u) {
+  889: _PtsLayRedim(gg, minMax, w, h) {
+  919: _PtsAjustarVentana(g) {
+  937: _PtsFirmaMonitores() {
+  946: _PtsMonInfo(i) {
+  951: _PtsHwndCSP() {
+  959: _PtsMonNacim() {
+ 1001: _PtsFijarMinimo(g) {
+ 1015: _PtsFinMovimiento(wParam, lParam, msg, hwnd) {
+ 1022: _PtsDisplayChange(wParam, lParam, msg, hwnd) {
+ 1029: _PtsReencajar(*) {
+ 1062: _PtsTopToggle(*) {
+ 1072: _PtsAutoMin() {                    ; modo Normal: al tomar el foco CSP, la ventana se minimiza
+ 1099: _PtsUIEscala() {
+ 1119: _PtsHubToggle(clave,*) {
+ 1122: _PtsClicAutoToggle(chk, *) {
+ 1127: _PtsTemaMarcar(seleccionarFila := true) {
+ 1167: _PtsTemaSel(lv, fila, selected := true, *) {
+ 1176: _PtsTemaFocus(lv, fila, *) {
+ 1183: _PtsTemaDobleClick(lv, fila, *) {
+ 1195: _PtsTemaProbarSel(*) {
+ 1213: _PtsTemaAplicarSel(*) {
+ 1229: _PtsTemaAplicar(p, reselect := false, *) {
+ 1240: _PtsZonaDefs() {
+ 1265: _NvZonaVacia(v) {
+ 1279: _NvPanTexto() {
+ 1294: _NvPanRefrescarTabla() {
+ 1331: _NvPanCargarOpac(row, ini, sec, clave) {
+ 1355: _NvPanSel(lv, row, sel) {
+ 1386: _NvPanAplicarValores(*) {
+ 1458: _NvPanDibujar(st := 0) {
+ 1500: _NvPanBorrar(st := 0) {
+ 1535: _NvPanPestana(st := 0) {
+ 1555: _NvPanDobleClick(lv, row) {
+ 1577: _PtsDefPorClave(k) {
+ 1584: _PtsEventosDefs() {
+ 1646: _PtsEventoSlug(txt) {
+ 1657: _PtsGruposBase() {
+ 1661: _PtsNuevoNombreDef() {
+ 1673: _PtsSlugUnico(nombre) {
+ 1689: _PtsNuevoEvento() {
+ 1761: _PtsWizFin(d, usarConfig) {
+ 1782: _PtsEvCrear(r) {
+ 1825: _PtsEvWizAplicarCfg(slug, r) {
+ 1844: _PtsEvLimpiarPend(slug) {
+ 1853: _PtsJoin(arr, sep) {
+ 1860: _PtsEstabRect(foco) {
+ 1873: _PtsRectDe(d) {
+ 1896: _PtsAplicarZona(d,r) {
+ 1972: _RgGuardarMirror() {
+ 1989: _PtsZonasVivo(d := 0) {
+ 2001: _PtsDestello(d := 0) {
+ 2020: _PtsDibujarRango(texto,color := "9A7BFF",permitirPunto := false) {
+ 2127: _PtsFilaActual() {
+ 2137: _PtsOvlLimpiarRefAnterior() {
+ 2145: _PtsOvlAtenuar(on, dActual := 0) {
+ 2193: _PtsDibujarSel(encadenar := false) {
+ 2227: _PtsLvEntero(fila, col) {
+ 2237: _PtsAjustarZona() {
+ 2274: _PtsCamposDe(*) {
+ 2276: _PtsSel(ctrl,item,selected) {
+ 2284: _PtsRefrescar() {
+ 2293: _PtsDesplazar(*) {
+ 2312: _PtsDefecto(*) {
+ 2327: _PtsZonaPausable(d) {
+ 2332: _PtsZonaEliminable(d) {
+ 2336: _PtsMenuZona(ctrl, item, esDerecho, *) {
+ 2357: _PtsPausarAlternar(d) {
+ 2370: _PtsEliminar(d) {
+ 2453: _GuardarDuracionesHUD(dA, dM, dB) {
+ 2483: _PtsDurPropia(id) {
+ 2488: _PtsDurEfectiva(id,z) {
+ 2501: _PtsEvDurAplicar(*) {
+ 2535: _PtsEvDobleClick(ctrl, rowNumber) {
+ 2576: _PtsEvDurRefrescar() {
+ 2594: _PtsZonaTxt(z) {
+ 2598: _AccPx(v) {
+ 2601: _AccInit(g, tab, x0, cw, fnUiP, lvEv := 0) {
+ 2622: _AccNuevo(id, titulo, yTop, resumen := 0, abiertoDef := true) {
+ 2633: _R(ctrl) {                        ; registra el control en el panel en construcción
+ 2637: _AccPie(ctrl) {                   ; control que sigue al último panel (stEv)
+ 2641: _AccFin() {
+ 2660: _AccPanel(id) {
+ 2666: _AccY0() {
+ 2673: _AccSbSync() {
+ 2683: _AccOnVScroll(wParam, lParam, msg, hwnd) {
+ 2706: _AccOnWheel(wParam, lParam, msg, hwnd) {
+ 2727: _AccFit() {
+ 2732: _AccWorkArea(&wt, &wb) {
+ 2750: _AccDisponible() {
+ 2763: _AccAltoDe(p) {
+ 2768: _AccFinPaneles() {
+ 2775: _AccAjustar(prioId := "") {
+ 2785: _AccToggle(id, *) {
+ 2793: _AccPintarCab(p) {
+ 2799: _AccRefrescarResumen() {
+ 2809: _PtsRectCliente(hCtl, hPar, &x, &y, &w, &h) {
+ 2819: _AccRelayout(*) {
+ 2904: _AccResumen1() {
+ 2911: _AccResumen2() {
+ 2917: _AccResumen3() {
+ 2934: _PtsNomEvento(idEv) {
+ 2947: _PtsEvTextoGuardar(*) {
+ 2966: _PtsEvTextoReset(*) {
+ 2983: _PtsEvLeer() {
+ 2990: _PtsEvGuardar(k,f,z,op) {
+ 3000: _PtsEvAtajoDefault(idEv) {
+ 3016: _PtsEvRemapDefault(idEv) {
+ 3034: _PtsEvCaps(idEv) {
+ 3061: _PtsEvResumen(idEv, c) {
+ 3093: _PtsEvRemapGuardar(*) {
+ 3107: _PtsEvRemapReset(*) {
+ 3122: _PtsEvPartToggle(tipo, ctrl, *) {
+ 3137: _PtsEvFilas() {
+ 3199: _PtsEvObtenerSeleccionados(lv) {
+ 3210: _PtsEvSel(ctrl,item,selected) {
+ 3271: _PtsEvCambio(*) {
+ 3299: _PtsEvProbar(*) {
+ 3315: _PtsOcultarGuiAnclado() {
+ 3333: _PtsMostrarGuiAnclado(row) {
+ 3452: _PtsEvToggleAnclar(*) {
+ 3466: _PtsEvReubicarZona(*) {
+ 3506: _PtsEditarRangoInteractivo(titulo, idEv, rectIni := "") {
+ 3561: NcHit(wParam, lParam, msg, hwnd) {
+ 3612: _PtsAlphaChange(*) {
+ 3621: _PtsAlphaFChange(*) {
+ 3631: _PtsDibujarZonaEstab(foco := false) {
+ 3646: _PtsReiniciar(*) {
+ 3653: _PtsMoverBotones(ctrl) {
+ 3657: _PtsReubicar(*) {
+ 3661: ReubicarBotones() {
+ 3701: _PtsUltimoBackupIni() {
+ 3718: _PtsSelloLibre() {
+ 3726: _PtsBakRefrescar() {
+ 3738: _PtsBackupIni(*) {
+ 3756: _PtsRestaurarIni(*) {
+ 3779: _PtsCambiarPerfil(ctrl,*) {
+ 3782: _PtsCerrar(*) {
+ 3824: _PtsToggleVerZonas(*) {
+ 3830: MostrarZonasCalibracion(ms := 0) {
+ 3880: OcultarZonasCalibracion() {
+ 3894: _CrearRectOverlay(x,y,w,h,color,texto := "") {
+ 3905: _OvlEtiquetas() {
+ 3909: _OvlBarrerHuerfanas() {
+ 3921: _OvlEtiqueta(gBox,x,y,ow,oh,color,texto) {
+ 3951: _OvlDestruir(g) {
+ 3965: _PtsEvLvRojo(lp) {
+ 3989: _PtsTemaLvNotify(wParam, lParam, msg, hwnd) {
+ 4027: _PtsColorRef(hex) {
+ 4033: _PtsTextoContraste(hex) {
+ 4043: _KgEst() {
+ 4048: _KgAttach(ctl, onCapture := "") {
+ 4066: _KgFocus(ctl, *) {
+ 4072: _KgMods() {
+ 4085: _KgJoin(p) {
+ 4092: _KgOnKey(wParam, lParam, msg, hwnd) {
+ 4138: _KgOnUp(wParam, lParam, msg, hwnd) {
+ 4151: _KgOnChar(wParam, lParam, msg, hwnd) {
+ 4156: _KgNotify(d, txt) {
+ 4163: _PtsInd() {
+ 4167: _PtsIndInit(edA, indA, edR, indR, lbA, lbR) {
+ 4180: _PtsIndSet(clave, estado, tip := "") {
+ 4193: _PtsAtajoColision(col, txt) {
+ 4203: _PtsIndRefrescar(avisar := false) {
+ 4231: _PtsIndOk(*) {
+ 4243: _PtsAtajoAviso(ctl, txt) {
+ 4247: _PtsGuardarCambios(*) {
+ 4265: _PtsEvSecciones(ini) {
+ 4278: _PtsEvIniClaves(ini, sec, slug) {
+ 4310: _PtsEvNombreDe(slug) {
+ 4317: _PtsEvSlugDeFila(row) {
+ 4329: _PtsEvSlugsSel() {
+ 4340: _PtsEvSeleccionarSlug(slug) {
+ 4353: _PtsEvContextMenu(lv, item, isRight, x, y) {
+ 4371: _PtsEvEliminar(*) {
+ 4407: _PtsEvDuplicar(*) {
+ 4442: _PtsEvColDeClick(lv) {
+ 4451: _PtsEvDobleClickCol(lv, row) {
+ 4462: _PtsEvEnfocarCampo(ctl, enAcordeon := true) {
+
+=== lib\calibrador_20261115_135944.bak.ahk  (4570 líneas)
+    4: _PtsModoMarcar() {
+   26: PtsModo_Set(m) {
+   42: _PtsRefrescarDiferido() {
+   60: _PtsModoCambiar(m) {
+   80: _PtsModoVigilar() {
+  100: PtsModo_SincronizarCSP() {        ; la llama AccionEnfoque tras conmutar enfoque.activo
+  114: _AyudaEstado() {
+  119: AyudaRegistrar(ctrl, texto) {
+  129: AyudaIniciar() {
+  137: _MostrarAyudaContextual(wParam, lParam, msg, hwnd) {
+  148: _AyudaMostrar(ch) {
+  155: _AyudaVigilar() {
+  165: AbrirPanelPuntos() {
+  667: _PtsLayCuenta(g) {                 ; nº de controles creados hasta ahora (marca el inicio/fin de cada pestaña)
+  673: _PtsLayInit(g,lyM,tb,lv,lvEv,ov,u) {
+  777: _PtsLayRedim(gg, minMax, w, h) {
+  807: _PtsAjustarVentana(g) {
+  825: _PtsFirmaMonitores() {
+  834: _PtsMonInfo(i) {
+  839: _PtsHwndCSP() {
+  847: _PtsMonNacim() {
+  889: _PtsFijarMinimo(g) {
+  903: _PtsFinMovimiento(wParam, lParam, msg, hwnd) {
+  910: _PtsDisplayChange(wParam, lParam, msg, hwnd) {
+  917: _PtsReencajar(*) {
+  950: _PtsTopToggle(*) {
+  960: _PtsAutoMin() {                    ; modo Normal: al tomar el foco CSP, la ventana se minimiza
+  987: _PtsUIEscala() {
+ 1007: _PtsHubToggle(clave,*) {
+ 1010: _PtsClicAutoToggle(chk, *) {
+ 1015: _PtsTemaMarcar(seleccionarFila := true) {
+ 1055: _PtsTemaSel(lv, fila, selected := true, *) {
+ 1064: _PtsTemaFocus(lv, fila, *) {
+ 1071: _PtsTemaDobleClick(lv, fila, *) {
+ 1083: _PtsTemaProbarSel(*) {
+ 1101: _PtsTemaAplicarSel(*) {
+ 1117: _PtsTemaAplicar(p, reselect := false, *) {
+ 1128: _PtsZonaDefs() {
+ 1152: _NvZonaVacia(v) {
+ 1166: _NvPanTexto() {
+ 1186: _NvPanRefrescarTabla() {
+ 1223: _NvPanCargarOpac(row, ini, sec, clave) {
+ 1247: _NvPanSel(lv, row, sel) {
+ 1278: _NvPanAplicarValores(*) {
+ 1351: _NvPanProximoLibre() {
+ 1360: _NvPanDibujar(st := 0) {
+ 1386: _NvPanBorrar(st := 0) {
+ 1422: _NvPanPestana(st := 0) {
+ 1445: _NvPanDobleClick(lv, row) {
+ 1467: _PtsDefPorClave(k) {
+ 1474: _PtsEventosDefs() {
+ 1536: _PtsEventoSlug(txt) {
+ 1547: _PtsGruposBase() {
+ 1551: _PtsNuevoNombreDef() {
+ 1563: _PtsSlugUnico(nombre) {
+ 1579: _PtsNuevoEvento() {
+ 1651: _PtsWizFin(d, usarConfig) {
+ 1672: _PtsEvCrear(r) {
+ 1715: _PtsEvWizAplicarCfg(slug, r) {
+ 1734: _PtsEvLimpiarPend(slug) {
+ 1743: _PtsJoin(arr, sep) {
+ 1750: _PtsEstabRect(foco) {
+ 1763: _PtsRectDe(d) {
+ 1786: _PtsAplicarZona(d,r) {
+ 1862: _RgGuardarMirror() {
+ 1879: _PtsZonasVivo(d := 0) {
+ 1891: _PtsDestello(d := 0) {
+ 1910: _PtsDibujarRango(texto,color := "9A7BFF",permitirPunto := false) {
+ 2017: _PtsFilaActual() {
+ 2027: _PtsOvlLimpiarRefAnterior() {
+ 2035: _PtsOvlAtenuar(on, dActual := 0) {
+ 2083: _PtsDibujarSel(encadenar := false) {
+ 2117: _PtsLvEntero(fila, col) {
+ 2127: _PtsAjustarZona() {
+ 2164: _PtsCamposDe(*) {
+ 2166: _PtsSel(ctrl,item,selected) {
+ 2174: _PtsRefrescar() {
+ 2183: _PtsDesplazar(*) {
+ 2202: _PtsDefecto(*) {
+ 2217: _PtsZonaPausable(d) {
+ 2222: _PtsZonaEliminable(d) {
+ 2226: _PtsMenuZona(ctrl, item, esDerecho, *) {
+ 2247: _PtsPausarAlternar(d) {
+ 2260: _PtsEliminar(d) {
+ 2343: _GuardarDuracionesHUD(dA, dM, dB) {
+ 2373: _PtsDurPropia(id) {
+ 2378: _PtsDurEfectiva(id,z) {
+ 2391: _PtsEvDurAplicar(*) {
+ 2425: _PtsEvDobleClick(ctrl, rowNumber) {
+ 2466: _PtsEvDurRefrescar() {
+ 2484: _PtsZonaTxt(z) {
+ 2488: _AccPx(v) {
+ 2491: _AccInit(g, tab, x0, cw, fnUiP, lvEv := 0) {
+ 2512: _AccNuevo(id, titulo, yTop, resumen := 0, abiertoDef := true) {
+ 2523: _R(ctrl) {                        ; registra el control en el panel en construcción
+ 2527: _AccPie(ctrl) {                   ; control que sigue al último panel (stEv)
+ 2531: _AccFin() {
+ 2550: _AccPanel(id) {
+ 2556: _AccY0() {
+ 2563: _AccSbSync() {
+ 2573: _AccOnVScroll(wParam, lParam, msg, hwnd) {
+ 2596: _AccOnWheel(wParam, lParam, msg, hwnd) {
+ 2617: _AccFit() {
+ 2622: _AccWorkArea(&wt, &wb) {
+ 2640: _AccDisponible() {
+ 2653: _AccAltoDe(p) {
+ 2658: _AccFinPaneles() {
+ 2665: _AccAjustar(prioId := "") {
+ 2675: _AccToggle(id, *) {
+ 2683: _AccPintarCab(p) {
+ 2689: _AccRefrescarResumen() {
+ 2699: _PtsRectCliente(hCtl, hPar, &x, &y, &w, &h) {
+ 2709: _AccRelayout(*) {
+ 2794: _AccResumen1() {
+ 2801: _AccResumen2() {
+ 2807: _AccResumen3() {
+ 2824: _PtsNomEvento(idEv) {
+ 2837: _PtsEvTextoGuardar(*) {
+ 2856: _PtsEvTextoReset(*) {
+ 2873: _PtsEvLeer() {
+ 2880: _PtsEvGuardar(k,f,z,op) {
+ 2890: _PtsEvAtajoDefault(idEv) {
+ 2906: _PtsEvRemapDefault(idEv) {
+ 2924: _PtsEvCaps(idEv) {
+ 2956: _PtsEvResumen(idEv, c) {
+ 2991: _PtsEvRemapGuardar(*) {
+ 3006: _PtsEvRemapReset(*) {
+ 3022: _PtsExcluirCruzarAuto(tipo, idEv) {
+ 3034: _PtsEvPartToggle(tipo, ctrl, *) {
+ 3062: _PtsEvFilas() {
+ 3135: _PtsEvObtenerSeleccionados(lv) {
+ 3146: _PtsEvSel(ctrl,item,selected) {
+ 3213: _PtsEvCambio(*) {
+ 3241: _PtsEvProbar(*) {
+ 3257: _PtsOcultarGuiAnclado() {
+ 3275: _PtsMostrarGuiAnclado(row) {
+ 3394: _PtsEvToggleAnclar(*) {
+ 3408: _PtsEvReubicarZona(*) {
+ 3448: _PtsEditarRangoInteractivo(titulo, idEv, rectIni := "") {
+ 3503: NcHit(wParam, lParam, msg, hwnd) {
+ 3554: _PtsAlphaChange(*) {
+ 3563: _PtsAlphaFChange(*) {
+ 3573: _PtsDibujarZonaEstab(foco := false) {
+ 3590: _PtsEvIdSel() {
+ 3601: _PtsExcluirOpuesto(tipo, idEv) {
+ 3612: _PillGuiDe(p) {
+ 3621: _PtsPildoraUbicar(idEv := "", *) {
+ 3658: Parpadeo() {
+ 3670: _PtsPildoraBtnAgregar(x, y, w := 210) {
+ 3680: _PtsDibujarZonaEvento(key := "") {
+ 3716: _PtsReiniciar(*) {
+ 3723: _PtsMoverBotones(ctrl) {
+ 3727: _PtsReubicar(*) {
+ 3731: ReubicarBotones() {
+ 3771: _PtsUltimoBackupIni() {
+ 3788: _PtsSelloLibre() {
+ 3796: _PtsBakRefrescar() {
+ 3808: _PtsBackupIni(*) {
+ 3826: _PtsRestaurarIni(*) {
+ 3849: _PtsCambiarPerfil(ctrl,*) {
+ 3852: _PtsCerrar(*) {
+ 3896: _PtsToggleVerZonas(*) {
+ 3902: MostrarZonasCalibracion(ms := 0) {
+ 3952: OcultarZonasCalibracion() {
+ 3966: _CrearRectOverlay(x,y,w,h,color,texto := "") {
+ 3977: _OvlEtiquetas() {
+ 3981: _OvlBarrerHuerfanas() {
+ 3993: _OvlEtiqueta(gBox,x,y,ow,oh,color,texto) {
+ 4023: _OvlDestruir(g) {
+ 4037: _PtsEvLvRojo(lp) {
+ 4061: _PtsTemaLvNotify(wParam, lParam, msg, hwnd) {
+ 4099: _PtsColorRef(hex) {
+ 4105: _PtsTextoContraste(hex) {
+ 4115: _KgEst() {
+ 4120: _KgAttach(ctl, onCapture := "") {
+ 4138: _KgFocus(ctl, *) {
+ 4144: _KgMods() {
+ 4157: _KgJoin(p) {
+ 4164: _KgOnKey(wParam, lParam, msg, hwnd) {
+ 4210: _KgOnUp(wParam, lParam, msg, hwnd) {
+ 4223: _KgOnChar(wParam, lParam, msg, hwnd) {
+ 4228: _KgNotify(d, txt) {
+ 4235: _PtsInd() {
+ 4239: _PtsIndInit(edA, indA, edR, indR, lbA, lbR) {
+ 4252: _PtsIndSet(clave, estado, tip := "") {
+ 4265: _PtsAtajoColision(col, txt) {
+ 4275: _PtsIndRefrescar(avisar := false) {
+ 4310: _PtsIndOk(*) {
+ 4325: _PtsAtajoAviso(ctl, txt) {
+ 4330: _PtsStRestaurar(st, prev) {
+ 4334: _PtsGuardarCambios(*) {
+ 4357: _PtsEvSecciones(ini) {
+ 4370: _PtsEvIniClaves(ini, sec, slug) {
+ 4402: _PtsEvNombreDe(slug) {
+ 4409: _PtsEvSlugDeFila(row) {
+ 4421: _PtsEvSlugsSel() {
+ 4432: _PtsEvSeleccionarSlug(slug) {
+ 4445: _PtsEvContextMenu(lv, item, isRight, x, y) {
+ 4463: _PtsEvEliminar(*) {
+ 4503: _PtsEvDuplicar(*) {
+ 4538: _PtsEvColDeClick(lv) {
+ 4547: _PtsEvDobleClickCol(lv, row) {
+ 4558: _PtsEvEnfocarCampo(ctl, enAcordeon := true) {
+
+=== lib\calibrador_antes_p3.bak.ahk  (4525 líneas)
+    4: _PtsModoMarcar() {
+   26: PtsModo_Set(m) {
+   42: _PtsRefrescarDiferido() {
+   60: _PtsModoCambiar(m) {
+   80: _PtsModoVigilar() {
+  100: PtsModo_SincronizarCSP() {        ; la llama AccionEnfoque tras conmutar enfoque.activo
+  114: _AyudaEstado() {
+  119: AyudaRegistrar(ctrl, texto) {
+  129: AyudaIniciar() {
+  137: _MostrarAyudaContextual(wParam, lParam, msg, hwnd) {
+  148: _AyudaMostrar(ch) {
+  155: _AyudaVigilar() {
+  165: AbrirPanelPuntos() {
+  738: _PtsLayCuenta(g) {                 ; nº de controles creados hasta ahora (marca el inicio/fin de cada pestaña)
+  744: _PtsLayInit(g,lyM,tb,lv,lvEv,ov,u) {
+  867: _PtsLayRedim(gg, minMax, w, h) {
+  897: _PtsAjustarVentana(g) {
+  915: _PtsFirmaMonitores() {
+  924: _PtsMonInfo(i) {
+  929: _PtsHwndCSP() {
+  937: _PtsMonNacim() {
+  979: _PtsFijarMinimo(g) {
+  993: _PtsFinMovimiento(wParam, lParam, msg, hwnd) {
+ 1000: _PtsDisplayChange(wParam, lParam, msg, hwnd) {
+ 1007: _PtsReencajar(*) {
+ 1040: _PtsTopToggle(*) {
+ 1050: _PtsAutoMin() {                    ; modo Normal: al tomar el foco CSP, la ventana se minimiza
+ 1077: _PtsUIEscala() {
+ 1097: _PtsHubToggle(clave,*) {
+ 1100: _PtsClicAutoToggle(chk, *) {
+ 1105: _PtsTemaMarcar(seleccionarFila := true) {
+ 1145: _PtsTemaSel(lv, fila, selected := true, *) {
+ 1154: _PtsTemaFocus(lv, fila, *) {
+ 1161: _PtsTemaDobleClick(lv, fila, *) {
+ 1173: _PtsTemaProbarSel(*) {
+ 1191: _PtsTemaAplicarSel(*) {
+ 1207: _PtsTemaAplicar(p, reselect := false, *) {
+ 1218: _PtsZonaDefs() {
+ 1243: _NvZonaVacia(v) {
+ 1257: _NvPanTexto() {
+ 1272: _NvPanRefrescarTabla() {
+ 1309: _NvPanCargarOpac(row, ini, sec, clave) {
+ 1333: _NvPanSel(lv, row, sel) {
+ 1364: _NvPanAplicarValores(*) {
+ 1436: _NvPanDibujar(st := 0) {
+ 1478: _NvPanBorrar(st := 0) {
+ 1513: _NvPanPestana(st := 0) {
+ 1533: _NvPanDobleClick(lv, row) {
+ 1555: _PtsDefPorClave(k) {
+ 1562: _PtsEventosDefs() {
+ 1624: _PtsEventoSlug(txt) {
+ 1635: _PtsGruposBase() {
+ 1639: _PtsNuevoNombreDef() {
+ 1651: _PtsSlugUnico(nombre) {
+ 1667: _PtsNuevoEvento() {
+ 1739: _PtsWizFin(d, usarConfig) {
+ 1760: _PtsEvCrear(r) {
+ 1803: _PtsEvWizAplicarCfg(slug, r) {
+ 1822: _PtsEvLimpiarPend(slug) {
+ 1831: _PtsJoin(arr, sep) {
+ 1838: _PtsEstabRect(foco) {
+ 1851: _PtsRectDe(d) {
+ 1874: _PtsAplicarZona(d,r) {
+ 1950: _RgGuardarMirror() {
+ 1967: _PtsZonasVivo(d := 0) {
+ 1979: _PtsDestello(d := 0) {
+ 1998: _PtsDibujarRango(texto,color := "9A7BFF",permitirPunto := false) {
+ 2105: _PtsFilaActual() {
+ 2115: _PtsOvlLimpiarRefAnterior() {
+ 2123: _PtsOvlAtenuar(on, dActual := 0) {
+ 2171: _PtsDibujarSel(encadenar := false) {
+ 2205: _PtsLvEntero(fila, col) {
+ 2215: _PtsAjustarZona() {
+ 2252: _PtsCamposDe(*) {
+ 2254: _PtsSel(ctrl,item,selected) {
+ 2262: _PtsRefrescar() {
+ 2271: _PtsDesplazar(*) {
+ 2290: _PtsDefecto(*) {
+ 2305: _PtsZonaPausable(d) {
+ 2310: _PtsZonaEliminable(d) {
+ 2314: _PtsMenuZona(ctrl, item, esDerecho, *) {
+ 2335: _PtsPausarAlternar(d) {
+ 2348: _PtsEliminar(d) {
+ 2431: _GuardarDuracionesHUD(dA, dM, dB) {
+ 2461: _PtsDurPropia(id) {
+ 2466: _PtsDurEfectiva(id,z) {
+ 2479: _PtsEvDurAplicar(*) {
+ 2513: _PtsEvDobleClick(ctrl, rowNumber) {
+ 2554: _PtsEvDurRefrescar() {
+ 2572: _PtsZonaTxt(z) {
+ 2576: _AccPx(v) {
+ 2579: _AccInit(g, tab, x0, cw, fnUiP, lvEv := 0) {
+ 2600: _AccNuevo(id, titulo, yTop, resumen := 0, abiertoDef := true) {
+ 2611: _R(ctrl) {                        ; registra el control en el panel en construcción
+ 2615: _AccPie(ctrl) {                   ; control que sigue al último panel (stEv)
+ 2619: _AccFin() {
+ 2638: _AccPanel(id) {
+ 2644: _AccY0() {
+ 2651: _AccSbSync() {
+ 2661: _AccOnVScroll(wParam, lParam, msg, hwnd) {
+ 2684: _AccOnWheel(wParam, lParam, msg, hwnd) {
+ 2705: _AccFit() {
+ 2710: _AccWorkArea(&wt, &wb) {
+ 2728: _AccDisponible() {
+ 2741: _AccAltoDe(p) {
+ 2746: _AccFinPaneles() {
+ 2753: _AccAjustar(prioId := "") {
+ 2763: _AccToggle(id, *) {
+ 2771: _AccPintarCab(p) {
+ 2777: _AccRefrescarResumen() {
+ 2787: _PtsRectCliente(hCtl, hPar, &x, &y, &w, &h) {
+ 2797: _AccRelayout(*) {
+ 2882: _AccResumen1() {
+ 2889: _AccResumen2() {
+ 2895: _AccResumen3() {
+ 2912: _PtsNomEvento(idEv) {
+ 2925: _PtsEvTextoGuardar(*) {
+ 2944: _PtsEvTextoReset(*) {
+ 2961: _PtsEvLeer() {
+ 2968: _PtsEvGuardar(k,f,z,op) {
+ 2978: _PtsEvAtajoDefault(idEv) {
+ 2994: _PtsEvRemapDefault(idEv) {
+ 3012: _PtsEvCaps(idEv) {
+ 3042: _PtsEvResumen(idEv, c) {
+ 3077: _PtsEvRemapGuardar(*) {
+ 3091: _PtsEvRemapReset(*) {
+ 3107: _PtsExcluirCruzarAuto(tipo, idEv) {
+ 3119: _PtsEvPartToggle(tipo, ctrl, *) {
+ 3138: _PtsEvFilas() {
+ 3211: _PtsEvObtenerSeleccionados(lv) {
+ 3222: _PtsEvSel(ctrl,item,selected) {
+ 3287: _PtsEvCambio(*) {
+ 3315: _PtsEvProbar(*) {
+ 3331: _PtsOcultarGuiAnclado() {
+ 3349: _PtsMostrarGuiAnclado(row) {
+ 3468: _PtsEvToggleAnclar(*) {
+ 3482: _PtsEvReubicarZona(*) {
+ 3522: _PtsEditarRangoInteractivo(titulo, idEv, rectIni := "") {
+ 3577: NcHit(wParam, lParam, msg, hwnd) {
+ 3628: _PtsAlphaChange(*) {
+ 3637: _PtsAlphaFChange(*) {
+ 3647: _PtsDibujarZonaEstab(foco := false) {
+ 3662: _PtsDibujarZonaEvento(key := "") {
+ 3692: _PtsReiniciar(*) {
+ 3699: _PtsMoverBotones(ctrl) {
+ 3703: _PtsReubicar(*) {
+ 3707: ReubicarBotones() {
+ 3747: _PtsUltimoBackupIni() {
+ 3764: _PtsSelloLibre() {
+ 3772: _PtsBakRefrescar() {
+ 3784: _PtsBackupIni(*) {
+ 3802: _PtsRestaurarIni(*) {
+ 3825: _PtsCambiarPerfil(ctrl,*) {
+ 3828: _PtsCerrar(*) {
+ 3870: _PtsToggleVerZonas(*) {
+ 3876: MostrarZonasCalibracion(ms := 0) {
+ 3926: OcultarZonasCalibracion() {
+ 3940: _CrearRectOverlay(x,y,w,h,color,texto := "") {
+ 3951: _OvlEtiquetas() {
+ 3955: _OvlBarrerHuerfanas() {
+ 3967: _OvlEtiqueta(gBox,x,y,ow,oh,color,texto) {
+ 3997: _OvlDestruir(g) {
+ 4011: _PtsEvLvRojo(lp) {
+ 4035: _PtsTemaLvNotify(wParam, lParam, msg, hwnd) {
+ 4073: _PtsColorRef(hex) {
+ 4079: _PtsTextoContraste(hex) {
+ 4089: _KgEst() {
+ 4094: _KgAttach(ctl, onCapture := "") {
+ 4112: _KgFocus(ctl, *) {
+ 4118: _KgMods() {
+ 4131: _KgJoin(p) {
+ 4138: _KgOnKey(wParam, lParam, msg, hwnd) {
+ 4184: _KgOnUp(wParam, lParam, msg, hwnd) {
+ 4197: _KgOnChar(wParam, lParam, msg, hwnd) {
+ 4202: _KgNotify(d, txt) {
+ 4209: _PtsInd() {
+ 4213: _PtsIndInit(edA, indA, edR, indR, lbA, lbR) {
+ 4226: _PtsIndSet(clave, estado, tip := "") {
+ 4239: _PtsAtajoColision(col, txt) {
+ 4249: _PtsIndRefrescar(avisar := false) {
+ 4277: _PtsIndOk(*) {
+ 4289: _PtsAtajoAviso(ctl, txt) {
+ 4293: _PtsGuardarCambios(*) {
+ 4312: _PtsEvSecciones(ini) {
+ 4325: _PtsEvIniClaves(ini, sec, slug) {
+ 4357: _PtsEvNombreDe(slug) {
+ 4364: _PtsEvSlugDeFila(row) {
+ 4376: _PtsEvSlugsSel() {
+ 4387: _PtsEvSeleccionarSlug(slug) {
+ 4400: _PtsEvContextMenu(lv, item, isRight, x, y) {
+ 4418: _PtsEvEliminar(*) {
+ 4458: _PtsEvDuplicar(*) {
+ 4493: _PtsEvColDeClick(lv) {
+ 4502: _PtsEvDobleClickCol(lv, row) {
+ 4513: _PtsEvEnfocarCampo(ctl, enAcordeon := true) {
+
+=== lib\calibrador_mockup.bak.ahk  (4942 líneas)
+    4: _PtsModoMarcar() {
+   26: PtsModo_Set(m) {
+   42: _PtsRefrescarDiferido() {
+   60: _PtsModoCambiar(m) {
+   80: _PtsModoVigilar() {
+  100: PtsModo_SincronizarCSP() {        ; la llama AccionEnfoque tras conmutar enfoque.activo
+  114: _AyudaEstado() {
+  119: AyudaRegistrar(ctrl, texto) {
+  129: AyudaIniciar() {
+  137: _MostrarAyudaContextual(wParam, lParam, msg, hwnd) {
+  148: _AyudaMostrar(ch) {
+  155: _AyudaVigilar() {
+  165: AbrirPanelPuntos() {
+  708: _PtsLayCuenta(g) {                 ; nº de controles creados hasta ahora (marca el inicio/fin de cada pestaña)
+  714: _PtsLayInit(g,lyM,tb,lv,lvEv,ov,u) {
+  823: _PtsLayRedim(gg, minMax, w, h) {
+  853: _PtsAjustarVentana(g) {
+  871: _PtsFirmaMonitores() {
+  880: _PtsMonInfo(i) {
+  885: _PtsHwndCSP() {
+  893: _PtsMonNacim() {
+  935: _PtsFijarMinimo(g) {
+  949: _PtsFinMovimiento(wParam, lParam, msg, hwnd) {
+  956: _PtsDisplayChange(wParam, lParam, msg, hwnd) {
+  963: _PtsReencajar(*) {
+  996: _PtsTopToggle(*) {
+ 1006: _PtsAutoMin() {                    ; modo Normal: al tomar el foco CSP, la ventana se minimiza
+ 1033: _PtsUIEscala() {
+ 1053: _PtsHubToggle(clave,*) {
+ 1056: _PtsClicAutoToggle(chk, *) {
+ 1061: _PtsTemaMarcar(seleccionarFila := true) {
+ 1101: _PtsTemaSel(lv, fila, selected := true, *) {
+ 1110: _PtsTemaFocus(lv, fila, *) {
+ 1117: _PtsTemaDobleClick(lv, fila, *) {
+ 1129: _PtsTemaProbarSel(*) {
+ 1147: _PtsTemaAplicarSel(*) {
+ 1163: _PtsTemaAplicar(p, reselect := false, *) {
+ 1174: _PtsZonaDefs() {
+ 1198: _NvZonaVacia(v) {
+ 1212: _NvPanTexto() {
+ 1232: _NvPanRefrescarTabla() {
+ 1269: _NvPanCargarOpac(row, ini, sec, clave) {
+ 1293: _NvPanSel(lv, row, sel) {
+ 1324: _NvPanAplicarValores(*) {
+ 1397: _NvPanProximoLibre() {
+ 1406: _NvPanDibujar(st := 0) {
+ 1432: _NvPanBorrar(st := 0) {
+ 1468: _NvPanPestana(st := 0) {
+ 1491: _NvPanDobleClick(lv, row) {
+ 1513: _PtsDefPorClave(k) {
+ 1522: _PtsBuscarCambio(ctrl, *) {
+ 1528: _PtsEvFiltroOk(nombre, grupo := "") {
+ 1534: _PtsEvFiltroAplicar() {
+ 1543: _PtsEvEncabezado(ctrl, item, selected) {
+ 1558: _PtsAccPanel(id) {
+ 1566: _PtsGrupoSync(idGrp, miembros, *) {
+ 1598: _PtsDrawItemAcento(wParam, lParam, msg, hwnd) {
+ 1621: _PtsEventosDefs() {
+ 1683: _PtsEventoSlug(txt) {
+ 1694: _PtsGruposBase() {
+ 1698: _PtsNuevoNombreDef() {
+ 1710: _PtsSlugUnico(nombre) {
+ 1726: _PtsNuevoEvento() {
+ 1798: _PtsWizFin(d, usarConfig) {
+ 1819: _PtsEvCrear(r) {
+ 1862: _PtsEvWizAplicarCfg(slug, r) {
+ 1881: _PtsEvLimpiarPend(slug) {
+ 1890: _PtsJoin(arr, sep) {
+ 1897: _PtsEstabRect(foco) {
+ 1910: _PtsRectDe(d) {
+ 1933: _PtsAplicarZona(d,r) {
+ 2009: _RgGuardarMirror() {
+ 2026: _PtsZonasVivo(d := 0) {
+ 2038: _PtsDestello(d := 0) {
+ 2057: _PtsDibujarRango(texto,color := "9A7BFF",permitirPunto := false) {
+ 2164: _PtsFilaActual() {
+ 2174: _PtsOvlLimpiarRefAnterior() {
+ 2182: _PtsOvlAtenuar(on, dActual := 0) {
+ 2230: _PtsDibujarSel(encadenar := false) {
+ 2264: _PtsLvEntero(fila, col) {
+ 2274: _PtsAjustarZona() {
+ 2311: _PtsCamposDe(*) {
+ 2313: _PtsSel(ctrl,item,selected) {
+ 2321: _PtsRefrescar() {
+ 2330: _PtsDesplazar(*) {
+ 2349: _PtsDefecto(*) {
+ 2364: _PtsZonaPausable(d) {
+ 2369: _PtsZonaEliminable(d) {
+ 2373: _PtsMenuZona(ctrl, item, esDerecho, *) {
+ 2394: _PtsPausarAlternar(d) {
+ 2407: _PtsEliminar(d) {
+ 2490: _GuardarDuracionesHUD(dA, dM, dB) {
+ 2520: _PtsDurPropia(id) {
+ 2525: _PtsDurEfectiva(id,z) {
+ 2538: _PtsEvDurAplicar(*) {
+ 2572: _PtsEvDobleClick(ctrl, rowNumber) {
+ 2613: _PtsEvDurRefrescar() {
+ 2631: _PtsZonaTxt(z) {
+ 2635: _AccPx(v) {
+ 2638: _AccInit(g, tab, x0, cw, fnUiP, lvEv := 0) {
+ 2659: _AccNuevo(id, titulo, yTop, resumen := 0, abiertoDef := true) {
+ 2670: _R(ctrl) {                        ; registra el control en el panel en construcción
+ 2674: _AccPie(ctrl) {                   ; control que sigue al último panel (stEv)
+ 2678: _AccFin() {
+ 2697: _AccPanel(id) {
+ 2703: _AccY0() {
+ 2710: _AccSbSync() {
+ 2720: _AccOnVScroll(wParam, lParam, msg, hwnd) {
+ 2743: _AccOnWheel(wParam, lParam, msg, hwnd) {
+ 2776: _AccFit() {
+ 2781: _AccWorkArea(&wt, &wb) {
+ 2799: _AccDisponible() {
+ 2812: _AccAltoDe(p) {
+ 2817: _AccFinPaneles() {
+ 2824: _AccAjustar(prioId := "") {
+ 2834: _AccGrupoDef(padre, hijos) {
+ 2842: _AccPanelOculto(p) {
+ 2850: _AccToggle(id, *) {
+ 2858: _AccPintarCab(p) {
+ 2864: _AccRefrescarResumen() {
+ 2874: _PtsRectCliente(hCtl, hPar, &x, &y, &w, &h) {
+ 2884: _AccRelayout(*) {
+ 2980: _AccResumen1() {
+ 2987: _AccResumen2() {
+ 2993: _AccResumen3() {
+ 3010: _PtsNomEvento(idEv) {
+ 3023: _PtsEvTextoGuardar(*) {
+ 3042: _PtsEvTextoReset(*) {
+ 3059: _PtsEvLeer() {
+ 3069: _PtsEvActivoLeer(k) {
+ 3077: _PtsEvActivo(k) {
+ 3084: _PtsEvActivoSet(k, on) {
+ 3092: _PtsEvFormatoTxt(k, c) {
+ 3097: _PtsEvSlugFila(fila) {
+ 3105: _PtsEvSyncEstado(ctrl) {
+ 3126: _PtsEvEstadoCambio(ctrl, *) {
+ 3146: _PtsEvAgruparOn() {
+ 3153: _PtsEvToggleAgrupar(*) {
+ 3160: _PtsEvGrupoInsertar(nom) {
+ 3178: _PtsEvGruposPreparar(defs) {
+ 3201: _PtsEvAsignaGrupo(nf, grp) {
+ 3214: _PtsEvGuardar(k,f,z,op) {
+ 3224: _PtsEvAtajoDefault(idEv) {
+ 3240: _PtsEvRemapDefault(idEv) {
+ 3258: _PtsEvCaps(idEv) {
+ 3290: _PtsEvResumen(idEv, c) {
+ 3325: _PtsEvRemapGuardar(*) {
+ 3340: _PtsEvRemapReset(*) {
+ 3356: _PtsExcluirCruzarAuto(tipo, idEv) {
+ 3368: _PtsEvPartToggle(tipo, ctrl, *) {
+ 3396: _PtsEvFilas() {
+ 3473: _PtsEvObtenerSeleccionados(lv) {
+ 3484: _PtsEvSel(ctrl,item,selected) {
+ 3551: _PtsEvCambio(*) {
+ 3579: _PtsEvProbar(*) {
+ 3595: _PtsOcultarGuiAnclado() {
+ 3613: _PtsMostrarGuiAnclado(row) {
+ 3732: _PtsEvToggleAnclar(*) {
+ 3746: _PtsEvReubicarZona(*) {
+ 3786: _PtsEditarRangoInteractivo(titulo, idEv, rectIni := "") {
+ 3841: NcHit(wParam, lParam, msg, hwnd) {
+ 3892: _PtsAlphaChange(*) {
+ 3901: _PtsAlphaFChange(*) {
+ 3911: _PtsDibujarZonaEstab(foco := false) {
+ 3928: _PtsEvIdSel() {
+ 3944: _PtsExcluirOpuesto(tipo, idEv) {
+ 3955: _PillGuiDe(p) {
+ 3965: _PillGuiRigida(idEv) {
+ 3981: _PtsPildoraUbicar(idEv := "", *) {
+ 4026: Parpadeo() {
+ 4038: _PtsPildoraBtnAgregar(x, y, w := 210) {
+ 4048: _PtsDibujarZonaEvento(key := "") {
+ 4084: _PtsReiniciar(*) {
+ 4091: _PtsMoverBotones(ctrl) {
+ 4095: _PtsReubicar(*) {
+ 4099: ReubicarBotones() {
+ 4139: _PtsUltimoBackupIni() {
+ 4156: _PtsSelloLibre() {
+ 4164: _PtsBakRefrescar() {
+ 4176: _PtsBackupIni(*) {
+ 4194: _PtsRestaurarIni(*) {
+ 4217: _PtsCambiarPerfil(ctrl,*) {
+ 4220: _PtsCerrar(*) {
+ 4264: _PtsToggleVerZonas(*) {
+ 4270: MostrarZonasCalibracion(ms := 0) {
+ 4320: OcultarZonasCalibracion() {
+ 4334: _CrearRectOverlay(x,y,w,h,color,texto := "") {
+ 4345: _OvlEtiquetas() {
+ 4349: _OvlBarrerHuerfanas() {
+ 4361: _OvlEtiqueta(gBox,x,y,ow,oh,color,texto) {
+ 4391: _OvlDestruir(g) {
+ 4405: _PtsEvLvRojo(lp) {
+ 4433: _PtsTemaLvNotify(wParam, lParam, msg, hwnd) {
+ 4471: _PtsColorRef(hex) {
+ 4477: _PtsTextoContraste(hex) {
+ 4487: _KgEst() {
+ 4492: _KgAttach(ctl, onCapture := "") {
+ 4510: _KgFocus(ctl, *) {
+ 4516: _KgMods() {
+ 4529: _KgJoin(p) {
+ 4536: _KgOnKey(wParam, lParam, msg, hwnd) {
+ 4582: _KgOnUp(wParam, lParam, msg, hwnd) {
+ 4595: _KgOnChar(wParam, lParam, msg, hwnd) {
+ 4600: _KgNotify(d, txt) {
+ 4607: _PtsInd() {
+ 4611: _PtsIndInit(edA, indA, edR, indR, lbA, lbR) {
+ 4624: _PtsIndSet(clave, estado, tip := "") {
+ 4637: _PtsAtajoColision(col, txt) {
+ 4647: _PtsIndRefrescar(avisar := false) {
+ 4682: _PtsIndOk(*) {
+ 4697: _PtsAtajoAviso(ctl, txt) {
+ 4702: _PtsStRestaurar(st, prev) {
+ 4706: _PtsGuardarCambios(*) {
+ 4729: _PtsEvSecciones(ini) {
+ 4742: _PtsEvIniClaves(ini, sec, slug) {
+ 4774: _PtsEvNombreDe(slug) {
+ 4781: _PtsEvSlugDeFila(row) {
+ 4793: _PtsEvSlugsSel() {
+ 4804: _PtsEvSeleccionarSlug(slug) {
+ 4817: _PtsEvContextMenu(lv, item, isRight, x, y) {
+ 4835: _PtsEvEliminar(*) {
+ 4875: _PtsEvDuplicar(*) {
+ 4910: _PtsEvColDeClick(lv) {
+ 4919: _PtsEvDobleClickCol(lv, row) {
+ 4930: _PtsEvEnfocarCampo(ctl, enAcordeon := true) {
+
+=== lib\calibrador_panel.ahk  (343 líneas)
+    9: _PtsSesActual(nueva?) {
+   23: _PtsCalibrarZona(titulo, idEv, rectIni := "", modoIni := "panel", cola := "", guardar := "") {
+   81: _PtsSesDibujar(ses) {
+  103: _PtsSesCadena(ses) {
+  124: _PtsSesAjustar(ses) {
+  142: _PtsPanelBucleEspera(ses) {
+  148: _PtsSesPersistir(ses, r) {
+  155: _PtsPanelCrear(ses) {
+  195: _PtsPanelToggleVerZonas(ses, *) {
+  200: _PtsPanelPintarBtnVer(ses, visibles) {
+  210: _PtsPanelArrastrar(ses, *) {
+  216: _PtsPanelPulsar(ses, modo, *) {
+  226: _PtsPanelRefrescar(ses) {
+  258: _PtsPanelAyuda(modo) {
+  267: _PtsPanelInfo(ses, txt) {
+  273: _PtsPanelAlFrente(ses) {
+  280: _PtsPanelContiene(ses, x, y) {
+  290: _PtsPanelDestruir(ses) {
+  298: _PtsEventosRangos() {
+  328: _PtsGuardarRangoEvento(idEv, r) {
+  336: _PtsGuardarRangoZona(idEv, r) {
+
+=== lib\calibrador_py.ahk  (523 líneas)
+   19: CalPyInit() {
+   26: _CalPyCerrarInstancia(*) {
+   32: _CalPyResolverExe() {
+   46: AbrirCalibradorPy(*) {
+   72: _CalPyModoActual() {
+   78: _CalPyExportarCatalogo() {
+   96: _CalPyJ(s) {
+  107: _CalPyOnCopyData(wParam, lParam, msg, hwnd) {
+  117: _CalPyDespachar(p) {
+  186: _CalPyCerrarProceso() {
+  198: _CalPyReiniciarSeguro() {
+  213: _CalPyRecargarIni() {
+  225: _CalPyLlamar(candidatos, args*) {
+  239: _CalPyToggleLockButtons() {
+  251: _CalPyLayoutSave(modo := "normal") {
+  257: _CalPyLayoutApply(modo := "normal") {
+  265: _CalPySndNativo(idEv) {
+  329: _CalPyProbarSnd(tipo := "clic", vol := 60, idEv := "") {
+  360: _CalPyReloadTheme(nombreTema := "") {
+  395: _CalPyDibujarZona(idEv, tipo := "cruzar", modo := 1) {
+  419: _CalPyCalibrarZona(idEv, modo := "panel", tipo := "cruzar", clase := "evento", rotulo := "") {
+  438: _CalPyProbarHud(idEv, color := "00E5FF", fmt := "", zona := "", opac := "", texto := "", dur := "") {
+  482: _CalPyLog(msg) {
+  487: _CalPyCapEstado() {
+  492: _CalPyCapturaOn() {
+  501: _CalPyCapturaOff() {
+  509: _CalPyCapturaLatido() {
+  513: _CalPyCapturaVigilar() {
+
+=== lib\calibrador_py_20261116_144712.bak.ahk  (240 líneas)
+   18: CalPyInit() {
+   23: _CalPyCerrarInstancia(*) {
+   28: _CalPyResolverExe() {
+   42: AbrirCalibradorPy(*) {
+   68: _CalPyModoActual() {
+   74: _CalPyExportarCatalogo() {
+   92: _CalPyJ(s) {
+  103: _CalPyOnCopyData(wParam, lParam, msg, hwnd) {
+  111: _CalPyDespachar(p) {
+  161: _CalPyRecargarIni() {
+  170: _CalPyLlamar(candidatos, args*) {
+  184: _CalPyToggleLockButtons() {
+  196: _CalPyLayoutSave(modo := "normal") {
+  202: _CalPyLayoutApply(modo := "normal") {
+  208: _CalPyReloadTheme(nombreTema := "") {
+  214: _CalPyDibujarZona(idEv, tipo := "cruzar", modo := 1) {
+  231: _CalPyProbarHud(idEv, color := "00E5FF") {
+  238: _CalPyLog(msg) {
+
+=== lib\calibrador_py_20261116_164810.bak.ahk  (335 líneas)
+   18: CalPyInit() {
+   23: _CalPyCerrarInstancia(*) {
+   28: _CalPyResolverExe() {
+   42: AbrirCalibradorPy(*) {
+   68: _CalPyModoActual() {
+   74: _CalPyExportarCatalogo() {
+   92: _CalPyJ(s) {
+  103: _CalPyOnCopyData(wParam, lParam, msg, hwnd) {
+  111: _CalPyDespachar(p) {
+  167: _CalPyRecargarIni() {
+  176: _CalPyLlamar(candidatos, args*) {
+  190: _CalPyToggleLockButtons() {
+  202: _CalPyLayoutSave(modo := "normal") {
+  208: _CalPyLayoutApply(modo := "normal") {
+  214: _CalPyProbarSnd(tipo := "clic", vol := 60) {
+  238: _CalPyReloadTheme(nombreTema := "") {
+  275: _CalPyDibujarZona(idEv, tipo := "cruzar", modo := 1) {
+  292: _CalPyProbarHud(idEv, color := "00E5FF", fmt := "", zona := "", opac := "", texto := "", dur := "") {
+  333: _CalPyLog(msg) {
+
+=== lib\calibrador_scroll_fix.bak.ahk  (4929 líneas)
+    4: _PtsModoMarcar() {
+   26: PtsModo_Set(m) {
+   42: _PtsRefrescarDiferido() {
+   60: _PtsModoCambiar(m) {
+   80: _PtsModoVigilar() {
+  100: PtsModo_SincronizarCSP() {        ; la llama AccionEnfoque tras conmutar enfoque.activo
+  114: _AyudaEstado() {
+  119: AyudaRegistrar(ctrl, texto) {
+  129: AyudaIniciar() {
+  137: _MostrarAyudaContextual(wParam, lParam, msg, hwnd) {
+  148: _AyudaMostrar(ch) {
+  155: _AyudaVigilar() {
+  165: AbrirPanelPuntos() {
+  708: _PtsLayCuenta(g) {                 ; nº de controles creados hasta ahora (marca el inicio/fin de cada pestaña)
+  714: _PtsLayInit(g,lyM,tb,lv,lvEv,ov,u) {
+  823: _PtsLayRedim(gg, minMax, w, h) {
+  853: _PtsAjustarVentana(g) {
+  871: _PtsFirmaMonitores() {
+  880: _PtsMonInfo(i) {
+  885: _PtsHwndCSP() {
+  893: _PtsMonNacim() {
+  935: _PtsFijarMinimo(g) {
+  949: _PtsFinMovimiento(wParam, lParam, msg, hwnd) {
+  956: _PtsDisplayChange(wParam, lParam, msg, hwnd) {
+  963: _PtsReencajar(*) {
+  996: _PtsTopToggle(*) {
+ 1006: _PtsAutoMin() {                    ; modo Normal: al tomar el foco CSP, la ventana se minimiza
+ 1033: _PtsUIEscala() {
+ 1053: _PtsHubToggle(clave,*) {
+ 1056: _PtsClicAutoToggle(chk, *) {
+ 1061: _PtsTemaMarcar(seleccionarFila := true) {
+ 1101: _PtsTemaSel(lv, fila, selected := true, *) {
+ 1110: _PtsTemaFocus(lv, fila, *) {
+ 1117: _PtsTemaDobleClick(lv, fila, *) {
+ 1129: _PtsTemaProbarSel(*) {
+ 1147: _PtsTemaAplicarSel(*) {
+ 1163: _PtsTemaAplicar(p, reselect := false, *) {
+ 1174: _PtsZonaDefs() {
+ 1198: _NvZonaVacia(v) {
+ 1212: _NvPanTexto() {
+ 1232: _NvPanRefrescarTabla() {
+ 1269: _NvPanCargarOpac(row, ini, sec, clave) {
+ 1293: _NvPanSel(lv, row, sel) {
+ 1324: _NvPanAplicarValores(*) {
+ 1397: _NvPanProximoLibre() {
+ 1406: _NvPanDibujar(st := 0) {
+ 1432: _NvPanBorrar(st := 0) {
+ 1468: _NvPanPestana(st := 0) {
+ 1491: _NvPanDobleClick(lv, row) {
+ 1513: _PtsDefPorClave(k) {
+ 1522: _PtsBuscarCambio(ctrl, *) {
+ 1528: _PtsEvFiltroOk(nombre, grupo := "") {
+ 1534: _PtsEvFiltroAplicar() {
+ 1543: _PtsEvEncabezado(ctrl, item, selected) {
+ 1558: _PtsAccPanel(id) {
+ 1566: _PtsGrupoSync(idGrp, miembros, *) {
+ 1598: _PtsDrawItemAcento(wParam, lParam, msg, hwnd) {
+ 1621: _PtsEventosDefs() {
+ 1683: _PtsEventoSlug(txt) {
+ 1694: _PtsGruposBase() {
+ 1698: _PtsNuevoNombreDef() {
+ 1710: _PtsSlugUnico(nombre) {
+ 1726: _PtsNuevoEvento() {
+ 1798: _PtsWizFin(d, usarConfig) {
+ 1819: _PtsEvCrear(r) {
+ 1862: _PtsEvWizAplicarCfg(slug, r) {
+ 1881: _PtsEvLimpiarPend(slug) {
+ 1890: _PtsJoin(arr, sep) {
+ 1897: _PtsEstabRect(foco) {
+ 1910: _PtsRectDe(d) {
+ 1933: _PtsAplicarZona(d,r) {
+ 2009: _RgGuardarMirror() {
+ 2026: _PtsZonasVivo(d := 0) {
+ 2038: _PtsDestello(d := 0) {
+ 2057: _PtsDibujarRango(texto,color := "9A7BFF",permitirPunto := false) {
+ 2164: _PtsFilaActual() {
+ 2174: _PtsOvlLimpiarRefAnterior() {
+ 2182: _PtsOvlAtenuar(on, dActual := 0) {
+ 2230: _PtsDibujarSel(encadenar := false) {
+ 2264: _PtsLvEntero(fila, col) {
+ 2274: _PtsAjustarZona() {
+ 2311: _PtsCamposDe(*) {
+ 2313: _PtsSel(ctrl,item,selected) {
+ 2321: _PtsRefrescar() {
+ 2330: _PtsDesplazar(*) {
+ 2349: _PtsDefecto(*) {
+ 2364: _PtsZonaPausable(d) {
+ 2369: _PtsZonaEliminable(d) {
+ 2373: _PtsMenuZona(ctrl, item, esDerecho, *) {
+ 2394: _PtsPausarAlternar(d) {
+ 2407: _PtsEliminar(d) {
+ 2490: _GuardarDuracionesHUD(dA, dM, dB) {
+ 2520: _PtsDurPropia(id) {
+ 2525: _PtsDurEfectiva(id,z) {
+ 2538: _PtsEvDurAplicar(*) {
+ 2572: _PtsEvDobleClick(ctrl, rowNumber) {
+ 2613: _PtsEvDurRefrescar() {
+ 2631: _PtsZonaTxt(z) {
+ 2635: _AccPx(v) {
+ 2638: _AccInit(g, tab, x0, cw, fnUiP, lvEv := 0) {
+ 2659: _AccNuevo(id, titulo, yTop, resumen := 0, abiertoDef := true) {
+ 2670: _R(ctrl) {                        ; registra el control en el panel en construcción
+ 2674: _AccPie(ctrl) {                   ; control que sigue al último panel (stEv)
+ 2678: _AccFin() {
+ 2697: _AccPanel(id) {
+ 2703: _AccY0() {
+ 2710: _AccSbSync() {
+ 2720: _AccOnVScroll(wParam, lParam, msg, hwnd) {
+ 2743: _AccOnWheel(wParam, lParam, msg, hwnd) {
+ 2764: _AccFit() {
+ 2769: _AccWorkArea(&wt, &wb) {
+ 2787: _AccDisponible() {
+ 2800: _AccAltoDe(p) {
+ 2805: _AccFinPaneles() {
+ 2812: _AccAjustar(prioId := "") {
+ 2822: _AccGrupoDef(padre, hijos) {
+ 2830: _AccPanelOculto(p) {
+ 2838: _AccToggle(id, *) {
+ 2846: _AccPintarCab(p) {
+ 2852: _AccRefrescarResumen() {
+ 2862: _PtsRectCliente(hCtl, hPar, &x, &y, &w, &h) {
+ 2872: _AccRelayout(*) {
+ 2967: _AccResumen1() {
+ 2974: _AccResumen2() {
+ 2980: _AccResumen3() {
+ 2997: _PtsNomEvento(idEv) {
+ 3010: _PtsEvTextoGuardar(*) {
+ 3029: _PtsEvTextoReset(*) {
+ 3046: _PtsEvLeer() {
+ 3056: _PtsEvActivoLeer(k) {
+ 3064: _PtsEvActivo(k) {
+ 3071: _PtsEvActivoSet(k, on) {
+ 3079: _PtsEvFormatoTxt(k, c) {
+ 3084: _PtsEvSlugFila(fila) {
+ 3092: _PtsEvSyncEstado(ctrl) {
+ 3113: _PtsEvEstadoCambio(ctrl, *) {
+ 3133: _PtsEvAgruparOn() {
+ 3140: _PtsEvToggleAgrupar(*) {
+ 3147: _PtsEvGrupoInsertar(nom) {
+ 3165: _PtsEvGruposPreparar(defs) {
+ 3188: _PtsEvAsignaGrupo(nf, grp) {
+ 3201: _PtsEvGuardar(k,f,z,op) {
+ 3211: _PtsEvAtajoDefault(idEv) {
+ 3227: _PtsEvRemapDefault(idEv) {
+ 3245: _PtsEvCaps(idEv) {
+ 3277: _PtsEvResumen(idEv, c) {
+ 3312: _PtsEvRemapGuardar(*) {
+ 3327: _PtsEvRemapReset(*) {
+ 3343: _PtsExcluirCruzarAuto(tipo, idEv) {
+ 3355: _PtsEvPartToggle(tipo, ctrl, *) {
+ 3383: _PtsEvFilas() {
+ 3460: _PtsEvObtenerSeleccionados(lv) {
+ 3471: _PtsEvSel(ctrl,item,selected) {
+ 3538: _PtsEvCambio(*) {
+ 3566: _PtsEvProbar(*) {
+ 3582: _PtsOcultarGuiAnclado() {
+ 3600: _PtsMostrarGuiAnclado(row) {
+ 3719: _PtsEvToggleAnclar(*) {
+ 3733: _PtsEvReubicarZona(*) {
+ 3773: _PtsEditarRangoInteractivo(titulo, idEv, rectIni := "") {
+ 3828: NcHit(wParam, lParam, msg, hwnd) {
+ 3879: _PtsAlphaChange(*) {
+ 3888: _PtsAlphaFChange(*) {
+ 3898: _PtsDibujarZonaEstab(foco := false) {
+ 3915: _PtsEvIdSel() {
+ 3931: _PtsExcluirOpuesto(tipo, idEv) {
+ 3942: _PillGuiDe(p) {
+ 3952: _PillGuiRigida(idEv) {
+ 3968: _PtsPildoraUbicar(idEv := "", *) {
+ 4013: Parpadeo() {
+ 4025: _PtsPildoraBtnAgregar(x, y, w := 210) {
+ 4035: _PtsDibujarZonaEvento(key := "") {
+ 4071: _PtsReiniciar(*) {
+ 4078: _PtsMoverBotones(ctrl) {
+ 4082: _PtsReubicar(*) {
+ 4086: ReubicarBotones() {
+ 4126: _PtsUltimoBackupIni() {
+ 4143: _PtsSelloLibre() {
+ 4151: _PtsBakRefrescar() {
+ 4163: _PtsBackupIni(*) {
+ 4181: _PtsRestaurarIni(*) {
+ 4204: _PtsCambiarPerfil(ctrl,*) {
+ 4207: _PtsCerrar(*) {
+ 4251: _PtsToggleVerZonas(*) {
+ 4257: MostrarZonasCalibracion(ms := 0) {
+ 4307: OcultarZonasCalibracion() {
+ 4321: _CrearRectOverlay(x,y,w,h,color,texto := "") {
+ 4332: _OvlEtiquetas() {
+ 4336: _OvlBarrerHuerfanas() {
+ 4348: _OvlEtiqueta(gBox,x,y,ow,oh,color,texto) {
+ 4378: _OvlDestruir(g) {
+ 4392: _PtsEvLvRojo(lp) {
+ 4420: _PtsTemaLvNotify(wParam, lParam, msg, hwnd) {
+ 4458: _PtsColorRef(hex) {
+ 4464: _PtsTextoContraste(hex) {
+ 4474: _KgEst() {
+ 4479: _KgAttach(ctl, onCapture := "") {
+ 4497: _KgFocus(ctl, *) {
+ 4503: _KgMods() {
+ 4516: _KgJoin(p) {
+ 4523: _KgOnKey(wParam, lParam, msg, hwnd) {
+ 4569: _KgOnUp(wParam, lParam, msg, hwnd) {
+ 4582: _KgOnChar(wParam, lParam, msg, hwnd) {
+ 4587: _KgNotify(d, txt) {
+ 4594: _PtsInd() {
+ 4598: _PtsIndInit(edA, indA, edR, indR, lbA, lbR) {
+ 4611: _PtsIndSet(clave, estado, tip := "") {
+ 4624: _PtsAtajoColision(col, txt) {
+ 4634: _PtsIndRefrescar(avisar := false) {
+ 4669: _PtsIndOk(*) {
+ 4684: _PtsAtajoAviso(ctl, txt) {
+ 4689: _PtsStRestaurar(st, prev) {
+ 4693: _PtsGuardarCambios(*) {
+ 4716: _PtsEvSecciones(ini) {
+ 4729: _PtsEvIniClaves(ini, sec, slug) {
+ 4761: _PtsEvNombreDe(slug) {
+ 4768: _PtsEvSlugDeFila(row) {
+ 4780: _PtsEvSlugsSel() {
+ 4791: _PtsEvSeleccionarSlug(slug) {
+ 4804: _PtsEvContextMenu(lv, item, isRight, x, y) {
+ 4822: _PtsEvEliminar(*) {
+ 4862: _PtsEvDuplicar(*) {
+ 4897: _PtsEvColDeClick(lv) {
+ 4906: _PtsEvDobleClickCol(lv, row) {
+ 4917: _PtsEvEnfocarCampo(ctl, enAcordeon := true) {
+
+=== lib\companion.ahk  (838 líneas)
+   13: __New(color) {
+   22: Show(x,y,w,h,g := 1) {
+   40: Hide() {
+   48: IniciarDeteccion() {
+   86: BuscarVentanaCSP(idActual,frag1,frag2) {
+  102: CheckReload() {
+  122: ChequearZonaHistorial() {
+  143: LimpiarAltPegadoPureRef() {
+  151: ChequearZonaAltA() {
+  158: ChequearZonaDerecha() {
+  165: _ChequearBotones(estado,zonas,pref := "") {
+  182: LoopColorV() {
+  262: LoopColorCC() {
+  342: LoopAccesoRapido() {
+  402: __Q_SEND_NORMAL() {
+  415: AlternarEstabilizacion() {
+  467: _Stab_ToggleUI(alta, esDobleTap) {
+  477: _AplicarEstabVisibilidadBase() {
+  487: _CompanionRestaurarAudio() {
+  499: _TemaHex(clave, def) {
+  506: _LH() {
+  511: _LHGdipIniciar() {
+  531: _LHPen(argb, ancho) {
+  540: _LHTrazo(gfx, argb, ancho, x1, y1, x2, y2) {
+  547: _LHArco(gfx, argb, ancho, x, y, w, h, a0, sw) {
+  554: _LHElipse(gfx, argb, ancho, x, y, w, h) {
+  561: _LHRelleno(gfx, argb, x, y, w, h) {
+  569: _LHFlecha(gfx, argb, ancho, cx, cy, r, angFin) {
+  583: _LHConstruir(modo) {
+  701: _LHAsegurarGui() {
+  709: _LHPintar(ent, alfa) {
+  722: LienzoHUD_Mostrar(modo, tecla := "", minMs := 0) {
+  775: _LHTick() {
+  793: _LHFade() {
+  802: _LHOcultar() {
+  811: LienzoHUD_Invalidar() {   ; llamar tras cambiar colores de theme.ini (opcional)
+  820: LienzoHUD_ChequeoR() {
+  825: LienzoHUD_ChequeoSpace() {
+  835: #Include %A_LineFile%\..\companion_modosel.ahk
+  836: #Include %A_LineFile%\..\companion_lienzos.ahk
+  837: #Include %A_LineFile%\..\companion_enfoque.ahk
+  838: #Include %A_LineFile%\..\companion_flotantes.ahk
+
+=== lib\companion_enfoque.ahk  (305 líneas)
+    5: _EnfDiferirAvisos(act) {
+    9: _EnfAvisos(act) {
+   22: _EnfClickDoble(origX, origY) {
+   42: _EnfEstado() {
+   46: AccionEnfoque() {
+   70: _EnfReconciliar() {
+  111: _EnfMs() {
+  115: _EnfLog(tp, activo, hkMs, hkNom) {
+  127: _NotificarPureRef(modo) {
+  140: _IdsPaneles() {
+  158: _LayoutPanelGuardado(nombre,clave,mon) {
+  169: _AplicarLayoutPaneles(nombre) {
+  206: _LayoutVerificar(obj, nombre) {
+  221: _CapturarLayout(nombre) {
+  255: MostrarGUIEnfoque() {
+  289: OcultarGUIEnfoque() {
+  296: ResetEnfoque() {
+
+=== lib\companion_flotantes.ahk  (2290 líneas)
+    4: ResetAlphaStates() {
+   47: _EsPanelEmbebido(g) {
+   75: _TraerPanelesAlFrente() {
+   85: _MostrarPaneles() {
+  112: _PanelSanarAmortiguado(gp) {
+  143: _ArrastrarPanelBloque(hwndClick,lParam,guiObj) {
+  163: _GetPanelEstado(guiObj) {
+  180: _SetPanelEstado(guiObj, target) {
+  213: _PanelesSweep() {
+  224: _SegCruzaRect(x0,y0,x1,y1,l,t,r,b) {
+  256: _LBtnAbajo() {
+  263: _HubLPSt() {
+  270: _HubLPActivo() {
+  279: _HubLP_WM_POINTERDOWN(wParam, lParam, msg, hwnd) {
+  291: _HubLPFueLapiz() {
+  297: _HubLPHecha(t0, movido, esLapiz) {
+  302: _HubLPDisparar() {
+  309: _CongelarPanel(h, congelar) {
+  319: _SweepAplicar(tocados, target) {
+  346: _SweepToggle(g0) {
+  431: _ClickOArrastre(hwndClick,lParam,guiObj) {
+  491: _GuardarOffsetHC() {
+  502: _LeerEstadoBloque(clave,defecto) {
+  510: _EscribirEstadoBloque(clave,valor) {
+  514: _ToggleBloqueo() {
+  521: _HcOffsetBloque() {
+  544: ActualizarDialGUI() {
+  563: _PillAjustar(p, txt, xTexto := 26, margenDer := 8) {
+  575: _PillW(p) {
+  582: IniciarDsGUI() {
+  604: ActualizarDsGUI() {
+  621: IniciarCcGUI() {
+  655: ActualizarCcGUI() {
+  672: IniciarArGUI() {
+  706: ActualizarArGUI() {
+  723: IniciarHCGUI() {
+  757: ActualizarHCGUI() {
+  775: IniciarNVGUI() {
+  799: ActualizarNVGUI(forzar := false) {
+  827: _NvGUI_WM_LBUTTONDOWN(wParam, lParam, msg, hwnd) {
+  853: _NvClicSt() {
+  858: _NvClicFin() {
+  864: _NvClicPoll() {
+  909: _NvClicSimple() {
+  917: _NvGUI_EsperarSoltar() {
+  927: _NvBotonCrearVentana(*) {
+  938: _NvPanelSt() {
+  946: _NvPanelBoton(g, acc, x, y, w, h, txt, fn, activo := false) {
+  953: _NvPanelClamp(&x, &y, w, h) {
+  964: _NvPanelCerrar() {
+  976: _NvPanelEjecutarEn(hwnd) {
+  986: _NvPanel_WM_LBUTTONDOWN(wParam, lParam, msg, hwnd) {
+  991: _NvPanel_WM_POINTERDOWN(wParam, lParam, msg, hwnd) {
+  999: _NvPanelVigilar() {
+ 1029: _VentanaDelProceso(h) {
+ 1035: _NvMostrarMenu() {
+ 1174: _NvMenuGlobal(modo, *) {
+ 1178: _NvMenuIndividual(h, modo, *) {
+ 1182: IniciarLockGUI() {
+ 1218: ActualizarLockGUI() {
+ 1238: IniciarFrenteGUI() {
+ 1274: ActualizarFrenteGUI() {
+ 1289: _ToggleFrente() {
+ 1308: IniciarEstabBtnGUI() {
+ 1344: ActualizarEstabBtnGUI() {
+ 1364: _ToggleEstabVisible() {
+ 1377: IniciarReloadGUI() {
+ 1401: _ReloadGUI_WM_LBUTTONDOWN(wParam,lParam,msg,hwnd) {
+ 1452: IniciarHubGUI() {
+ 1494: _HayBotonesEmbebidos() {
+ 1505: ActualizarHubGUI() {
+ 1524: _AplicarVisibilidadEmbebidos() {
+ 1526: _SetVis(gObj, k) {
+ 1544: _HubGUI_WM_LBUTTONDOWN(wParam,lParam,msg,hwnd) {
+ 1577: _Companion_WM_RBUTTON(wParam,lParam,msg,hwnd) {
+ 1597: _EjecutarAccionHub(act, *) {
+ 1643: _MostrarMenuContextualHub() {
+ 1735: _HubPanelSt() {
+ 1740: _HubPanelCerrar() {
+ 1755: _HubPanelEjecutarEn(hwnd) {
+ 1765: _HubPanel_WM_LBUTTONDOWN(wParam, lParam, msg, hwnd) {
+ 1770: _HubPanel_WM_POINTERDOWN(wParam, lParam, msg, hwnd) {
+ 1778: _HubPanelVigilar() {
+ 1806: _HubPanelMostrar(filas) {
+ 1872: _HubPanelLayout(*) {
+ 1885: _MenuToggleEmbebido(k, *) {
+ 1897: _HubRapidaActiva(k) {
+ 1903: _HubToggleRapida(k, *) {
+ 1914: _HubMenuAbierto() {
+ 1925: IniciarPuntosGUI() {
+ 1956: _PuntosGUI_WM_LBUTTONDOWN(wParam,lParam,msg,hwnd) {
+ 2013: MostrarAccionesRapidasGUI() {
+ 2086: _PillDin() {
+ 2091: _PillHwndMapa() {
+ 2097: _PillIdsRigidos() {
+ 2104: _PillNombreCorto(nombre) {
+ 2117: _PillCrearDinamica(idEv, nombre, atajo := "") {
+ 2161: _PillActualizarDinamica(idEv, nombre, atajo := "") {
+ 2175: _PillDestruirDinamica(idEv) {
+ 2189: _PillDestruirTodas() {
+ 2197: _PillSincronizarDinamicas() {
+ 2219: _PillDin_WM_LBUTTONDOWN(wParam, lParam, msg, hwnd) {
+ 2240: _PillClickOArrastre(hwndClick, lParam, p) {
+ 2279: _PillDisparar(idEv) {
+
+=== lib\companion_lienzos.ahk  (1170 líneas)
+   12: _NvCfg() {
+   42: NuevaVentanaEnZona(rango := "ZonaSegura") {
+   54: _NvEjecutar(rango) {
+  215: _NvSnapshot() {
+  224: _NvEsperarCambio(s, ms := 2500) {
+  237: NvEstado() {
+  242: _NvIniModoGlobal() {
+  250: _NvModoEfectivo(e, h) {
+  257: _NvEstadoVisual(e) {
+  271: NvSetGlobal(modo) {
+  280: NvSetIndividual(h, modo) {
+  297: NvAlternarInteractivo() {
+  301: _NvRefrescar() {
+  306: NvSetModo(m) {
+  310: NvToggleModo() {
+  317: NvRegistrarVentana(hwnd, zona := "") {
+  327: _NvPersistir(h) {
+  337: _NvPersistirTodo() {
+  342: _NvClsDoc() {
+  347: _NvEsDocCsp(h) {
+  354: _NvFirmaGestion(h) {
+  363: _NvDocsFirma() {
+  376: NvRestaurarAlSalir(*) {
+  406: _NvSondeoSueltas() {
+  412: _NvDocsLibres() {
+  426: _NvDocsRetomables() {
+  441: _NvAdoptarLibres(firmaSolo := true, soloH := 0, mover := false) {
+  469: _NvZonaParaEmbeber() {
+  483: _NvColocarEnZonaLibre(h, &zona) {
+  518: NvReposicionarVentanas() {
+  547: _NvProbarEfecto(h) {
+  560: _NvBotonEmbeber(*) {
+  569: _NvBotonRetomar(*) {
+  574: _NvIniciarVigilancia() {
+  585: NvRehidratar() {
+  623: NvSiguienteZona() {
+  645: LoopNuevasVentanas() {
+  672: _NvCacheModo() {
+  677: _NvOlvidarCache(h) {
+  684: _NvOpacZona(hwnd) {
+  698: _NvReaplicarOpacidad() {
+  715: _NvAplicarModo(hwnd, modo, dentro := false) {
+  742: _NvEsperarNueva(cspPid, antes, timeoutMs := 4000) {
+  756: _NvDispararMenu(mainHwnd) {
+  773: _NvDocs(pid) {
+  785: _NvTodas(pid) {
+  796: _NvEnLista(h, lista) {
+  803: _NvLog(s) {
+  808: _NvSoltarMods() {
+  828: _NvDispararAtajo(mainHwnd) {
+  846: _NvForzarFocoMarco(main) {
+  859: _NvDisparar(modo, pid := 0, intento := 1) {
+  889: _NvEsperarSoltarFisico() {
+  897: _NvLimpiarMenu(main) {
+  904: _NvEsperarPopup(pid, antes, ms) {
+  920: _NvEsperarMas(pid, n, ms) {
+  930: _NvEsperarHasta(pid, n, ms) {
+  940: _NvDispararVerificado(pid) {
+  977: _NvRangoRect(nombre := "zonasegura", usarDefault := true) {
+ 1011: _NvArrastrarPestana(x1, y1, x2, y2) {
+ 1040: _NvColorCerca(a, b, tol) {
+ 1048: _NvTabActivaAgarre(main) {
+ 1082: _NvTabActivaEnRango(xIni, y, xFin) {
+ 1116: _NvTabActivaEnFila(main, dy) {
+ 1128: NvMedirColorTab() {
+ 1141: NvDiagBarra() {
+ 1161: _NvRectVisible(x, y, w, h) {
+
+=== lib\companion_modosel.ahk  (190 líneas)
+   10: _ModoSel() {
+   14: EstablecerModoTrabajo(nombre) {
+   28: _ModoContarGuardados(nombre) {
+   38: _ModoSelPosGuardada(nombre) {
+   50: _ModoSelCrear() {
+   92: _ModoSelPintarSeg(c, on) {
+   99: _ModoSelRefrescar() {
+  116: _ModoSelVigilar() {
+  131: ModoSel_Alternar() {
+  144: _ModoGuardarActivo() {
+  151: _ModoTrayConstruir() {
+  165: _ModoTrayMarcar(act) {
+  171: _ModoSelArranque() {
+  180: _ModoSel_WM_LBUTTONDOWN(wParam, lParam, msg, hwnd) {
+
+=== lib\comportamientos.ahk  (1006 líneas)
+    2: _CompInit() {
+    7: _CompGlobAdd(c, dy) {
+   13: _CompGlobToggle(*) {
+   19: _CompBloqueAddExtra(id, ctrl, h := 24) {
+   30: _CompBloqueNuevo(id, num, titulo, subtitulo, yDis, abierto := false) {
+   57: _CompBloqueDe(id) {
+   64: _CompBloqueToggle(id, *) {
+   74: _CompIni(key, campo, idEv, reset := false) {          ; lectura cacheada (el loop de hover la llama cada tick)
+   85: _CompOp(key, campo, idEv, def) {                      ; opacidad Win32 0-255
+   89: _CompBorde(key, idEv, def) {
+   93: _CompDefOp(key, campo) {
+   98: _CompE2Activo(idEv) {                                 ; eventos con runtime cableado (E2b añade más)
+  101: _CompAplicarVivo(key, idEv) {
+  139: _CompModGuardar(key, campo, idEv, ctrl) {
+  154: _CompPildoraTam(idEv) {
+  158: _CompPildoraColor(idEv) {                             ; "" = color del tema
+  162: _CompPildoraSwatch(c, col) {
+  169: _CompPildoraGuardar(campo, idEv, ctrl) {
+  196: _CompPildoraReset(*) {
+  205: _CompPildoraAplicar(idEv) {                           ; color: todas; tamaño: solo dinámicas
+  227: _CompHeredadoPintar(cmp, *) {
+  234: _CompReqBRefrescar(cmp, *) {
+  239: _CompMsIcono(cmp, *) {
+  255: _CompSliderLeer(campo) {                                ; E4
+  279: _CompSliderExtraGuardar(campo, ctrl) {                  ; W4: modo / rango / snap por pasos -> [Estab_p<PERFIL>]
+  310: _CompSliderVerificarTeclas(cmp) {
+  325: _CompSnapsPintar(eSnaps, malIdx) {                      ; rojo solo en la caja inválida con texto; las demás en color normal
+  332: _CompSliderGuardar(campo, ctrl) {                       ; E4
+  380: _CompCampoCambio(key, campo, ctrl, *) {
+  417: _CompCargarCampos(idEv) {                             ; se llama al seleccionar evento
+  513: _CompNvFranjaUbic() {                                 ; "sup" (def.) | "inf"
+  516: _CompNvFranjaUbicGuardar(ctrl, *) {
+  521: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+  789: _CompFilaDe(key) {
+  797: _CompAltoBloque(id) {
+  807: _CompAlto() {
+  818: _CompPos(y, yTop := 0, yBottom := 99999) {   ; y = tope del panel; recorta visibilidad al viewport
+  948: _CompTextos() {
+  965: _CompCbClick(key, ctrl, *) {
+  979: _CompGear(key, *) {
+  989: _CompRefrescar() {
+
+=== lib\comportamientos_20261115_015808.bak.ahk  (449 líneas)
+    2: _CompInit() {
+    7: _CompGlobAdd(c, dy) {
+   13: _CompGlobToggle(*) {
+   19: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+   29: _CompBloqueDe(id) {
+   36: _CompBloqueToggle(id, *) {
+   52: _CompIni(key, campo, idEv, reset := false) {          ; lectura cacheada (el loop de hover la llama cada tick)
+   63: _CompOp(key, campo, idEv, def) {                      ; opacidad Win32 0-255
+   67: _CompBorde(key, idEv, def) {
+   71: _CompDefOp(key, campo) {
+   76: _CompE2Activo(idEv) {                                 ; eventos con runtime cableado (E2b añade más)
+   79: _CompAplicarVivo(key, idEv) {
+  115: _CompModGuardar(key, campo, idEv, ctrl) {
+  123: _CompSliderLeer(campo) {                                ; E4
+  132: _CompSliderGuardar(campo, ctrl) {                       ; E4
+  156: _CompCampoCambio(key, campo, ctrl, *) {
+  185: _CompCargarCampos(idEv) {                             ; se llama al seleccionar evento
+  236: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+  330: _CompFilaDe(key) {
+  337: _CompAlto() {
+  353: _CompPos(y, yTop := 0, yBottom := 99999) {   ; y = tope del panel; recorta visibilidad al viewport
+  399: _CompTextos() {
+  415: _CompCbClick(key, ctrl, *) {
+  424: _CompGear(key, *) {
+  434: _CompRefrescar() {
+
+=== lib\comportamientos_20261115_024309.bak.ahk  (475 líneas)
+    2: _CompInit() {
+    7: _CompGlobAdd(c, dy) {
+   13: _CompGlobToggle(*) {
+   19: _CompBloqueAddExtra(id, ctrl, h := 24) {
+   30: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+   40: _CompBloqueDe(id) {
+   47: _CompBloqueToggle(id, *) {
+   63: _CompIni(key, campo, idEv, reset := false) {          ; lectura cacheada (el loop de hover la llama cada tick)
+   74: _CompOp(key, campo, idEv, def) {                      ; opacidad Win32 0-255
+   78: _CompBorde(key, idEv, def) {
+   82: _CompDefOp(key, campo) {
+   87: _CompE2Activo(idEv) {                                 ; eventos con runtime cableado (E2b añade más)
+   90: _CompAplicarVivo(key, idEv) {
+  126: _CompModGuardar(key, campo, idEv, ctrl) {
+  134: _CompSliderLeer(campo) {                                ; E4
+  143: _CompSliderGuardar(campo, ctrl) {                       ; E4
+  167: _CompCampoCambio(key, campo, ctrl, *) {
+  196: _CompCargarCampos(idEv) {                             ; se llama al seleccionar evento
+  247: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+  341: _CompFilaDe(key) {
+  348: _CompAlto() {
+  368: _CompPos(y, yTop := 0, yBottom := 99999) {   ; y = tope del panel; recorta visibilidad al viewport
+  425: _CompTextos() {
+  441: _CompCbClick(key, ctrl, *) {
+  450: _CompGear(key, *) {
+  460: _CompRefrescar() {
+
+=== lib\comportamientos_20261115_135944.bak.ahk  (708 líneas)
+    2: _CompInit() {
+    7: _CompGlobAdd(c, dy) {
+   13: _CompGlobToggle(*) {
+   19: _CompBloqueAddExtra(id, ctrl, h := 24) {
+   30: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+   40: _CompBloqueDe(id) {
+   47: _CompBloqueToggle(id, *) {
+   63: _CompIni(key, campo, idEv, reset := false) {          ; lectura cacheada (el loop de hover la llama cada tick)
+   74: _CompOp(key, campo, idEv, def) {                      ; opacidad Win32 0-255
+   78: _CompBorde(key, idEv, def) {
+   82: _CompDefOp(key, campo) {
+   87: _CompE2Activo(idEv) {                                 ; eventos con runtime cableado (E2b añade más)
+   90: _CompAplicarVivo(key, idEv) {
+  126: _CompModGuardar(key, campo, idEv, ctrl) {
+  140: _CompHeredadoPintar(cmp, *) {
+  147: _CompReqBRefrescar(cmp, *) {
+  152: _CompMsIcono(cmp, *) {
+  168: _CompSliderLeer(campo) {                                ; E4
+  182: _CompSliderVerificarTeclas(cmp) {
+  197: _CompSnapsPintar(eSnaps, malIdx) {                      ; rojo solo en la caja inválida con texto; las demás en color normal
+  204: _CompSliderGuardar(campo, ctrl) {                       ; E4
+  252: _CompCampoCambio(key, campo, ctrl, *) {
+  281: _CompCargarCampos(idEv) {                             ; se llama al seleccionar evento
+  361: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+  563: _CompFilaDe(key) {
+  570: _CompAlto() {
+  591: _CompPos(y, yTop := 0, yBottom := 99999) {   ; y = tope del panel; recorta visibilidad al viewport
+  650: _CompTextos() {
+  667: _CompCbClick(key, ctrl, *) {
+  681: _CompGear(key, *) {
+  691: _CompRefrescar() {
+
+=== lib\comportamientos_antes_p3.bak.ahk  (656 líneas)
+    2: _CompInit() {
+    7: _CompGlobAdd(c, dy) {
+   13: _CompGlobToggle(*) {
+   19: _CompBloqueAddExtra(id, ctrl, h := 24) {
+   30: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+   40: _CompBloqueDe(id) {
+   47: _CompBloqueToggle(id, *) {
+   63: _CompIni(key, campo, idEv, reset := false) {          ; lectura cacheada (el loop de hover la llama cada tick)
+   74: _CompOp(key, campo, idEv, def) {                      ; opacidad Win32 0-255
+   78: _CompBorde(key, idEv, def) {
+   82: _CompDefOp(key, campo) {
+   87: _CompE2Activo(idEv) {                                 ; eventos con runtime cableado (E2b añade más)
+   90: _CompAplicarVivo(key, idEv) {
+  126: _CompModGuardar(key, campo, idEv, ctrl) {
+  139: _CompHeredadoPintar(cmp, *) {
+  146: _CompReqBRefrescar(cmp, *) {
+  151: _CompMsIcono(cmp, *) {
+  167: _CompSliderLeer(campo) {                                ; E4
+  181: _CompSliderVerificarTeclas(cmp) {
+  196: _CompSnapsPintar(eSnaps, malIdx) {                      ; rojo solo en la caja inválida con texto; las demás en color normal
+  203: _CompSliderGuardar(campo, ctrl) {                       ; E4
+  251: _CompCampoCambio(key, campo, ctrl, *) {
+  280: _CompCargarCampos(idEv) {                             ; se llama al seleccionar evento
+  356: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+  516: _CompFilaDe(key) {
+  523: _CompAlto() {
+  544: _CompPos(y, yTop := 0, yBottom := 99999) {   ; y = tope del panel; recorta visibilidad al viewport
+  603: _CompTextos() {
+  619: _CompCbClick(key, ctrl, *) {
+  631: _CompGear(key, *) {
+  641: _CompRefrescar() {
+
+=== lib\comportamientos_estetica.bak.ahk  (922 líneas)
+    2: _CompInit() {
+    7: _CompGlobAdd(c, dy) {
+   13: _CompGlobToggle(*) {
+   19: _CompBloqueAddExtra(id, ctrl, h := 24) {
+   30: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+   40: _CompBloqueDe(id) {
+   47: _CompBloqueToggle(id, *) {
+   63: _CompIni(key, campo, idEv, reset := false) {          ; lectura cacheada (el loop de hover la llama cada tick)
+   74: _CompOp(key, campo, idEv, def) {                      ; opacidad Win32 0-255
+   78: _CompBorde(key, idEv, def) {
+   82: _CompDefOp(key, campo) {
+   87: _CompE2Activo(idEv) {                                 ; eventos con runtime cableado (E2b añade más)
+   90: _CompAplicarVivo(key, idEv) {
+  128: _CompModGuardar(key, campo, idEv, ctrl) {
+  143: _CompPildoraTam(idEv) {
+  147: _CompPildoraColor(idEv) {                             ; "" = color del tema
+  151: _CompPildoraSwatch(c, col) {
+  158: _CompPildoraGuardar(campo, idEv, ctrl) {
+  185: _CompPildoraReset(*) {
+  194: _CompPildoraAplicar(idEv) {                           ; color: todas; tamaño: solo dinámicas
+  216: _CompHeredadoPintar(cmp, *) {
+  223: _CompReqBRefrescar(cmp, *) {
+  228: _CompMsIcono(cmp, *) {
+  244: _CompSliderLeer(campo) {                                ; E4
+  268: _CompSliderExtraGuardar(campo, ctrl) {                  ; W4: modo / rango / snap por pasos -> [Estab_p<PERFIL>]
+  299: _CompSliderVerificarTeclas(cmp) {
+  314: _CompSnapsPintar(eSnaps, malIdx) {                      ; rojo solo en la caja inválida con texto; las demás en color normal
+  321: _CompSliderGuardar(campo, ctrl) {                       ; E4
+  369: _CompCampoCambio(key, campo, ctrl, *) {
+  406: _CompCargarCampos(idEv) {                             ; se llama al seleccionar evento
+  502: _CompNvFranjaUbic() {                                 ; "sup" (def.) | "inf"
+  505: _CompNvFranjaUbicGuardar(ctrl, *) {
+  510: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+  777: _CompFilaDe(key) {
+  784: _CompAlto() {
+  805: _CompPos(y, yTop := 0, yBottom := 99999) {   ; y = tope del panel; recorta visibilidad al viewport
+  864: _CompTextos() {
+  881: _CompCbClick(key, ctrl, *) {
+  895: _CompGear(key, *) {
+  905: _CompRefrescar() {
+
+=== lib\comportamientos_mockup.bak.ahk  (923 líneas)
+    2: _CompInit() {
+    7: _CompGlobAdd(c, dy) {
+   13: _CompGlobToggle(*) {
+   19: _CompBloqueAddExtra(id, ctrl, h := 24) {
+   30: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+   40: _CompBloqueDe(id) {
+   47: _CompBloqueToggle(id, *) {
+   63: _CompIni(key, campo, idEv, reset := false) {          ; lectura cacheada (el loop de hover la llama cada tick)
+   74: _CompOp(key, campo, idEv, def) {                      ; opacidad Win32 0-255
+   78: _CompBorde(key, idEv, def) {
+   82: _CompDefOp(key, campo) {
+   87: _CompE2Activo(idEv) {                                 ; eventos con runtime cableado (E2b añade más)
+   90: _CompAplicarVivo(key, idEv) {
+  128: _CompModGuardar(key, campo, idEv, ctrl) {
+  143: _CompPildoraTam(idEv) {
+  147: _CompPildoraColor(idEv) {                             ; "" = color del tema
+  151: _CompPildoraSwatch(c, col) {
+  158: _CompPildoraGuardar(campo, idEv, ctrl) {
+  185: _CompPildoraReset(*) {
+  194: _CompPildoraAplicar(idEv) {                           ; color: todas; tamaño: solo dinámicas
+  216: _CompHeredadoPintar(cmp, *) {
+  223: _CompReqBRefrescar(cmp, *) {
+  228: _CompMsIcono(cmp, *) {
+  244: _CompSliderLeer(campo) {                                ; E4
+  268: _CompSliderExtraGuardar(campo, ctrl) {                  ; W4: modo / rango / snap por pasos -> [Estab_p<PERFIL>]
+  299: _CompSliderVerificarTeclas(cmp) {
+  314: _CompSnapsPintar(eSnaps, malIdx) {                      ; rojo solo en la caja inválida con texto; las demás en color normal
+  321: _CompSliderGuardar(campo, ctrl) {                       ; E4
+  369: _CompCampoCambio(key, campo, ctrl, *) {
+  406: _CompCargarCampos(idEv) {                             ; se llama al seleccionar evento
+  502: _CompNvFranjaUbic() {                                 ; "sup" (def.) | "inf"
+  505: _CompNvFranjaUbicGuardar(ctrl, *) {
+  510: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+  778: _CompFilaDe(key) {
+  785: _CompAlto() {
+  806: _CompPos(y, yTop := 0, yBottom := 99999) {   ; y = tope del panel; recorta visibilidad al viewport
+  865: _CompTextos() {
+  882: _CompCbClick(key, ctrl, *) {
+  896: _CompGear(key, *) {
+  906: _CompRefrescar() {
+
+=== lib\core_config.ahk  (649 líneas)
+    5: ObtenerMonitorCSP() {
+   24: GuardarPosicionGUI(nombre,hwnd) {
+   32: LeerPosicionGUI(nombre) {
+   42: _PosicionValidaEnPantalla(x,y) {
+   50: _MonitorDePunto(x,y) {
+   58: _RectaDentroDeMonitor(x,y,w,h) {
+   66: _RectaFijaEnPantalla(x,y,w,h) {
+   88: _EsquinaPanelBloque(i) {
+   96: _PanelFijaEnPantalla(gui) {
+  109: _AnclaBloquePaneles() {
+  132: _AnchoTextoPill(txt) {
+  147: _PillAnchoPara(txt, xTexto := 26, margenDer := 8) {
+  151: _AnchoBtn(clave) {
+  163: GuardarIniDiferido(archivo, seccion, clave, valor) {
+  168: _FlushIni() {
+  178: PuntosPorDefecto() {
+  189: _ZonaModo() {
+  195: _ZonaSuf(modo := 0) {
+  200: _ZonaSec(base, modo := 0) {
+  204: _PtsCache(reset := false) {
+  210: CargarPuntos(modo := 0) {
+  254: GuardarPuntos(conFirma := true) {
+  267: CargarEscala() {
+  274: CargarEscalaAvisos() {
+  283: _FirmaMonitores() {
+  292: _DetectarMonitoresHardware() {
+  322: ElegirPerfil() {
+  388: ClampPrimario(&x, &y, w := 0, h := 0) {
+  403: CambiarPerfil(nuevo) {
+  436: _ZonaDePuntos(desde,n) {
+  451: RecalcularZonas() {
+  466: _NombrePunto(i) {
+  485: ObtenerRango(nombre, modo := 0, ignorarPausa := false) {
+  501: _ZonasPausadasMapa() {
+  519: ZonaPausada(clave) {
+  523: ZonaPausar(clave, pausar := true) {
+  538: HudConfigEvento(ev) {
+  555: HudDuracionZona(z) {
+  575: HudDuracionDe(id) {
+  613: _HudDuracionZonaDeId(id) {
+  631: _HudDuracionPorZona(z) {
+  639: _HudDuracionDefecto(id) {
+
+=== lib\diag.ahk  (358 líneas)
+   18: _DS() {
+   44: _DiagCfg(clave, def) {
+   52: _DiagMs() {
+   61: _DiagTs() {
+   69: Diag_Iniciar() {
+   90: DiagLog(archivo, linea, cabecera := "") {
+  111: Diag_OnError(err, modo) {
+  146: Diag_BFCambio(delta := 0) {
+  155: _ProfRec(nombre, periodo := 0) {
+  168: _ProfRegistrar(r, ms) {
+  179: _ProfP95(r) {
+  192: _ProfLlamar(r, fn) {
+  216: Prof_T(fn, periodo := 0) {
+  234: Prof_Llamar(nombre, fn, args*) {
+  243: Prof_Ini(nombre := "") {
+  247: Prof_Fin(nombre, t0) {
+  256: _ProfResumen() {
+  298: Salud_Iniciar() {
+  305: _Salud_Tick() {
+  309: _Salud_Primera() {
+  313: _Salud_Muestreo() {
+  322: _DiagWorkingSetMB(h) {
+  332: _DiagVentanasPropias() {
+  341: Salud_Fila(motivo := "") {
+
+=== lib\espacial.ahk  (130 líneas)
+    7: _EspEstado() {
+   13: _EspacialIniciar() {
+   23: _EspacialSalir(*) {
+   29: _EspacialPausar(estado := true) {
+   36: _EspacialCargar() {
+   89: _EspacialVigilarIni() {
+   99: _EspacialTick() {
+  123: _EspacialDisparar(z) {
+
+=== lib\espacial_20261115_135944.bak.ahk  (130 líneas)
+    7: _EspEstado() {
+   13: _EspacialIniciar() {
+   23: _EspacialSalir(*) {
+   29: _EspacialPausar(estado := true) {
+   36: _EspacialCargar() {
+   89: _EspacialVigilarIni() {
+   99: _EspacialTick() {
+  123: _EspacialDisparar(z) {
+
+=== lib\estab_slider.ahk  (1206 líneas)
+    3: IniciarEstabGUI() {
+   84: _EstabMonitorEn(x,y) {
+   93: _EstabAlpha(activo := false) {
+  108: _EstabCalcular(w,h) {
+  142: _EstabLayout(w,h) {
+  159: _EstabRegion(w,h) {
+  168: ActualizarEstabGUI(v := -1,forzar := false) {
+  190: _EstabBajoMouse() {
+  198: _EstabWheelUp(*) {
+  203: _EstabWheelDown(*) {
+  211: _EstabFocoTecla(*) {
+  226: _EstabTeclaMenosUp(*) {
+  232: _EstabFocoRect() {
+  249: _EstabFocoGuardarRect(x,y,w,h) {
+  258: _EstabFocoMostrar() {
+  282: _EstabFocoOcultar(*) {
+  303: _EstabFocoVigilar(*) {
+  323: _EstabFocoPrevisualizar() {
+  334: _EstabTeclaLocal(d) {
+  341: _EstabEnviarRaw(envio) {
+  347: _EstabEmitir(tecla,n,pausa := 0) {
+  364: _EstabFijarAbsoluto(target) {
+  370: _EstabInvalidarConfianza(*) {
+  376: _EstabEnviarDelta(nuevo) {
+  402: _EstabMarcas() {                                        ; E4: marcas desde INI, cacheadas
+  424: _EstabMagneto(v, entrada := 3, salida := 6) {
+  447: _EstabPrevisualizar(cx,cy) {
+  456: _EstabEnBarra(rx,ry) {
+  462: _EstabRectGuardada() {
+  476: _EstabRectCalibrada() {
+  488: _EstabGuardarRect() {
+  503: _EstabAplicarRect(x,y,w,h) {
+  527: _EstabGUI_WM_LBUTTONDOWN(wParam,lParam,msg,hwnd) {
+  630: _EstabGUI_WM_RBUTTONDOWN(wParam,lParam,msg,hwnd) {
+  637: _EstabGUI_WM_MBUTTONDOWN(wParam,lParam,msg,hwnd) {
+  646: _EstabAplicarValor(nuevo) {
+  700: _GuardarValorEstab() {
+  719: _EstabGdipIniciar() {
+  732: _EstabPildora(x,y,an,al,radio) {
+  743: _EstabRellenar(gfx,ruta,hex,alfa := 255) {
+  749: _EstabTrazar(gfx,ruta,hex,grosor) {
+  755: _EstabTextoCentrado(gfx,txt,cx,cy,lado,em,colorHex) {
+  775: _EstabSoloSeccion() {
+  780: _EstabSoloLineaCargar() {
+  789: _EstabSoloLineaAplicar() {
+  810: _EstabSoloLineaAlternar(*) {
+  821: _EstabColoresPorPerfil() {
+  858: _EstabPanelPintar(gfx) {
+  976: _EstabDibujar() {
+ 1038: Stab_ResetUniversal(herramienta := "", forzar := false) {
+ 1067: _Stab_Clave(id) {
+ 1071: _Stab_Recordar(v) {
+ 1079: _Stab_NecesitaEmitir(id) {
+ 1084: _Stab_ValorUniversal(id) {
+ 1092: _Stab_Olvidar(clave) {
+ 1098: _Stab_CargarKnown() {
+ 1110: _Stab_GuardarKnown() {
+ 1117: _Stab_ResetFisico() {
+ 1176: _Stab_PostReset() {
+ 1183: _Stab_EmitirAbortable(tecla, n, tool, clave) {
+
+=== lib\gui_builder.ahk  (58 líneas)
+   12: GbSetFont(guiObj, tam := 9, peso := 400, nombre := "Segoe UI", extra := "") {
+   21: GbBoton(guiObj, texto, x, y, w, h, fnCallback, opts := "") {
+   35: GbEditConCue(guiObj, cueText, x, y, w, h, margenDer := 0, opts := "") {
+   53: GbParLabelEdit(guiObj, labelText, cueText, x, y, w, h, wLabel := 80, opts := "") {
+
+=== lib\hotkeys_csp.ahk  (1879 líneas)
+   20: _AltF_SoltarB(*) {
+   29: _AltRestaurar(seguia) {
+   36: _LiberarFantasmas() {
+   50: _LiberarModificadores(esSalida := false, *) {
+   72: LanzarBriefing() {
+   77: _VigilaFocoCSP() {
+   98: _ModEnviar(atajo, hud := "", colorHud := "00E5FF") {
+  111: _ModAtajo(fila, campo, idEv, def) {
+  115: _ModActivo(fila, idEv) {
+  119: _ModQuick(idEv, tecla, defCorto, defLargo := "") {
+  132: _ModToggle(idEv, defA := "", defB := "") {
+  161: _RemapNormalizar(txt) {
+  182: _RemapNombreTecla(t) {
+  188: _AtajoAEnvio(a) {
+  211: _RemapCtx(held) {
+  222: _RemapCtxOk(held) {
+  232: _RemapDisparar(idEv, tecla, held, *) {
+  243: _RemapDescargarHotkeys() {
+  255: _RemapCargarHotkeys() {
+  289: _RemapVigilarIni() {
+  300: #HotIf
+  301: ^!b:: LanzarBriefing()
+  308: EntornoMapa() {
+  312: EntornoRegistrar(hwnd) {
+  316: _CspFoco() {
+  322: _AsegurarCSP(timeoutS := 0.12) {
+  330: _ComboInicio() {
+  334: _EntornoGuiAHK(hwnd) {
+  345: EntornoQuitar(hwnd) {
+  351: _EntornoPidCache() {
+  357: _EntornoResolverPid(pid) {
+  369: _EntornoEsPython(hwnd, pid) {
+  384: EsCompanionTk(hwnd := 0) {
+  407: EsEntornoCSP() {
+  424: #HotIf EsEditorTexto()
+  425: ^s:: {
+  430: ^g:: {
+  440: #HotIf
+  441: #SuspendExempt
+  449: $sc029:: {
+  464: Pause:: {
+  468: #SuspendExempt False
+  470: _EscrituraSet(on, conTimer := false) {
+  493: _EscrituraInactividadCheck() {
+  505: #SuspendExempt
+  506: #HotIf EsCompanionTk()
+  507: *LWin:: return
+  508: *RWin:: return
+  509: #SuspendExempt false
+  511: #HotIf EsEntornoCSP()
+  512: *LWin:: return
+  513: *RWin:: return
+  514: RButton:: {
+  523: RButton up:: {
+  537: Space & RButton:: {
+  543: Numpad0:: {
+  548: _ToggleHistorialColor() {
+  556: ^s:: {
+  562: _VigilarGuardado() {
+  568: _TickGuardado() {
+  587: ~!b:: {
+  597: ~!b up:: {
+  613: _InvSeleccionConGUI() {
+  626: x:: {
+  646: $^z:: _DeshacerRehacer()
+  647: _MaskRButton() {
+  655: _RachaConteo(clave := "") {
+  670: _DeshacerRehacer() {
+  706: $^z up:: stylus.botonSostenido := false
+  707: !z:: {
+  712: !^z:: {
+  719: !^z up:: stylus.botonSostenido := false
+  720: #HotIf stylus.altActive && !WinActive("ahk_exe PureRef.exe")
+  721: z:: {
+  726: w:: {
+  730: -:: _CicloO()
+  731: e:: {
+  735: x:: {
+  746: a:: {
+  758: s:: {
+  770: f:: {
+  786: f up:: AltF_state.held := false
+  787: $!Space::
+  788: $Space:: {
+  794: #HotIf
+  795: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  796: $a:: {
+  811: #HotIf EsEntornoCSP()
+  812: ~RButton & a:: {
+  818: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  819: $e:: {
+  848: #HotIf EsEntornoCSP()
+  849: ~RButton & e:: {
+  856: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  857: ^e:: {
+  861: !e:: {
+  865: !q:: {
+  869: ~LAlt & 1::
+  870: ~RAlt & 1:: {
+  874: ~LAlt & 2::
+  875: ~RAlt & 2:: {
+  879: !Home:: {
+  883: !-:: _CicloO()
+  884: $w:: {
+  913: $z:: {
+  937: $z up:: {
+  940: ~r:: SetTimer(LienzoHUD_ChequeoR, -140)
+  941: $q:: {
+  978: _FlushPendentes() {
+  994: _ToggleLayerVis() {
+ 1003: +q:: {
+ 1007: !j:: {
+ 1017: _FadeAlpha(hwnd,hasta,pasos := 6,delayMs := 0) {
+ 1044: _FadePaso(key) {
+ 1057: _SetColorV(on) {
+ 1077: _SetColorCC(on) {
+ 1097: _SetAR(on) {
+ 1118: _ToggleHoverPaneles() {
+ 1125: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe") && stylus.altActive
+ 1126: $!x:: {
+ 1142: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1143: __AltX_SEND_NORMAL() {
+ 1153: !s:: {
+ 1170: __AltS_SEND_NORMAL() {
+ 1179: $s:: {
+ 1226: $k:: {
+ 1241: $o:: _CicloO()
+ 1242: _CicloO() {
+ 1258: MacroCapas_Ejecutar(paso := 0) {
+ 1274: MacroCapas_Paso(paso) {
+ 1282: $Escape:: {
+ 1306: +r:: {
+ 1310: Tab::
+ 1311: +Escape::
+ 1312: F3:: AccionEnfoque()
+ 1313: ~f:: {
+ 1316: #HotIf EsEntornoCSP()
+ 1317: ~RButton & q:: {
+ 1323: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1325: ~Space & -:: {
+ 1331: #HotIf GetKeyState("Space") && WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1332: *e:: _SpaceE_Dispatch()
+ 1333: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1336: _SpaceE_Dispatch() {
+ 1357: ShiftAnclado_Toggle() {
+ 1376: ShiftAnclado_Apagar(silencioso := false) {
+ 1391: _BadgeSFT(on) {
+ 1429: _BadgeSFTGuardia() {                      ; red de seguridad si el Shift se libera por otra vía
+ 1443: _HudSFTAnclado(on) {
+ 1540: _HudSFTReafirmar() {
+ 1546: #HotIf EsEntornoCSP()
+ 1547: ~RButton & w:: {
+ 1553: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1554: !w:: {
+ 1558: #HotIf EsEntornoCSP()
+ 1559: ~RButton & -:: {
+ 1573: ~RButton & z:: {
+ 1580: ~RButton & z up:: stylus.botonSostenido := false
+ 1581: ~RButton & x:: {
+ 1587: ~RButton & 1:: {
+ 1593: ~RButton & 2:: {
+ 1599: _EnviarOpacidad() {
+ 1605: ~RButton & 3::
+ 1606: ~RButton & 4::
+ 1607: ~RButton & 5::
+ 1608: ~RButton & 6::
+ 1609: ~RButton & 7::
+ 1610: ~RButton & 8::
+ 1611: ~RButton & 9::
+ 1612: ~RButton & 0:: {
+ 1622: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1623: ~1:: {
+ 1629: ~2:: {
+ 1635: ~3:: {
+ 1641: ~4:: {
+ 1647: NumpadDiv:: {
+ 1651: Numpad8:: {
+ 1727: ~Space & NumpadAdd:: {
+ 1731: ~Space & NumpadSub:: {
+ 1735: ~Space & w:: {
+ 1740: ~Space & x:: {
+ 1745: ~Space & e:: _SpaceE_Dispatch()
+ 1746: ~Space & q:: {
+ 1750: ~Space & s:: {
+ 1756: ~Space & f:: {
+ 1768: ~Space & Numpad1::
+ 1769: ~Space & Numpad2::
+ 1770: ~Space & Numpad3::
+ 1771: ~Space & Numpad4::
+ 1772: ~Space & Numpad5::
+ 1773: ~Space & Numpad6:: {
+ 1779: $Numpad6:: {
+ 1783: *Backspace:: {
+ 1791: ~*Space:: {
+ 1795: ~*Space up:: {
+ 1820: #HotIf
+ 1821: $^F11:: _CapturarLayout("Normal")
+ 1822: $^F12:: _CapturarLayout("Enfoque")
+ 1823: $^F10:: (HasMethod(this, "AbrirCalibradorPy") ? AbrirCalibradorPy() : AbrirPanelPuntos())
+ 1824: $^!+c:: (HasMethod(this, "AbrirCalibradorPy") ? AbrirCalibradorPy() : AbrirPanelPuntos())
+ 1825: $^!+k:: AbrirPanelPuntos()
+ 1826: $^!+t:: _AbrirSelectorTema()
+ 1827: $^!+m:: ModoSel_Alternar()
+ 1828: $^!+F9:: {
+ 1837: $^!+F8:: NvToggleModo()
+ 1838: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1839: !f:: {
+ 1864: !f up:: {
+ 1869: ~b & k:: {
+ 1878: #HotIf
+ 1879: #HotIf
+
+=== lib\hotkeys_csp_20261115_024309.bak.ahk  (1563 líneas)
+   20: _AltF_SoltarB(*) {
+   29: _AltRestaurar(seguia) {
+   36: _LiberarFantasmas() {
+   50: _LiberarModificadores(esSalida := false, *) {
+   72: LanzarBriefing() {
+   77: _VigilaFocoCSP() {
+   98: _ModEnviar(atajo, hud := "") {
+  110: _ModAtajo(fila, campo, idEv, def) {
+  114: _ModActivo(fila, idEv) {
+  118: _ModQuick(idEv, tecla, defCorto, defLargo := "") {
+  131: _ModToggle(idEv, defA, defB := "") {
+  142: #HotIf
+  143: ^!b:: LanzarBriefing()
+  146: #HotIf EsEditorTexto()
+  147: ^s:: {
+  152: ^g:: {
+  162: #HotIf
+  163: #SuspendExempt
+  171: $sc029:: {
+  186: Pause:: {
+  190: #SuspendExempt False
+  192: _EscrituraSet(on, conTimer := false) {
+  215: _EscrituraInactividadCheck() {
+  227: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  228: RButton:: {
+  233: RButton up:: {
+  244: Space & RButton:: {
+  248: Numpad0:: {
+  253: _ToggleHistorialColor() {
+  261: ^s:: {
+  267: _VigilarGuardado() {
+  273: _TickGuardado() {
+  292: ~!b:: {
+  302: ~!b up:: {
+  318: _InvSeleccionConGUI() {
+  331: x:: {
+  351: $^z:: _DeshacerRehacer()
+  352: _MaskRButton() {
+  360: _RachaConteo(clave := "") {
+  375: _DeshacerRehacer() {
+  411: $^z up:: stylus.botonSostenido := false
+  412: !z:: {
+  417: !^z:: {
+  424: !^z up:: stylus.botonSostenido := false
+  425: #HotIf stylus.altActive && !WinActive("ahk_exe PureRef.exe")
+  426: z:: {
+  431: w:: {
+  435: -:: _CicloO()
+  436: e:: {
+  440: x:: {
+  451: a:: {
+  463: s:: {
+  475: f:: {
+  491: f up:: AltF_state.held := false
+  492: $!Space::
+  493: $Space:: {
+  499: #HotIf
+  500: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  501: $a:: {
+  516: ~RButton & a:: {
+  521: $e:: {
+  550: ~RButton & e:: {
+  556: ^e:: {
+  560: !e:: {
+  564: !q:: {
+  568: ~LAlt & 1::
+  569: ~RAlt & 1:: {
+  573: ~LAlt & 2::
+  574: ~RAlt & 2:: {
+  578: !Home:: {
+  582: !-:: _CicloO()
+  583: $w:: {
+  612: $z:: {
+  636: $z up:: {
+  639: ~r:: SetTimer(LienzoHUD_ChequeoR, -140)
+  640: $q:: {
+  677: _FlushPendentes() {
+  693: _ToggleLayerVis() {
+  702: +q:: {
+  706: !j:: {
+  716: _FadeAlpha(hwnd,hasta,pasos := 6,delayMs := 0) {
+  743: _FadePaso(key) {
+  756: _SetColorV(on) {
+  776: _SetColorCC(on) {
+  796: _SetAR(on) {
+  817: _ToggleHoverPaneles() {
+  824: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe") && stylus.altActive
+  825: $!x:: {
+  841: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  842: __AltX_SEND_NORMAL() {
+  852: !s:: {
+  869: __AltS_SEND_NORMAL() {
+  878: $s:: {
+  925: $k:: {
+  940: $o:: _CicloO()
+  941: _CicloO() {
+  957: MacroCapas_Ejecutar(paso := 0) {
+  973: MacroCapas_Paso(paso) {
+  981: $Escape:: {
+ 1005: +r:: {
+ 1009: Tab::
+ 1010: +Escape::
+ 1011: F3:: AccionEnfoque()
+ 1012: ~f:: {
+ 1015: ~RButton & q:: {
+ 1021: ~Space & -:: {
+ 1027: #HotIf GetKeyState("Space") && WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1028: *e:: _SpaceE_Dispatch()
+ 1029: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1032: _SpaceE_Dispatch() {
+ 1053: ShiftAnclado_Toggle() {
+ 1072: ShiftAnclado_Apagar(silencioso := false) {
+ 1087: _BadgeSFT(on) {
+ 1125: _BadgeSFTGuardia() {                      ; red de seguridad si el Shift se libera por otra vía
+ 1139: _HudSFTAnclado(on) {
+ 1236: _HudSFTReafirmar() {
+ 1242: ~RButton & w:: {
+ 1247: !w:: {
+ 1251: ~RButton & -:: {
+ 1264: ~RButton & z:: {
+ 1270: ~RButton & z up:: stylus.botonSostenido := false
+ 1271: ~RButton & x:: {
+ 1276: ~RButton & 1:: {
+ 1281: ~RButton & 2:: {
+ 1286: _EnviarOpacidad() {
+ 1292: ~RButton & 3::
+ 1293: ~RButton & 4::
+ 1294: ~RButton & 5::
+ 1295: ~RButton & 6::
+ 1296: ~RButton & 7::
+ 1297: ~RButton & 8::
+ 1298: ~RButton & 9::
+ 1299: ~RButton & 0:: {
+ 1308: ~1:: {
+ 1314: ~2:: {
+ 1320: ~3:: {
+ 1326: ~4:: {
+ 1332: NumpadDiv:: {
+ 1336: Numpad8:: {
+ 1412: ~Space & NumpadAdd:: {
+ 1416: ~Space & NumpadSub:: {
+ 1420: ~Space & w:: {
+ 1425: ~Space & x:: {
+ 1430: ~Space & e:: _SpaceE_Dispatch()
+ 1431: ~Space & q:: {
+ 1435: ~Space & s:: {
+ 1441: ~Space & f:: {
+ 1453: ~Space & Numpad1::
+ 1454: ~Space & Numpad2::
+ 1455: ~Space & Numpad3::
+ 1456: ~Space & Numpad4::
+ 1457: ~Space & Numpad5::
+ 1458: ~Space & Numpad6:: {
+ 1464: $Numpad6:: {
+ 1468: *Backspace:: {
+ 1476: ~*Space:: {
+ 1480: ~*Space up:: {
+ 1505: #HotIf
+ 1506: $^F11:: _CapturarLayout("Normal")
+ 1507: $^F12:: _CapturarLayout("Enfoque")
+ 1508: $^F10:: AbrirPanelPuntos()
+ 1509: $^!+c:: AbrirPanelPuntos()
+ 1510: $^!+t:: _AbrirSelectorTema()
+ 1511: $^!+m:: ModoSel_Alternar()
+ 1512: $^!+F9:: {
+ 1521: $^!+F8:: NvToggleModo()
+ 1522: #HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+ 1523: !f:: {
+ 1548: !f up:: {
+ 1553: ~b & k:: {
+ 1562: #HotIf
+ 1563: #HotIf
+
+=== lib\hud_badges.ahk  (674 líneas)
+    3: _CheckGitDone() {
+    7: ResetEstadoAltX() {
+   12: _DestruirGui(guiObj) {
+   23: _LimpiarGUIs() {
+   58: _AvisoMonitorLienzo(&l, &t, &r, &b) {
+   71: _HudRangoEv(idEv) {
+   91: _CalcularPosicionZona(zona, w, h) {
+  113: _AvisoCerrarAuxiliares() {
+  124: _AvisoCerrarBadge() {
+  148: _TimerOcultarBadge() {
+  151: _AvisoCerrarHUD() {
+  165: _TimerOcultarHUD() {
+  171: _DwmNoRedondear(hwnd) {
+  182: MostrarAvisoUI(formato, textoPrincipal, subtexto := "", zona := 2, colorAcento := "00E5FF", duracion := 0, opacidad := 0, claveEv := "") {
+  396: _AvisoEvento(clave, textoPrincipal := "", subtexto := "", colorAcento := "00E5FF", duracion := 0) {
+  422: _MapearTextoAEvento(texto) {
+  514: MostrarBadgeCombo(comboText, toolText, colorAcento := "00E5FF", duracion := 1500, zona := 2) {
+  523: MostrarHUD(texto, colorBarra := "00E5FF", duracion := 1200, zona := 3) {
+  538: MostrarToolTipE(texto, duracion := 1200) {
+  545: MostrarIconoHerramienta(tipo,duracion := 700) {
+  576: _OcultarIconoSi(id) {
+  584: MostrarToolTipZ(texto,duracion := 800) {
+  595: ToolTipCS(texto,duracion := 800) {
+  602: _AvisoClamp(x, y, w, h) {
+  617: _AvisoPosicionar(hwnd) {
+  626: MostrarMiniTexto(texto,colorHex := "00E5FF",duracion := 1200,colorTexto := "FFFFFF") {
+  636: _OcultarMiniTipSi(id) {
+  640: _OcultarMiniGUISi(hwndMG) {
+  646: MostrarTooltipToggle(titulo,simbolo,color) {
+  653: _OcultarToggleSi(hwndT) {
+  655: QuitarTooltipToggle() {
+  662: _HudAnchoAjustado(w, texto, subtexto, tSize, sSize) {
+  670: _HudMedirTexto(txt, size) {
+
+=== lib\salida.ahk  (162 líneas)
+   12: _Sesion() {
+   21: _SalidaFases() {
+   29: Sesion_Iniciar() {
+   62: RestaurarPanelesCSP() {
+   92: Salida_Registrar(nombre, prioridad, fn) {
+  121: Salir(motivo := "desconocido", codigo := 0) {
+
+=== lib\sonido_evento.ahk  (183 líneas)
+    4: _SndTiposDef() {
+    8: _SndIdxTipo(tipo) {
+   14: _SndCacheMap() {
+   20: _SndLeer(idEv := "") {
+   57: _SndWav(tipo, vol) {
+   94: _SndTocar(tipo, vol) {
+  101: _SndEvento(clave) {
+  110: _PtsSndIdEv() {
+  115: _PtsSndRefrescar(*) {
+  136: _PtsSndCambio(prev := false, *) {
+  162: _PtsSndVolChange(*) {
+  167: _PtsSndHeredar(*) {
+  177: _PtsSndProbar(*) {
+  180: _AccResumenSnd() {
+
+=== lib\theme_gfx.ahk  (771 líneas)
+    3: _SetIcono(ctrl,nombre,esON := false) {
+   22: _Glifizar(ctrl,cod,esON) {
+   32: _ColorIcono(esON) {
+   38: _Glifo(nombre) {
+   50: _RutaIcono(nombre) {
+   66: _Tema(seccion,clave,defecto := "") {
+   84: _TemaValido(seccion,v,defecto) {
+   91: _FuenteInstalada(nombre) {
+  111: _TemaFuente(rol := "texto") {
+  124: _RolDeHex(hex) {
+  139: _AvisoColor(hex) {
+  148: _AlphaTema(clave, defecto) {
+  155: _DwmRedondear(hwnd) {
+  189: GetWindowRectSize(hwnd, &w, &h) {
+  207: _GfxGdipInicio(cerrar := false) {
+  232: _GfxGdipAlSalir(*) {
+  235: _GfxPen(argb, ancho) {
+  244: _GfxLinea(g, pen, s, x1, y1, x2, y2) {
+  249: _GfxDibujaLupa(g, argb, s) {
+  261: _GfxDibujaRotar(g, argb, s) {
+  286: _GfxDibujaMano(g, argb, s) {
+  307: GfxIconoLienzo(nombre, tam := 24, esON := false, fondo := "") {
+  348: GfxMascaraRedondeada(hwnd, w := 0, h := 0, radio := 8) {
+  381: _TemaSelEst() {
+  386: _TemaPerfiles() {
+  676: _AbrirSelectorTema() {
+  718: _TemaSelCerrar(*) {
+  726: _TemaSelAplicarPerfil(perfil, *) {
+  756: _TemaRefrescarPaneles() {

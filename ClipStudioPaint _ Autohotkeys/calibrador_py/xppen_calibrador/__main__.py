@@ -20,6 +20,7 @@ def main(argv=None) -> int:
     ap.add_argument("--perfil", default="1")
     ap.add_argument("--modo", default="normal")
     ap.add_argument("--ahk-hwnd", type=int, default=0)
+    ap.add_argument("--catalogo", default=None, help="ruta a un JSON de catalogo alternativo")
     ap.add_argument("--render", choices=["ctk", "canvas"], default="ctk", help="motor de renderizado: ctk (actual) o canvas (nuevo piloto)")
     ap.add_argument("--selftest", action="store_true", help="construye la ventana, la cierra y devuelve 0 si todo OK")
     ap.add_argument("--dump-schema", action="store_true", help="imprime dónde vive cada clave del contrato en el INI real")
@@ -31,12 +32,13 @@ def main(argv=None) -> int:
         return dump_schema(a)
 
     from .core import single_instance
+    single_instance.configurar(a.ini)
     if not a.selftest and not single_instance.adquirir():
         return 0
     try:
         from .app import CalibradorApp
         mark("imports ok")
-        app = CalibradorApp(a.ini, a.perfil, a.modo, a.ahk_hwnd, render=a.render)
+        app = CalibradorApp(a.ini, a.perfil, a.modo, a.ahk_hwnd, render=a.render, catalogo_path=a.catalogo)
         mark("ventana creada")
         if a.selftest:
             app.diagnostico_fase0()

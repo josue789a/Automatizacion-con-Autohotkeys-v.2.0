@@ -4,9 +4,17 @@
 *.tmp
 desktop.ini
 *.rar
+*.zip
+*.tar
+*.gz
+respaldos/
 _backups/
 _historico/
 *.lnk
+VERSION_ANTERIOR_5DIAS/
+VERSION_ANTERIOR_COMMIT_99b6c31/
+VERSION_COMPLETA_ORIGINAL/
+paquete_para_claude.zip
 
 # Python
 __pycache__/

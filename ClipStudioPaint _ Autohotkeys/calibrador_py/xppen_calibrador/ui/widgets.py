@@ -769,10 +769,42 @@ def attach_keycapture(host, on_clear=None, on_commit=None, get_history=None):
     host._kc_rbutton = tap_rbutton
 
     def kdown(ev):
-        # Campo blindado contra escritura manual directa para evitar descalibraciones
-        # y garantizar que RButton del stylus sea detectado por el overlay AHK.
-        if getattr(ev, "keysym", "") in ("Tab", "ISO_Left_Tab"):
+        sym = getattr(ev, "keysym", "")
+        if sym in ("Tab", "ISO_Left_Tab"):
             return None
+        if sym in ("BackSpace", "Delete"):
+            if callable(on_clear):
+                on_clear()
+            else:
+                put("")
+                if callable(on_commit):
+                    on_commit()
+                try:
+                    inner.event_generate("<FocusOut>")
+                except Exception:
+                    pass
+            accent(False)
+            return "break"
+        if sym == "Escape":
+            if st.get("armed"):
+                st["armed"] = False
+                accent(False)
+            return "break"
+        if st.get("manual"):
+            return None
+        tok = _tok_de(ev)
+        if tok:
+            if st.get("armed"):
+                focus_out(force=True)   # desarma AHK (limpia + CAP_CANCEL) y captura local
+            put(tok)
+            if callable(on_commit):
+                on_commit()
+            try:
+                inner.event_generate("<FocusOut>")
+            except Exception:
+                pass
+            accent(False)
+            return "break"
         return "break"
 
     def kup(ev):
@@ -882,13 +914,11 @@ def attach_keycapture(host, on_clear=None, on_commit=None, get_history=None):
         if _same_physical_click(ev):
             return
         now = _mono()
-        dt = now - last_click_t[0]
         last_click_t[0] = now
-        if _is_empty():
-            inner.after(30, lambda: _is_empty() and arm_capture())
-        else:
-            if dt < 0.6:
-                arm_capture()
+        try:
+            inner.focus_set()           # teclado local; AHK solo con doble clic
+        except Exception:
+            pass
 
     def on_double_click(ev=None):
         arm_capture()
@@ -955,8 +985,7 @@ def attach_keycapture(host, on_clear=None, on_commit=None, get_history=None):
 
     def focus_in(_e=None):
         accent(True)
-        if _is_empty() and not st.get("armed") and not st.get("manual"):
-            arm_capture()
+        # Opción A: ya no se arma AHK al enfocar (causaba el ping-pong de foco)
 
     def focus_out(_e=None, force=False):
         if (not force and st.get("armed")

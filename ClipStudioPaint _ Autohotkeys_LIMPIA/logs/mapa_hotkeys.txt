@@ -1,0 +1,120 @@
+﻿401-401 | INFRA? | ^!b |  | 
+545-549 | INFRA? | ^s | EsEditorTexto() | 
+550-559 | INFRA? | ^g | EsEditorTexto() | 
+568-569 | INFRA? | $` |  | APILADO/REVISAR
+569-582 | INFRA? | $sc029 |  | 
+584-587 | INFRA? | Pause |  | 
+627-627 | INFRA? | ~*LWin |  | 
+628-628 | INFRA? | ~*RWin |  | 
+632-636 | D/INFRA? | RButton | CspLibre() && _LegadoActivo() | 
+637-647 | D/INFRA? | RButton up | CspLibre() && _LegadoActivo() | 
+648-651 | B? | Space & RButton | CspLibre() && _LegadoActivo() | 
+653-657 | D/INFRA? | Numpad0 | CspLibre() | 
+666-669 | D/INFRA? | ^s | CspLibre() | 
+697-706 | A? | ~!b | CspLibre() | 
+707-720 | A? | ~!b up | CspLibre() | 
+737-756 | D/INFRA? | x | CspLibre() && _LegadoActivo() | 
+758-758 | D/INFRA? | $^z | CspLibre() && _LegadoActivo() | 
+759-764 | D/INFRA? | $^y | CspLibre() && _LegadoActivo() | 
+826-826 | D/INFRA? | $^z up | CspLibre() && _LegadoActivo() | 
+828-832 | A? | !z | CspLibre() && _LegadoActivo() | 
+833-839 | A? | !^z | CspLibre() && _LegadoActivo() | 
+840-840 | A? | !^z up | CspLibre() && _LegadoActivo() | 
+842-846 | A? | z | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+847-850 | A? | q | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+851-854 | A? | w | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+855-855 | A? | - | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+856-859 | A? | e | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+860-870 | A? | x | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+871-882 | A? | a | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+883-894 | A? | s | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+895-910 | A? | f | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+911-911 | A? | f up | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+912-913 | A? | $!Space | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | APILADO/REVISAR
+913-918 | A? | $Space | !Cap_Armado() && (IsSet(stylus) && stylus.altActive) && !WinActive("ahk_exe PureRef.exe") && _LegadoActivo() | 
+921-935 | D/INFRA? | $a | CspLibre() && _LegadoActivo() | 
+937-942 | C? | ~RButton & a | CspLibre() && _LegadoActivo() | 
+944-984 | D/INFRA? | $e | CspLibre() && _LegadoActivo() | 
+986-992 | C? | ~RButton & e | CspLibre() && _LegadoActivo() | 
+994-997 | D/INFRA? | ^e | CspLibre() && _LegadoActivo() | 
+998-1001 | A? | !e | CspLibre() && _LegadoActivo() | 
+1002-1005 | A? | !q | CspLibre() && _LegadoActivo() | 
+1007-1008 | D/INFRA? | ~LAlt & 1 | CspLibre() | APILADO/REVISAR
+1008-1011 | D/INFRA? | ~RAlt & 1 | CspLibre() | 
+1012-1013 | D/INFRA? | ~LAlt & 2 | CspLibre() | APILADO/REVISAR
+1013-1016 | D/INFRA? | ~RAlt & 2 | CspLibre() | 
+1018-1021 | A? | !Home | CspLibre() && _LegadoActivo() | 
+1022-1022 | A? | !- | CspLibre() && _LegadoActivo() | 
+1024-1065 | D/INFRA? | $w | CspLibre() && _LegadoActivo() | 
+1066-1097 | D/INFRA? | $z | CspLibre() && _LegadoActivo() | 
+1099-1101 | D/INFRA? | $z up | CspLibre() && _LegadoActivo() | 
+1103-1103 | D/INFRA? | ~r | CspLibre() | 
+1105-1147 | D/INFRA? | $q | CspLibre() && _LegadoActivo() | 
+1175-1178 | D/INFRA? | +q | CspLibre() && _LegadoActivo() | 
+1179-1188 | A? | !j | CspLibre() && _LegadoActivo() | 
+1299-1314 | A? | $!x | CspLibre() && (IsSet(stylus) && stylus.altActive) && _LegadoActivo() | 
+1327-1343 | A? | !s | CspLibre() && _LegadoActivo() | 
+1355-1400 | D/INFRA? | $s | CspLibre() && _LegadoActivo() | 
+1403-1417 | D/INFRA? | $k | CspLibre() | 
+1418-1418 | D/INFRA? | $o | CspLibre() | 
+1459-1482 | D/INFRA? | $Escape | CspLibre() | 
+1484-1487 | D/INFRA? | +r | CspLibre() && _LegadoActivo() | 
+1488-1489 | D/INFRA? | Tab | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1489-1490 | D/INFRA? | +Escape | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1490-1490 | D/INFRA? | F3 | CspLibre() && _LegadoActivo() | 
+1491-1492 | D/INFRA? | ~f | CspLibre() && _LegadoActivo() | 
+1496-1501 | C? | ~RButton & q | CspLibre() && _LegadoActivo() | 
+1506-1511 | B? | ~Space & - | CspLibre() && _LegadoActivo() | 
+1513-1513 | B? | *e | GetKeyState("Space") && CspLibre() && _LegadoActivo() | 
+1728-1733 | C? | ~RButton & w | CspLibre() && _LegadoActivo() | 
+1735-1738 | A? | !w | CspLibre() && _LegadoActivo() | 
+1740-1753 | C? | ~RButton & - | CspLibre() && _LegadoActivo() | 
+1754-1760 | C? | ~RButton & z | CspLibre() && _LegadoActivo() | 
+1761-1761 | C? | ~RButton & z up | CspLibre() && _LegadoActivo() | 
+1762-1767 | C? | ~RButton & x | CspLibre() && _LegadoActivo() | 
+1768-1773 | C? | ~RButton & 1 | CspLibre() && _LegadoActivo() | 
+1774-1779 | C? | ~RButton & 2 | CspLibre() && _LegadoActivo() | 
+1788-1789 | C? | ~RButton & 3 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1789-1790 | C? | ~RButton & 4 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1790-1791 | C? | ~RButton & 5 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1791-1792 | C? | ~RButton & 6 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1792-1793 | C? | ~RButton & 7 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1793-1794 | C? | ~RButton & 8 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1794-1795 | C? | ~RButton & 9 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1795-1804 | C? | ~RButton & 0 | CspLibre() && _LegadoActivo() | 
+1806-1811 | D/INFRA? | ~1 | CspLibre() | 
+1812-1817 | D/INFRA? | ~2 | CspLibre() | 
+1818-1823 | D/INFRA? | ~3 | CspLibre() | 
+1824-1829 | D/INFRA? | ~4 | CspLibre() | 
+1831-1834 | D/INFRA? | NumpadDiv | CspLibre() && _LegadoActivo() | 
+1835-1910 | D/INFRA? | Numpad8 | CspLibre() && _LegadoActivo() | 
+1911-1914 | B? | ~Space & NumpadAdd | CspLibre() && _LegadoActivo() | 
+1915-1918 | B? | ~Space & NumpadSub | CspLibre() && _LegadoActivo() | 
+1919-1923 | B? | ~Space & w | CspLibre() && _LegadoActivo() | 
+1924-1928 | B? | ~Space & x | CspLibre() && _LegadoActivo() | 
+1929-1929 | B? | ~Space & e | CspLibre() && _LegadoActivo() | 
+1930-1933 | B? | ~Space & q | CspLibre() && _LegadoActivo() | 
+1934-1939 | B? | ~Space & s | CspLibre() && _LegadoActivo() | 
+1940-1951 | B? | ~Space & f | CspLibre() && _LegadoActivo() | 
+1952-1953 | B? | ~Space & Numpad1 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1953-1954 | B? | ~Space & Numpad2 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1954-1955 | B? | ~Space & Numpad3 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1955-1956 | B? | ~Space & Numpad4 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1956-1957 | B? | ~Space & Numpad5 | CspLibre() && _LegadoActivo() | APILADO/REVISAR
+1957-1962 | B? | ~Space & Numpad6 | CspLibre() && _LegadoActivo() | 
+1964-1967 | D/INFRA? | $Numpad6 | CspLibre() | 
+1969-1976 | B? | *Backspace | CspLibre() && _LegadoActivo() | 
+1978-1981 | B? | ~*Space | CspLibre() | 
+1982-2005 | B? | ~*Space up | CspLibre() | 
+2008-2008 | INFRA? | $^F11 |  | 
+2009-2009 | INFRA? | $^F12 |  | 
+2010-2010 | INFRA? | $^F10 |  | 
+2011-2011 | INFRA? | $^!+c |  | 
+2012-2012 | INFRA? | $^!+k |  | 
+2013-2013 | INFRA? | $^!+t |  | 
+2014-2014 | INFRA? | $^!+m |  | 
+2015-2023 | INFRA? | $^!+F9 |  | 
+2024-2024 | INFRA? | $^!+F8 |  | 
+2026-2050 | A? | !f | CspLibre() && _LegadoActivo() | 
+2051-2055 | A? | !f up | CspLibre() && _LegadoActivo() | 
+2056-2064 | D/INFRA? | ~b & k | CspLibre() && _LegadoActivo() | 

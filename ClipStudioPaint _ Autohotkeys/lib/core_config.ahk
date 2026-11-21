@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2.0
 ; [LIB] core_config — fuente: XPPEN AHK VERSION ESTABLE.ahk L1283–1299, L2677–2795, L4158–4296 y L4884–4909
-_gDurCache := Map()
+; POSGUI_INI_OVERRIDE, SANDBOX_ACTIVO y _gDurCache se declaran en el encabezado de cada script principal
 
 ObtenerMonitorCSP() {
     ; Regla forzada: >1 monitor -> siempre la tableta; 1 monitor -> el único (primario)
@@ -8,7 +8,9 @@ ObtenerMonitorCSP() {
     MonitorGet(mon, &mL, &mT, &mR, &mB)
     return {x:mL, y:mT, w:mR - mL, h:mB - mT}
 }
-_PosGuiIniPath() => A_ScriptDir "\posiciones_gui.ini"
+_PosGuiIniPath() => (IsSet(POSGUI_INI_OVERRIDE) && POSGUI_INI_OVERRIDE != "")
+    ? POSGUI_INI_OVERRIDE
+    : (A_ScriptDir "\posiciones_gui.ini")
 GuardarPosicionGUI(nombre,hwnd) {
     global PERFIL
     sec := nombre "_p" PERFIL

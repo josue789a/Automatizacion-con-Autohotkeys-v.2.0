@@ -1,0 +1,169 @@
+{
+  "temas": [
+    {
+      "nombre": "1. CSP Réplica Nativa (Oscuro CSP)",
+      "desc": "Idéntico a los paneles, barras y botones activos de Clip Studio Paint",
+      "swatches": [
+        "636C82",
+        "474747",
+        "C8CEDE",
+        "9A7BFF",
+        "363636"
+      ]
+    },
+    {
+      "nombre": "2. Grafito Carbón (Minimalismo)",
+      "desc": "Tonos neutros puros sin tintes de color para máxima concentración",
+      "swatches": [
+        "525252",
+        "333333",
+        "999999",
+        "CCCCCC",
+        "2A2A2A"
+      ]
+    },
+    {
+      "nombre": "3. Slate Blue / Studio Pro (Wacom)",
+      "desc": "Azul pizarra digital moderno inspirado en herramientas de ilustración",
+      "swatches": [
+        "4E6982",
+        "343B47",
+        "7AA2F7",
+        "7DCFFF",
+        "2A313D"
+      ]
+    },
+    {
+      "nombre": "4. OLED Alto Contraste",
+      "desc": "Negros profundos y barras luminosas para pantallas oscuras o dibujo con luz solar",
+      "swatches": [
+        "737B8C",
+        "1E1E1E",
+        "E6EDF8",
+        "B388FF",
+        "141414"
+      ]
+    },
+    {
+      "nombre": "5. Sepia / Warm Paper (Estudio)",
+      "desc": "Tonos tierra orgánicos que descansan la vista emulando papel tradicional",
+      "swatches": [
+        "6B5E57",
+        "423B38",
+        "D4B996",
+        "E09F67",
+        "36302D"
+      ]
+    },
+    {
+      "nombre": "6. CSP Medida Exacta (Píxel a Píxel)",
+      "desc": "Valores medidos de la interfaz real de CSP: menú 494949, paneles 424242, selección 636D83",
+      "swatches": [
+        "636D83",
+        "494949",
+        "6A748A",
+        "9AA8CC",
+        "424242"
+      ]
+    },
+    {
+      "nombre": "7. Carbón de Paneles (CSP Neutro)",
+      "desc": "Neutros de paneles y barras de CSP sin azul: máxima calma para sesiones largas",
+      "swatches": [
+        "5C5C5C",
+        "424242",
+        "9AA3B8",
+        "7F8BA8",
+        "2E2E2E"
+      ]
+    },
+    {
+      "nombre": "8. Pizarra Azul de Selección",
+      "desc": "Azul pizarra de la pestaña y la capa activas de CSP llevado a todo el panel",
+      "swatches": [
+        "5F6B86",
+        "3E4452",
+        "B4BEDB",
+        "86A8FF",
+        "2F3441"
+      ]
+    },
+    {
+      "nombre": "9. Nocturno OLED (Negro Profundo)",
+      "desc": "Fondos casi negros con selección azul apagada y acento menta, para estudio sin luz",
+      "swatches": [
+        "3D4660",
+        "121212",
+        "8B97B8",
+        "5EEAD4",
+        "0A0A0A"
+      ]
+    },
+    {
+      "nombre": "10. Carbón Cálido (Arena)",
+      "desc": "Grises de CSP con matiz arena y acento ámbar suave para reducir la luz fría",
+      "swatches": [
+        "6E665F",
+        "484543",
+        "CDBFA9",
+        "E3B87A",
+        "3A3836"
+      ]
+    },
+    {
+      "nombre": "11. Alto Contraste Accesible",
+      "desc": "Blanco y amarillo sobre negro con selección azul intenso; legibilidad máxima",
+      "swatches": [
+        "3355B8",
+        "202020",
+        "FFFFFF",
+        "FFD60A",
+        "121212"
+      ]
+    },
+    {
+      "nombre": "12. Verde Estudio (Salvia)",
+      "desc": "Verdes salvia desaturados sobre carbón verdoso; descanso visual con acento menta",
+      "swatches": [
+        "56705F",
+        "3F4843",
+        "B7D3BF",
+        "7BE0A0",
+        "333B37"
+      ]
+    },
+    {
+      "nombre": "13. Violeta de Acento (Ciruela)",
+      "desc": "Grises violáceos con acento lavanda, afín al color de acento del estabilizador",
+      "swatches": [
+        "6B5F8C",
+        "3E3A4A",
+        "CFC4F2",
+        "B39DFF",
+        "2F2C3A"
+      ]
+    },
+    {
+      "nombre": "14. Ámbar Taller (Cobre)",
+      "desc": "Base neutra de CSP con selección cobre y acento ámbar encendido, como luz de lámpara",
+      "swatches": [
+        "8A6A3B",
+        "464646",
+        "FFD98A",
+        "FFB000",
+        "363636"
+      ]
+    },
+    {
+      "nombre": "15. Claro Gris CSP (Modo Día)",
+      "desc": "Variante clara: grises suaves y selección pizarra con texto oscuro, para luz de día",
+      "swatches": [
+        "AEB8D2",
+        "D0D0D0",
+        "5F6B8A",
+        "4466D8",
+        "E4E4E4"
+      ]
+    }
+  ]
+}

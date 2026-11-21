@@ -1077,8 +1077,12 @@ class EditorPanel(ctk.CTkFrame):
                                         l_sub=l_sub, vacio=vacio, chev=chev)
             r += 1
             self.groups[key] = []
+            if key == "B":
+                self._b_row_base = r   # row del primer bloque B (justo después de la cabecera)
             for cls in group:
                 b = cls(self.scroll, ctx, self._on_toggle)
+                b.editor = self
+                b.VISUAL_ESTADO = (key == "B")
                 b.grid(row=r, column=0, sticky="ew", pady=(0, T.GAP), padx=(0, 6))
                 self.groups[key].append(b)
                 if collapsed:
@@ -1167,8 +1171,24 @@ class EditorPanel(ctk.CTkFrame):
         """
         if getattr(self.ctx, "event_id", None) is None:
             return
+
+        # Guarda de seguridad: Panel B solo disponible si Atajo CSP está definido en Base
+        cur_a = str(self.ctx.get("atajo") or "").strip()
+        ev = self.catalogo.por_id(self.ctx.event_id) if hasattr(self, "catalogo") else None
+        base_def = str(ev.atajo_def or "").strip() if ev else ""
+        has_atajo = bool((cur_a and cur_a != "—") or (base_def and base_def != "—"))
+
+        for b in self.groups.get("B", []):
+            disp_cap = True if not b.CAP else bool(ev and ev.tiene(b.CAP))
+            b.set_available(has_atajo and disp_cap)
+            if not has_atajo:
+                b.l_sub.configure(text="Requiere definir el Atajo CSP en Base")
+            if hasattr(b, "refresh_cascada_a"):
+                b.refresh_cascada_a()
+            b.update_visual_state()
+
         for key, h in getattr(self, "_group_hdr", {}).items():
-            activo = self._grupo_activo(key)
+            activo = self._grupo_activo(key) if (key != "B" or has_atajo) else False
             try:
                 h["badge"].configure(fg_color=T.PRIMARY if activo else T.MUTED_BG)
                 h["b_lbl"].configure(text_color="#FFFFFF" if activo else T.MUTED_TXT)
@@ -1186,6 +1206,24 @@ class EditorPanel(ctk.CTkFrame):
             elif key in self._auto_col:
                 self._collapse_group(key, False)
                 self._auto_col.discard(key)
+
+        # ── reorden dinámico de bloques B ──
+        b_blocks = self.groups.get("B", [])
+        base = getattr(self, "_b_row_base", None)
+        if b_blocks and base is not None:
+            def _on(b):
+                try:
+                    return bool(b.available and b.configurado())
+                except Exception:
+                    return bool(b.available)
+            activos = [b for b in b_blocks if _on(b)]
+            inactivos = [b for b in b_blocks if b not in activos]
+            for i, b in enumerate(activos + inactivos):
+                visible = b.winfo_manager() == "grid"
+                b.grid_configure(row=base + i)
+                if not visible:
+                    b.grid_remove()   # grid_configure re-grillaría un bloque oculto (grupo colapsado)
+            self._queue_sync()
 
     def _on_toggle(self, block):
         if block.expanded:

@@ -38,33 +38,9 @@ def clave_pertenece_a_evento(key: str, eid: str) -> bool:
             return True
     return False
 
-ATAJO_DEFAULTS: dict[str, str] = {
-    "pluma": "Q", "aerografo": "W", "aerografo_alpha": "k", "pincel_suave": "Y",
-    "pincel_duro": "F6", "difu_mixer": "Ñ", "opc_presion": "<", "borrador": "E",
-    "borrador_suave": "L", "borrador_lazo": "F12", "borrador_all_layers": "F5", "smudge": "P", "smear": "B",
-    "smear_soft": "NumpadEnd", "color_mix": "D", "color_primario": "Q", "color_secundario": "Ctrl+2",
-    "relleno": "V", "area_color": "Ctrl+X", "lazo": "S", "deseleccion": "X", "reseleccion": "F10",
-    "inv_seleccion": "C", "shift_sostenido": "Shift", "flip_horizontal": "Alt+G",
-    "rotar_lienzo": "R", "zoom_lienzo": "Z", "regla_ocultar": "Alt+T", "capa_visibilidad": "Shift+D",
-    "guardar": "Ctrl+S", "deshacer": "Ctrl+Z", "rehacer": "Ctrl+Y", "copiar": "Ctrl+C", "enfoque": "Tab",
-    "history_lock": "—", "panel_ds": "—", "panel_cc": "—", "gui_frente": "—",
-    "estab_slider": "—", "layout": "—", "reload": "^!+r"
-}
+ATAJO_DEFAULTS: dict[str, str] = {}
 
-REMAP_DEFAULTS: dict[str, str] = {
-    "pluma": "Q", "aerografo": "W", "aerografo_alpha": "W²", "pincel_suave": "Alt+Q",
-    "pincel_duro": "RButton + Q", "difu_mixer": "RButton + W", "opc_presion": "Alt+W", "borrador": "E",
-    "borrador_suave": "E²", "borrador_lazo": "RButton + E", "borrador_all_layers": "Ctrl + E", "smudge": "Alt + X²",
-    "smear": "Alt + F", "smear_soft": "Alt + F²", "color_mix": "Alt + X",
-    "color_primario": "Q²", "color_secundario": "Q²", "relleno": "RButton + 1",
-    "area_color": "S²", "lazo": "S", "deseleccion": "X (toggle 0)", "reseleccion": "X (toggle 1)",
-    "inv_seleccion": "Space + RButton", "shift_sostenido": "RButton + F", "flip_horizontal": "Space + Alt+B",
-    "rotar_lienzo": "Z²", "zoom_lienzo": "Z", "regla_ocultar": "RButton + T",
-    "capa_visibilidad": "Space + E", "guardar": "Ctrl+S", "deshacer": "Ctrl+Z", "rehacer": "Ctrl+Y",
-    "copiar": "Ctrl+C", "enfoque": "Tab / F3", "history_lock": "Píldora lock", "panel_ds": "Píldora ds / Hover",
-    "panel_cc": "Píldora cc / Hover", "gui_frente": "Píldora frente", "estab_slider": "Slider estab",
-    "layout": "Menú Companion", "reload": "Píldora reload"
-}
+REMAP_DEFAULTS: dict[str, str] = {}
 
 
 @dataclass
@@ -85,10 +61,12 @@ class Evento:
 
 
 class Catalogo:
-    def __init__(self, store: IniFile, data_dir: Path):
-        self.store, self.json_path = store, Path(data_dir) / "catalogo.json"
+    def __init__(self, store: IniFile, data_dir: Path, json_path: Path | None = None):
+        self.store = store
+        self.json_path = Path(json_path) if json_path else (Path(data_dir) / "catalogo.json")
         self.eventos: list[Evento] = []
         self.origen = "json"
+        self._json_explicito = json_path is not None
 
     def load(self) -> "Catalogo":
         try:
@@ -103,9 +81,11 @@ class Catalogo:
         except Exception:
             eliminados = set()
         evs: dict[str, Evento] = {}
+        json_cargado = False
         if self.json_path.exists():
             try:
-                for e in json.loads(self.json_path.read_text(encoding="utf-8-sig")).get("eventos", []):
+                data = json.loads(self.json_path.read_text(encoding="utf-8-sig"))
+                for e in data.get("eventos", []):
                     eid = e["id"]
                     if eid in eliminados:
                         continue
@@ -115,9 +95,10 @@ class Catalogo:
                     grp = (e.get("grupo") or "").strip() or (GRUPO_CUSTOM if es_cust else "Otros")
                     evs[eid] = Evento(eid, e.get("nombre", eid), grp,
                                       at, rm, e.get("bloques", {}), custom=es_cust)
+                json_cargado = True
             except (OSError, ValueError, KeyError):
                 evs = {}
-        if not evs:
+        if not json_cargado and not self._json_explicito:
             self.origen = "ini"
             for k in self.store.keys("Particularidades"):
                 m = _PART_KEY.match(k)
@@ -219,7 +200,25 @@ class Catalogo:
 
     def siguiente_custom(self) -> tuple[str, str]:
         usados = {e.id for e in self.eventos}
+        if getattr(self, "store", None):
+            try:
+                ini_list = [c.strip() for c in (self.store.get("EventosCustom", "lista", "") or "").split(",") if c.strip()]
+                usados.update(ini_list)
+            except Exception:
+                pass
         n = 1
         while f"custom_{n}" in usados:
             n += 1
         return f"custom_{n}", f"Nuevo evento {n}"
+
+    def renombrar_custom(self, eid: str, nuevo: str) -> bool:
+        nuevo = (nuevo or "").strip()
+        if not nuevo or len(nuevo) > 60 or any(c in nuevo for c in "|\r\n"):
+            return False
+        ev = self.por_id(eid)
+        if ev is None or not ev.custom:
+            return False
+        grp = (self.store.get("EventosCustom", eid, "") or "").partition("|")[2] or GRUPO_CUSTOM
+        self.store.save_patches([("EventosCustom", eid, f"{nuevo}|{grp}")])
+        self.load()
+        return True

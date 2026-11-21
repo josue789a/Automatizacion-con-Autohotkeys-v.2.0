@@ -1,0 +1,403 @@
+﻿=== comportamientos.ahk L360-L540 ===
+360: ; Crea fila (checkbox + ⚙ + motivo) y su tarjeta. Devuelve el checkbox.
+361: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+362:     global ACC, COMP
+363:     g := ACC.g, x0 := ACC.x0, uiP := ACC.uiP
+364:     cb   := _R(g.Add("CheckBox", uiP.Call(x0 + 14,  yDis + 1, 210, 22), texto))
+365:     gear := _R(g.Add("Text",     uiP.Call(x0 + 228, yDis + 1, 78,  22) . " +0x200 +0x100", "⚙ Ajustes ▸"))
+366:     why  := _R(g.Add("Text",     uiP.Call(x0 + 312, yDis + 1, ACC.cw - 318, 22) . " +0x200 +0x4000 cGray", ""))
+367:     card := {ctrls: [], alto: 6 + 22 * lineas.Length}
+368:     for i, t in lineas {
+369:         lbl := _R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, ACC.cw - 42, 20) . " +0x200 +0x4000" . (i = 1 ? "" : " cGray"), t))
+370:         card.ctrls.Push(lbl)
+371:         try _AyudaReg(lbl, t)
+372:     }
+373:     card.filas := Map()                              ; índice de ctrl -> fila visual (varios ctrls pueden compartir fila)
+374:     cmp := false
+375:     if (campos = "slider") {                                ; E4: deslizador virtual ; ===== BLOQUE_B_P4_BEGIN =====
+376:         n := lineas.Length
+377:         cmp := {eRep: "", eAct: "", cbB: "", sld: true, eBajar: "", eSubir: "", lblReqTeclas: "", eSnaps: [], eAH: "", eAF: "", bZona: "", bZonaF: "", otrosCtrls: []}
+378:         ; Fila 1: Teclas obligatorias que suben y bajan
+379:         card.ctrls.Push(_R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 94, 20) . " +0x200", "Bajar estab (A):")))
+380:         cmp.eBajar := _R(g.Add("Edit", uiP.Call(x0 + 130, yDis + 2, 70, 20), ""))
+381:         _KgAttach(cmp.eBajar, (*) => _CompSliderVerificarTeclas(cmp))
+382:         card.ctrls.Push(cmp.eBajar)
+383:         card.ctrls.Push(_R(g.Add("Text", uiP.Call(x0 + 214, yDis + 2, 94, 20) . " +0x200", "Subir estab (B):")))
+384:         cmp.eSubir := _R(g.Add("Edit", uiP.Call(x0 + 310, yDis + 2, 70, 20), ""))
+385:         _KgAttach(cmp.eSubir, (*) => _CompSliderVerificarTeclas(cmp))
+386:         card.ctrls.Push(cmp.eSubir)
+387:         cmp.lblReqTeclas := _R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 408, 20) . " +0x200 cRed", "⚠️ Teclas obligatorias"))
+388:         card.ctrls.Push(cmp.lblReqTeclas)
+389:         card.filas[n + 1] := n + 1, card.filas[n + 2] := n + 1
+390:         card.filas[n + 3] := n + 1, card.filas[n + 4] := n + 1
+391:         card.filas[n + 5] := n + 2
+392: 
+393:         ; Fila 2: Snap points
+394:         txtSn := _R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 112, 20) . " +0x200", "Snap P1 ▸ P5 (%):"))
+395:         card.ctrls.Push(txtSn), cmp.otrosCtrls.Push(txtSn)
+396:         card.filas[n + 6] := n + 3
+397:         Loop 5 {
+398:             esn := _R(g.Add("Edit", uiP.Call(x0 + 150 + (A_Index - 1) * 44, yDis + 2, 38, 20) . " Number Limit3", ""))
+399:             cmp.eSnaps.Push(esn), cmp.otrosCtrls.Push(esn)
+400:             cueSnap := "P" A_Index
+401:             SendMessage(0x1501, 1, StrPtr(cueSnap), esn)
+402:             card.ctrls.Push(esn)
+403:             card.filas[n + 6 + A_Index] := n + 3
+404:             esn.OnEvent("Change", _CompCampoCambio.Bind(key, "snaps"))
+405:         }
+406: 
+407:         ; Fila 3: Opacidades
+408:         txtAH := _R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 112, 20) . " +0x200", "Hover (reposo) %:"))
+409:         cmp.otrosCtrls.Push(txtAH), card.ctrls.Push(txtAH)
+410:         cmp.eAH := _R(g.Add("Edit", uiP.Call(x0 + 150, yDis + 2, 48, 20), ""))
+411:         cmp.otrosCtrls.Push(cmp.eAH), card.ctrls.Push(cmp.eAH)
+412:         txtAF := _R(g.Add("Text", uiP.Call(x0 + 256, yDis + 2, 112, 20) . " +0x200", "Focus (activo) %:"))
+413:         cmp.otrosCtrls.Push(txtAF), card.ctrls.Push(txtAF)
+414:         cmp.eAF := _R(g.Add("Edit", uiP.Call(x0 + 372, yDis + 2, 48, 20), ""))
+415:         cmp.otrosCtrls.Push(cmp.eAF), card.ctrls.Push(cmp.eAF)
+416:         card.filas[n + 12] := n + 4, card.filas[n + 13] := n + 4
+417:         card.filas[n + 14] := n + 4, card.filas[n + 15] := n + 4
+418: 
+419:         ; Fila 4: Botones para dibujar
+420:         bZona := _R(g.Add("Button", uiP.Call(x0 + 34, yDis + 2, 160, 22), "✏ Dibujar deslizador"))
+421:         bZonaF := _R(g.Add("Button", uiP.Call(x0 + 204, yDis + 2, 180, 22), "✏ Dibujar enfoque (Shift+E)"))
+422:         bZona.OnEvent("Click", (*) => _PtsDibujarZonaEstab(false))
+423:         bZonaF.OnEvent("Click", (*) => _PtsDibujarZonaEstab(true))
+424:         cmp.bZona := bZona, cmp.bZonaF := bZonaF
+425:         cmp.otrosCtrls.Push(bZona), cmp.otrosCtrls.Push(bZonaF)
+426:         card.ctrls.Push(bZona), card.ctrls.Push(bZonaF)
+427:         card.filas[n + 16] := n + 5, card.filas[n + 17] := n + 5
+428: 
+429:         card.alto := 6 + 22 * (n + 5)
+430:         cmp.eBajar.OnEvent("Change", _CompCampoCambio.Bind(key, "tecla_bajar"))
+431:         cmp.eSubir.OnEvent("Change", _CompCampoCambio.Bind(key, "tecla_subir"))
+432:         cmp.eAH.OnEvent("Change", _CompCampoCambio.Bind(key, "alphaH"))
+433:         cmp.eAF.OnEvent("Change", _CompCampoCambio.Bind(key, "alphaF"))
+434:     } else if (campos = "ventanas") {                       ; Nuevas ventanas y lienzos integrados ; ===== BLOQUE_B_P5_BEGIN =====
+435:         n := lineas.Length
+436:         cmp := {ddModo: "", btnDib: "", btnPes: "", btnVer: "", btnBor: "", stZonas: ""}
+437: 
+438:         ; Fila 1: Visibilidad de ventanas
+439:         card.ctrls.Push(_R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 130, 20) . " +0x200", "Visibilidad lienzos:")))
+440:         ddModo := _R(g.Add("DropDownList", uiP.Call(x0 + 168, yDis + 2, 250, 22) . " Choose" (NvEstado().modoGlobal = "desact_25" || NvEstado().modoGlobal = "total" ? 2 : 1), ["Hover (aparece al pasar el lápiz)", "Ocultar total (25 %, bloqueada)"]))
+441:         ddModo.OnEvent("Change", (c, *) => NvSetModo(c.Value = 2 ? "total" : "hover"))
+442:         cmp.ddModo := ddModo
+443:         card.ctrls.Push(ddModo)
+444:         card.filas[n + 1] := n + 1, card.filas[n + 2] := n + 1
+445: 
+446:         ; Fila 2: Botones directos en un solo toque
+447:         btnDib := _R(g.Add("Button", uiP.Call(x0 + 34, yDis + 2, 170, 22), "➕ Dibujar lienzo 1–8"))
+448:         btnDib.OnEvent("Click", (*) => _NvPanDibujar())
+449:         btnPes := _R(g.Add("Button", uiP.Call(x0 + 212, yDis + 2, 205, 22), "🎯 Calibrar franja de arrastre"))
+450:         btnPes.OnEvent("Click", (*) => _NvPanPestana())
+451:         btnVer := _R(g.Add("Button", uiP.Call(x0 + 34, yDis + 2, 110, 22), "👁 Ver zonas"))
+452:         btnVer.OnEvent("Click", _PtsToggleVerZonas)
+453:         btnBor := _R(g.Add("Button", uiP.Call(x0 + 152, yDis + 2, 100, 22), "🗑 Borrar todo"))
+454:         btnBor.OnEvent("Click", (*) => _NvPanBorrar())
+455:         card.ctrls.Push(btnDib), card.ctrls.Push(btnPes), card.ctrls.Push(btnVer), card.ctrls.Push(btnBor)
+456:         card.filas[n + 3] := n + 2, card.filas[n + 4] := n + 2, card.filas[n + 5] := n + 3, card.filas[n + 6] := n + 3
+457: 
+458:         ; Fila 3: Estado informativo
+459:         stZ := _R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 408, 20) . " +0x200 +0x4000 cGray", _NvPanTexto()))
+460:         cmp.stZonas := stZ
+461:         ptsEd.stNvZonas := stZ
+462:         card.ctrls.Push(stZ)
+463:         card.filas[n + 7] := n + 4
+464: 
+465:         card.alto := 6 + 22 * (n + 4)
+466:     } else if (campos = "quick" || campos = "toggle") {     ; E3: modulación de tecla ; ===== BLOQUE_B_P3_BEGIN =====
+467:         n := lineas.Length
+468:         cmp := {eRep: "", eAct: "", cbB: "", mod: true, eA: "", eB: "", eMs: "", lblReqB: "", lblMs: "", baseA: ""}
+469:         et := (campos = "quick") ? ["Toque corto (A):", "Toque rápido (B):"] : ["Tecla A:", "Tecla B:"]
+470:         card.ctrls.Push(_R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 108, 20) . " +0x200", et[1])))
+471:         cmp.eA := _R(g.Add("Edit", uiP.Call(x0 + 146, yDis + 2, 80, 20), ""))
+472:         _KgAttach(cmp.eA, (*) => _CompHeredadoPintar(cmp))
+473:         card.ctrls.Push(cmp.eA)
+474:         card.ctrls.Push(_R(g.Add("Text", uiP.Call(x0 + 234, yDis + 2, 112, 20) . " +0x200", et[2])))
+475:         cmp.eB := _R(g.Add("Edit", uiP.Call(x0 + 350, yDis + 2, 80, 20), ""))
+476:         _KgAttach(cmp.eB, (*) => (campos = "toggle" ? _CompReqBRefrescar(cmp) : ""))
+477:         card.ctrls.Push(cmp.eB)
+478:         card.filas[n + 1] := n + 1, card.filas[n + 2] := n + 1
+479:         card.filas[n + 3] := n + 1, card.filas[n + 4] := n + 1
+480:         m := n + 4
+481:         if (campos = "toggle") {
+482:             cmp.lblReqB := _R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 408, 20) . " +0x200 cRed", "⚠️ Requiere Tecla B"))
+483:             cmp.lblReqB.Visible := false
+484:             card.ctrls.Push(cmp.lblReqB)
+485:             card.filas[m + 1] := n + 2
+486:             m++
+487:         }
+488:         nFilas := 1
+489:         if (campos = "quick") {
+490:             card.ctrls.Push(_R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 112, 20) . " +0x200", "Umbral (ms):")))
+491:             cmp.eMs := _R(g.Add("Edit", uiP.Call(x0 + 150, yDis + 2, 54, 20) . " Number Limit4", ""))
+492:             card.ctrls.Push(cmp.eMs)
+493:             cmp.lblMs := _R(g.Add("Text", uiP.Call(x0 + 214, yDis + 2, 220, 20) . " +0x200 cGray", "⚡ 250 ms (predeterminado)"))
+494:             card.ctrls.Push(cmp.lblMs)
+495:             card.filas[m + 1] := n + 2, card.filas[m + 2] := n + 2, card.filas[m + 3] := n + 2
+496:             nFilas := 2
+497:         }
+498:         card.alto := 6 + 22 * (n + nFilas + (campos = "toggle" ? 1 : 0))
+499:         cmp.eA.OnEvent("Change", _CompCampoCambio.Bind(key, "a"))
+500:         cmp.eA.OnEvent("Change", _CompHeredadoPintar.Bind(cmp))
+501:         cmp.eB.OnEvent("Change", _CompCampoCambio.Bind(key, "b"))
+502:         if (campos = "toggle")
+503:             cmp.eB.OnEvent("Change", _CompReqBRefrescar.Bind(cmp))
+504:         if (IsObject(cmp.eMs)) {
+505:             cmp.eMs.OnEvent("Change", _CompCampoCambio.Bind(key, "ms"))
+506:             cmp.eMs.OnEvent("Change", _CompMsIcono.Bind(cmp))
+507:         }
+508:     } else if (campos = "pildora") {                        ; E1: Píldora Táctil ; ===== BLOQUE_B_P1_BEGIN =====
+509:         n := lineas.Length
+510:         cmp := {btnUbic: ""}
+511:         btnUbic := _R(g.Add("Button", uiP.Call(x0 + 34, yDis + 2, 210, 24), "👁 Mostrar / Ubicar píldora"))
+512:         btnUbic.OnEvent("Click", (*) => _PtsPildoraUbicar())
+513:         cmp.btnUbic := btnUbic
+514:         ptsEd.bPildora := btnUbic
+515:         card.ctrls.Push(btnUbic)
+516:         card.filas[n + 1] := n + 1
+517:         card.alto := 6 + 22 * (n + 1)
+518:     } else if (campos = "rango") {                          ; Dibujo directo de zona
+519:         n := lineas.Length
+520:         cmp := {btnDib: ""}
+521:         btnDib := _R(g.Add("Button", uiP.Call(x0 + 34, yDis + 2, 180, 22), "✏ Dibujar zona / rango"))
+522:         btnDib.OnEvent("Click", (*) => _PtsDibujarZonaEvento(key))
+523:         cmp.btnDib := btnDib
+524:         card.ctrls.Push(btnDib)
+525:         card.filas[n + 1] := n + 1
+526:         card.alto := 6 + 22 * (n + 1)
+527:     } else if (campos != "") {                              ; E2: "rep" [+ " act"] [+ " borde"]
+528:         n := lineas.Length
+529:         cmp := {eRep: "", eAct: "", cbB: ""}
+530:         card.ctrls.Push(_R(g.Add("Text", uiP.Call(x0 + 34, yDis + 2, 118, 20) . " +0x200", "Opacidad reposo (%):")))
+531:         cmp.eRep := _R(g.Add("Edit", uiP.Call(x0 + 156, yDis + 2, 48, 20), ""))
+532:         card.ctrls.Push(cmp.eRep)
+533:         card.filas[n + 1] := n + 1, card.filas[n + 2] := n + 1
+534:         m := n + 2
+535:         if (InStr(campos, "act")) {
+536:             card.ctrls.Push(_R(g.Add("Text", uiP.Call(x0 + 220, yDis + 2, 118, 20) . " +0x200", "Opacidad activo (%):")))
+537:             cmp.eAct := _R(g.Add("Edit", uiP.Call(x0 + 342, yDis + 2, 48, 20), ""))
+538:             card.ctrls.Push(cmp.eAct)
+539:             card.filas[m + 1] := n + 1, card.filas[m + 2] := n + 1
+540:             m += 2
+=== calibrador.ahk L335-L372 ===
+335:     lblSndVol := _R(g.Add("Text",uiP(x0 + 286,s3,40,24) . " +0x200","60%"))
+336:     lblSndEfec := _R(g.Add("Text",uiP(x0 + 14,s4,420,24) . " +0x200 cGray",""))
+337:     _AccFin()
+338: 
+339:     ; --- [4] Comportamientos (avanzado) ---
+340:     _AccNuevo("p4", "(B) Particularidades", 612, _AccResumen3, false)
+341:     _CompInit()
+342:     COMP.lblEv := _R(g.Add("Text",uiP(x0 + 14,612 + 24,400,20) . " +0x200 cGray","Funciones especiales que modifican el evento."))
+343:     _CompBloqueNuevo("b1", "01 · Presencia y superficie", 612 + 44, true) ; ===== BLOQUE_B_P1_BEGIN =====
+344:     cbPill  := _CompFila("pildora", "💊 Píldora Táctil", 612 + 44,
+345:         ["Botón táctil en pantalla que dispara este evento con lápiz o dedo."], "b1", false, "pildora")
+346:     _PtsPildoraBtnAgregar(x0 + 34, 612 + 68)
+347:     cbHover := _CompFila("hover", "🎯 Hover por rango", 612 + 68,
+348:         ["Se dispara por la posición del lápiz dentro del rango del evento."
+349:         ,"El rango se dibuja y ajusta en la pestaña Zonas y rangos."], "b1", false, "rep act borde")
+350:     _CompBloqueNuevo("b2", "02 · Disparador espacial", 612 + 116) ; ===== BLOQUE_B_P2_BEGIN =====
+351:     cbCruzar := _CompFila("cruzar", "⌨ Paso ➔ Tecla CSP (lanzar atajo)", 612 + 92,
+352:         ["Al pasar el lápiz por el rango envía el atajo del evento. Usa una u otra opción, no ambas."], "b2", false, "rango")
+353:     cbAuto   := _CompFila("auto", "🖱 Paso ➔ Clic (auto-clic)", 612 + 116,
+354:         ["Al pasar el lápiz por la zona hace un clic automático. Usa una u otra opción, no ambas."], "b2", false, "rango")
+355:     _CompBloqueNuevo("b3", "03 · Modulación de tecla", 612 + 164) ; ===== BLOQUE_B_P3_BEGIN =====
+356:     cbQuick  := _CompFila("quick", "⏱ Pulsación Rápida", 612 + 188,
+357:         ["Toque corto = atajo 1; mantener = atajo 2 (umbral en ms)."
+358:         ,"Deja un atajo vacío para usar el predeterminado del evento."], "b3", false, "quick")
+359:     cbToggle := _CompFila("toggle", "🔁 Alternador (A ⇄ B)", 612 + 212,
+360:         ["Cada pulsación alterna entre la Tecla A y la Tecla B."
+361:         ,"Deja un atajo vacío para usar el predeterminado del evento."], "b3", false, "toggle")
+362:     _CompBloqueNuevo("b4", "04 · Deslizador virtual", 612 + 236) ; ===== BLOQUE_B_P4_BEGIN =====
+363:     cbSlider := _CompFila("slider", "🎚 Deslizador Universal", 612 + 260,
+364:         ["Teclas subir/bajar, Snap points, opacidades y botones de dibujo."], "b4", false, "slider")
+365:     _CompBloqueNuevo("b5", "05 · Nuevas ventanas y lienzos", 612 + 284) ; ===== BLOQUE_B_P5_BEGIN =====
+366:     cbNv     := _CompFila("ventanas", "🪟 Lienzos y Nuevas Ventanas", 612 + 308,
+367:         ["Visibilidad y zonas de lienzos auxiliares con dibujo directo en un solo toque."], "b5", false, "ventanas")
+368:     _AccFin()
+369:     p4 := _AccPanel("p4")
+370:     COMP.panel := p4
+371:     p4.altoFn := _CompAlto
+372:     p4.posFn  := _CompPos
+=== definiciones y puntos de entrada ===
+calibrador.ahk:343: _CompBloqueNuevo("b1", "01 · Presencia y superficie", 612 + 44, true) ; ===== BLOQUE_B_P1_BEGIN =====
+calibrador.ahk:350: _CompBloqueNuevo("b2", "02 · Disparador espacial", 612 + 116) ; ===== BLOQUE_B_P2_BEGIN =====
+calibrador.ahk:355: _CompBloqueNuevo("b3", "03 · Modulación de tecla", 612 + 164) ; ===== BLOQUE_B_P3_BEGIN =====
+calibrador.ahk:362: _CompBloqueNuevo("b4", "04 · Deslizador virtual", 612 + 236) ; ===== BLOQUE_B_P4_BEGIN =====
+calibrador.ahk:365: _CompBloqueNuevo("b5", "05 · Nuevas ventanas y lienzos", 612 + 284) ; ===== BLOQUE_B_P5_BEGIN =====
+calibrador.ahk:3938: IniWrite("0", _PosGuiIniPath(), "Particularidades", opuesto "_" idEv)
+calibrador_20261115_015808.bak.ahk:312: _CompBloqueNuevo("b1", "1 · Presencia y Superficie", 612 + 44, true)
+calibrador_20261115_015808.bak.ahk:319: _CompBloqueNuevo("b2", "2 · Disparador Espacial", 612 + 116)
+calibrador_20261115_015808.bak.ahk:323: _CompBloqueNuevo("b3", "3 · Modulación de Tecla", 612 + 164)
+calibrador_20261115_015808.bak.ahk:330: _CompBloqueNuevo("b4", "4 · Deslizador Virtual", 612 + 236)
+calibrador_20261115_024309.bak.ahk:312: _CompBloqueNuevo("b1", "1 · Presencia y Superficie", 612 + 44, true)
+calibrador_20261115_024309.bak.ahk:319: _CompBloqueNuevo("b2", "2 · Disparador Espacial", 612 + 116)
+calibrador_20261115_024309.bak.ahk:324: _CompBloqueNuevo("b3", "3 · Modulación de Tecla", 612 + 164)
+calibrador_20261115_024309.bak.ahk:331: _CompBloqueNuevo("b4", "4 · Deslizador Virtual", 612 + 236)
+calibrador_20261115_135944.bak.ahk:314: _CompBloqueNuevo("b1", "1 · Presencia y Superficie", 612 + 44, true)
+calibrador_20261115_135944.bak.ahk:321: _CompBloqueNuevo("b2", "2 · Disparador Espacial", 612 + 116)
+calibrador_20261115_135944.bak.ahk:326: _CompBloqueNuevo("b3", "3 · Modulación de Tecla", 612 + 164)
+calibrador_20261115_135944.bak.ahk:333: _CompBloqueNuevo("b4", "4 · Deslizador Virtual", 612 + 236)
+calibrador_20261115_135944.bak.ahk:336: _CompBloqueNuevo("b5", "5 · Nuevas Ventanas y Lienzos", 612 + 284)
+calibrador_20261115_135944.bak.ahk:3608: IniWrite("0", _PosGuiIniPath(), "Particularidades", opuesto "_" idEv)
+calibrador_antes_p3.bak.ahk:312: _CompBloqueNuevo("b1", "1 · Presencia y Superficie", 612 + 44, true)
+calibrador_antes_p3.bak.ahk:318: _CompBloqueNuevo("b2", "2 · Disparador Espacial", 612 + 116)
+calibrador_antes_p3.bak.ahk:323: _CompBloqueNuevo("b3", "3 · Modulación de Tecla", 612 + 164)
+calibrador_antes_p3.bak.ahk:330: _CompBloqueNuevo("b4", "4 · Deslizador Virtual", 612 + 236)
+comportamientos.ahk:30: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+comportamientos.ahk:135: IniWrite(v, _PosGuiIniPath(), "Particularidades", key "_" campo "_" idEv)
+comportamientos.ahk:361: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+comportamientos.ahk:375: if (campos = "slider") {                                ; E4: deslizador virtual ; ===== BLOQUE_B_P4_BEGIN =====
+comportamientos.ahk:434: } else if (campos = "ventanas") {                       ; Nuevas ventanas y lienzos integrados ; ===== BLOQUE_B_P5_BEGIN =====
+comportamientos.ahk:466: } else if (campos = "quick" || campos = "toggle") {     ; E3: modulación de tecla ; ===== BLOQUE_B_P3_BEGIN =====
+comportamientos.ahk:469: et := (campos = "quick") ? ["Toque corto (A):", "Toque rápido (B):"] : ["Tecla A:", "Tecla B:"]
+comportamientos.ahk:476: _KgAttach(cmp.eB, (*) => (campos = "toggle" ? _CompReqBRefrescar(cmp) : ""))
+comportamientos.ahk:481: if (campos = "toggle") {
+comportamientos.ahk:489: if (campos = "quick") {
+comportamientos.ahk:498: card.alto := 6 + 22 * (n + nFilas + (campos = "toggle" ? 1 : 0))
+comportamientos.ahk:502: if (campos = "toggle")
+comportamientos.ahk:508: } else if (campos = "pildora") {                        ; E1: Píldora Táctil ; ===== BLOQUE_B_P1_BEGIN =====
+comportamientos.ahk:518: } else if (campos = "rango") {                          ; Dibujo directo de zona
+comportamientos_20261115_015808.bak.ahk:19: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+comportamientos_20261115_015808.bak.ahk:119: IniWrite(v, _PosGuiIniPath(), "Particularidades", key "_" campo "_" idEv)
+comportamientos_20261115_015808.bak.ahk:236: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+comportamientos_20261115_015808.bak.ahk:247: if (campos = "slider") {                                ; E4: deslizador virtual
+comportamientos_20261115_015808.bak.ahk:266: } else if (campos = "quick" || campos = "toggle") {     ; E3: modulación de tecla
+comportamientos_20261115_015808.bak.ahk:269: et := (campos = "quick") ? ["Toque corto (A):", "Mantener (B):"] : ["Tecla A:", "Tecla B:"]
+comportamientos_20261115_015808.bak.ahk:279: if (campos = "quick") {
+comportamientos_20261115_024309.bak.ahk:30: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+comportamientos_20261115_024309.bak.ahk:130: IniWrite(v, _PosGuiIniPath(), "Particularidades", key "_" campo "_" idEv)
+comportamientos_20261115_024309.bak.ahk:247: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+comportamientos_20261115_024309.bak.ahk:258: if (campos = "slider") {                                ; E4: deslizador virtual
+comportamientos_20261115_024309.bak.ahk:277: } else if (campos = "quick" || campos = "toggle") {     ; E3: modulación de tecla
+comportamientos_20261115_024309.bak.ahk:280: et := (campos = "quick") ? ["Toque corto (A):", "Mantener (B):"] : ["Tecla A:", "Tecla B:"]
+comportamientos_20261115_024309.bak.ahk:290: if (campos = "quick") {
+comportamientos_20261115_135944.bak.ahk:30: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+comportamientos_20261115_135944.bak.ahk:135: IniWrite(v, _PosGuiIniPath(), "Particularidades", key "_" campo "_" idEv)
+comportamientos_20261115_135944.bak.ahk:361: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+comportamientos_20261115_135944.bak.ahk:372: if (campos = "slider") {                                ; E4: deslizador virtual
+comportamientos_20261115_135944.bak.ahk:431: } else if (campos = "ventanas") {                       ; Nuevas ventanas y lienzos integrados
+comportamientos_20261115_135944.bak.ahk:463: } else if (campos = "quick" || campos = "toggle") {     ; E3: modulación de tecla
+comportamientos_20261115_135944.bak.ahk:466: et := (campos = "quick") ? ["Toque corto (A):", "Toque rápido (B):"] : ["Tecla A:", "Tecla B:"]
+comportamientos_20261115_135944.bak.ahk:473: _KgAttach(cmp.eB, (*) => (campos = "toggle" ? _CompReqBRefrescar(cmp) : ""))
+comportamientos_20261115_135944.bak.ahk:478: if (campos = "toggle") {
+comportamientos_20261115_135944.bak.ahk:486: if (campos = "quick") {
+comportamientos_20261115_135944.bak.ahk:499: if (campos = "toggle")
+comportamientos_20261115_135944.bak.ahk:505: } else if (campos = "pildora") {                        ; E1: Píldora Táctil
+comportamientos_20261115_135944.bak.ahk:515: } else if (campos = "rango") {                          ; Dibujo directo de zona
+comportamientos_antes_p3.bak.ahk:30: _CompBloqueNuevo(id, titulo, yDis, abierto := false) {
+comportamientos_antes_p3.bak.ahk:135: IniWrite(v, _PosGuiIniPath(), "Particularidades", key "_" campo "_" idEv)
+comportamientos_antes_p3.bak.ahk:356: _CompFila(key, texto, yDis, lineas, bloque := "b1", pend := false, campos := "") {
+comportamientos_antes_p3.bak.ahk:367: if (campos = "slider") {                                ; E4: deslizador virtual
+comportamientos_antes_p3.bak.ahk:426: } else if (campos = "quick" || campos = "toggle") {     ; E3: modulación de tecla
+comportamientos_antes_p3.bak.ahk:429: et := (campos = "quick") ? ["Toque corto (A):", "Toque rápido (B):"] : ["Tecla A:", "Tecla B:"]
+comportamientos_antes_p3.bak.ahk:436: _KgAttach(cmp.eB, (*) => (campos = "toggle" ? _CompReqBRefrescar(cmp) : ""))
+comportamientos_antes_p3.bak.ahk:441: if (campos = "toggle") {
+comportamientos_antes_p3.bak.ahk:449: if (campos = "quick") {
+comportamientos_antes_p3.bak.ahk:462: if (campos = "toggle")
+comportamientos_antes_p3.bak.ahk:468: } else if (campos = "rango") {                          ; Dibujo directo de zona
+=== ramas hover / cruzar / auto ===
+calibrador.ahk:306: try SendMessage(0x1501, 1, StrPtr("Auto"), eDurEv.Hwnd)
+calibrador.ahk:347: cbHover := _CompFila("hover", "🎯 Hover por rango", 612 + 68,
+calibrador.ahk:351: cbCruzar := _CompFila("cruzar", "⌨ Paso ➔ Tecla CSP (lanzar atajo)", 612 + 92,
+calibrador.ahk:353: cbAuto   := _CompFila("auto", "🖱 Paso ➔ Clic (auto-clic)", 612 + 116,
+calibrador.ahk:659: cbHover.OnEvent("Click",_PtsEvPartToggle.Bind("hover"))
+calibrador.ahk:660: cbCruzar.OnEvent("Click",_PtsEvPartToggle.Bind("cruzar"))
+calibrador.ahk:661: cbAuto.OnEvent("Click",_PtsEvPartToggle.Bind("auto"))
+calibrador.ahk:2986: t.Push("Hover")
+calibrador.ahk:3292: res.Push("Hover")
+calibrador.ahk:3345: otro := (tipo = "cruzar") ? "auto" : "cruzar"
+calibrador.ahk:3350: try (otro = "auto" ? ptsEd.cbAuto : ptsEd.cbCruzar).Value := 0
+calibrador.ahk:3357: if (tipo = "cruzar" || tipo = "auto") && (ctrl.Value = 1) {
+calibrador.ahk:3371: if (val = "1" && (tipo = "cruzar" || tipo = "auto"))
+calibrador.ahk:3932: ; tipo = "cruzar" (Paso➔Tecla) o "auto" (Paso➔Clic): desmarca el opuesto en UI e INI
+calibrador.ahk:3933: opuesto := (tipo = "cruzar") ? "auto" : "cruzar"
+calibrador.ahk:3934: cb := (tipo = "cruzar") ? (HasProp(ptsEd, "cbAuto") ? ptsEd.cbAuto : 0) : (HasProp(ptsEd, "cbCruzar") ? ptsEd.cbCruzar : 0)
+calibrador.ahk:4614: static G := Map("req", ["*", "C0392B"], "opt", ["ℹ", "7F8C8D"], "auto", ["ℹ", "7F8C8D"]
+calibrador_20261115_015808.bak.ahk:275: try SendMessage(0x1501, 1, StrPtr("Auto"), eDurEv.Hwnd)
+calibrador_20261115_015808.bak.ahk:316: cbHover := _CompFila("hover", "🎯 Hover por rango", 612 + 68,
+calibrador_20261115_015808.bak.ahk:320: cbAuto  := _CompFila("auto", "⚡ Gatillo al Cruzar (Auto-clic)", 612 + 92,
+calibrador_20261115_015808.bak.ahk:348: ddNvModo.OnEvent("Change",(c, *) => NvSetModo(c.Value = 2 ? "total" : "hover"))
+calibrador_20261115_015808.bak.ahk:702: cbHover.OnEvent("Click",_PtsEvPartToggle.Bind("hover"))
+calibrador_20261115_015808.bak.ahk:703: cbAuto.OnEvent("Click",_PtsEvPartToggle.Bind("auto"))
+calibrador_20261115_015808.bak.ahk:2921: t.Push("Hover")
+calibrador_20261115_015808.bak.ahk:3062: res.Push("Hover")
+calibrador_20261115_015808.bak.ahk:4161: static G := Map("req", ["*", "C0392B"], "opt", ["ℹ", "7F8C8D"], "auto", ["ℹ", "7F8C8D"]
+calibrador_20261115_024309.bak.ahk:275: try SendMessage(0x1501, 1, StrPtr("Auto"), eDurEv.Hwnd)
+calibrador_20261115_024309.bak.ahk:316: cbHover := _CompFila("hover", "🎯 Hover por rango", 612 + 68,
+calibrador_20261115_024309.bak.ahk:320: cbAuto  := _CompFila("auto", "⚡ Gatillo al Cruzar (Auto-clic)", 612 + 92,
+calibrador_20261115_024309.bak.ahk:474: ddNvModo.OnEvent("Change",(c, *) => NvSetModo(c.Value = 2 ? "total" : "hover"))
+calibrador_20261115_024309.bak.ahk:704: cbHover.OnEvent("Click",_PtsEvPartToggle.Bind("hover"))
+calibrador_20261115_024309.bak.ahk:705: cbAuto.OnEvent("Click",_PtsEvPartToggle.Bind("auto"))
+calibrador_20261115_024309.bak.ahk:2923: t.Push("Hover")
+calibrador_20261115_024309.bak.ahk:3075: res.Push("Hover")
+calibrador_20261115_024309.bak.ahk:4184: static G := Map("req", ["*", "C0392B"], "opt", ["ℹ", "7F8C8D"], "auto", ["ℹ", "7F8C8D"]
+calibrador_20261115_135944.bak.ahk:277: try SendMessage(0x1501, 1, StrPtr("Auto"), eDurEv.Hwnd)
+calibrador_20261115_135944.bak.ahk:318: cbHover := _CompFila("hover", "🎯 Hover por rango", 612 + 68,
+calibrador_20261115_135944.bak.ahk:322: cbCruzar := _CompFila("cruzar", "⌨ Paso ➔ Tecla CSP (lanzar atajo)", 612 + 92,
+calibrador_20261115_135944.bak.ahk:324: cbAuto   := _CompFila("auto", "🖱 Paso ➔ Clic (auto-clic)", 612 + 116,
+calibrador_20261115_135944.bak.ahk:618: cbHover.OnEvent("Click",_PtsEvPartToggle.Bind("hover"))
+calibrador_20261115_135944.bak.ahk:619: cbCruzar.OnEvent("Click",_PtsEvPartToggle.Bind("cruzar"))
+calibrador_20261115_135944.bak.ahk:620: cbAuto.OnEvent("Click",_PtsEvPartToggle.Bind("auto"))
+calibrador_20261115_135944.bak.ahk:2813: t.Push("Hover")
+calibrador_20261115_135944.bak.ahk:2971: res.Push("Hover")
+calibrador_20261115_135944.bak.ahk:3024: otro := (tipo = "cruzar") ? "auto" : "cruzar"
+calibrador_20261115_135944.bak.ahk:3029: try (otro = "auto" ? ptsEd.cbAuto : ptsEd.cbCruzar).Value := 0
+calibrador_20261115_135944.bak.ahk:3036: if (tipo = "cruzar" || tipo = "auto") && (ctrl.Value = 1) {
+calibrador_20261115_135944.bak.ahk:3050: if (val = "1" && (tipo = "cruzar" || tipo = "auto"))
+calibrador_20261115_135944.bak.ahk:3602: ; tipo = "cruzar" (Paso➔Tecla) o "auto" (Paso➔Clic): desmarca el opuesto en UI e INI
+calibrador_20261115_135944.bak.ahk:3603: opuesto := (tipo = "cruzar") ? "auto" : "cruzar"
+calibrador_20261115_135944.bak.ahk:3604: cb := (tipo = "cruzar") ? (HasProp(ptsEd, "cbAuto") ? ptsEd.cbAuto : 0) : (HasProp(ptsEd, "cbCruzar") ? ptsEd.cbCruzar : 0)
+calibrador_20261115_135944.bak.ahk:4256: static G := Map("req", ["*", "C0392B"], "opt", ["ℹ", "7F8C8D"], "auto", ["ℹ", "7F8C8D"]
+calibrador_antes_p3.bak.ahk:275: try SendMessage(0x1501, 1, StrPtr("Auto"), eDurEv.Hwnd)
+calibrador_antes_p3.bak.ahk:315: cbHover := _CompFila("hover", "🎯 Hover por rango", 612 + 68,
+calibrador_antes_p3.bak.ahk:319: cbCruzar := _CompFila("cruzar", "⌨ Paso ➔ Tecla CSP (lanzar atajo)", 612 + 92,
+calibrador_antes_p3.bak.ahk:321: cbAuto   := _CompFila("auto", "🖱 Paso ➔ Clic (auto-clic)", 612 + 116,
+calibrador_antes_p3.bak.ahk:462: ddNvModo.OnEvent("Change",(c, *) => NvSetModo(c.Value = 2 ? "total" : "hover"))
+calibrador_antes_p3.bak.ahk:685: cbHover.OnEvent("Click",_PtsEvPartToggle.Bind("hover"))
+calibrador_antes_p3.bak.ahk:686: cbCruzar.OnEvent("Click",_PtsEvPartToggle.Bind("cruzar"))
+calibrador_antes_p3.bak.ahk:687: cbAuto.OnEvent("Click",_PtsEvPartToggle.Bind("auto"))
+calibrador_antes_p3.bak.ahk:2901: t.Push("Hover")
+calibrador_antes_p3.bak.ahk:3057: res.Push("Hover")
+calibrador_antes_p3.bak.ahk:3109: otro := (tipo = "cruzar") ? "auto" : "cruzar"
+calibrador_antes_p3.bak.ahk:3114: try (otro = "auto" ? ptsEd.cbAuto : ptsEd.cbCruzar).Value := 0
+calibrador_antes_p3.bak.ahk:3127: if (val = "1" && (tipo = "cruzar" || tipo = "auto"))
+calibrador_antes_p3.bak.ahk:4230: static G := Map("req", ["*", "C0392B"], "opt", ["ℹ", "7F8C8D"], "auto", ["ℹ", "7F8C8D"]
+companion.ahk:66: try WinSetTransparent(_CompOp("hover","op_rep","panel_ds",5),"ahk_id " colorV.dsID)
+companion.ahk:187: try WinSetTransparent(_CompOp("hover","op_rep","panel_ds",5),"ahk_id " colorV.dsID)
+companion.ahk:200: try WinSetTransparent(_CompOp("hover","op_rep","panel_ds",5),"ahk_id " colorV.dsID)
+companion.ahk:243: try WinSetTransparent(_CompOp("hover","op_act","panel_ds",255),"ahk_id " colorV.dsID)
+companion.ahk:251: try WinSetTransparent(_CompOp("hover","op_rep","panel_ds",5),"ahk_id " colorV.dsID)
+companion.ahk:255: if (_CompBorde("hover","panel_ds",true))
+companion.ahk:323: try WinSetTransparent(_CompOp("hover","op_act","panel_cc",255),"ahk_id " colorCC.id)
+companion.ahk:331: try WinSetTransparent(_CompOp("hover","op_rep","panel_cc",5),"ahk_id " colorCC.id)
+companion.ahk:335: if (_CompBorde("hover","panel_cc",true))
+companion_lienzos.ahk:245: m := (IniRead(_PosGuiIniPath(), "NvConfig", "modo", "hover") = "total") ? "desact_25" : "h_on"
+comportamientos.ahk:96: } else if (key = "hover") {
+comportamientos.ahk:98: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+comportamientos.ahk:103: } else if (key = "hover") {
+comportamientos.ahk:105: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+comportamientos.ahk:441: ddModo.OnEvent("Change", (c, *) => NvSetModo(c.Value = 2 ? "total" : "hover"))
+comportamientos.ahk:676: if (ctrl.Value && (key = "cruzar" || key = "auto")
+comportamientos_20261115_015808.bak.ahk:85: } else if (key = "hover") {
+comportamientos_20261115_015808.bak.ahk:87: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+comportamientos_20261115_015808.bak.ahk:92: } else if (key = "hover") {
+comportamientos_20261115_015808.bak.ahk:94: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+comportamientos_20261115_024309.bak.ahk:96: } else if (key = "hover") {
+comportamientos_20261115_024309.bak.ahk:98: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+comportamientos_20261115_024309.bak.ahk:103: } else if (key = "hover") {
+comportamientos_20261115_024309.bak.ahk:105: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+comportamientos_20261115_135944.bak.ahk:96: } else if (key = "hover") {
+comportamientos_20261115_135944.bak.ahk:98: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+comportamientos_20261115_135944.bak.ahk:103: } else if (key = "hover") {
+comportamientos_20261115_135944.bak.ahk:105: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+comportamientos_20261115_135944.bak.ahk:438: ddModo.OnEvent("Change", (c, *) => NvSetModo(c.Value = 2 ? "total" : "hover"))
+comportamientos_20261115_135944.bak.ahk:673: if (ctrl.Value && (key = "cruzar" || key = "auto")
+comportamientos_antes_p3.bak.ahk:96: } else if (key = "hover") {
+comportamientos_antes_p3.bak.ahk:98: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorV.dsID)
+comportamientos_antes_p3.bak.ahk:103: } else if (key = "hover") {
+comportamientos_antes_p3.bak.ahk:105: try WinSetTransparent(_CompOp("hover", act ? "op_act" : "op_rep", idEv, act ? 255 : 5), "ahk_id " colorCC.id)
+comportamientos_antes_p3.bak.ahk:625: if (ctrl.Value && (key = "cruzar" || key = "auto")
+espacial.ahk:69: cruzar := f.Has("cruzar"), auto := f.Has("auto"), hover := f.Has("hover")
+espacial_20261115_135944.bak.ahk:69: cruzar := f.Has("cruzar"), auto := f.Has("auto"), hover := f.Has("hover")
+hud_badges.ahk:494: if InStr(t, "HOVER") || InStr(t, "ACCESO RÁPIDO") || InStr(t, "ACCESO RAPIDO")

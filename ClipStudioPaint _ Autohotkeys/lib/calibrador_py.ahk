@@ -69,8 +69,47 @@ _CalPyResolverExe() {
     return ""
 }
 
-AbrirCalibradorPy(*) {
-    global PERFIL, CALPY_PID
+SandboxIniciar(iniVacio) {
+    global POSGUI_INI_OVERRIDE, SANDBOX_ACTIVO
+    POSGUI_INI_OVERRIDE := iniVacio
+    SANDBOX_ACTIVO := true
+    _SandboxRecargar()
+    A_IconTip := "XPPEN AHK - MODO PRUEBA (INI vacío)"
+    SetTimer(_SandboxVigilar, 500)
+    OnExit(_SandboxAlSalir)
+}
+
+_SandboxAlSalir(*) {
+    global POSGUI_INI_OVERRIDE, SANDBOX_ACTIVO
+    POSGUI_INI_OVERRIDE := ""
+    SANDBOX_ACTIVO := false
+}
+
+SandboxDetener() {
+    global POSGUI_INI_OVERRIDE, SANDBOX_ACTIVO
+    SetTimer(_SandboxVigilar, 0)
+    POSGUI_INI_OVERRIDE := ""
+    SANDBOX_ACTIVO := false
+    _SandboxRecargar()
+    A_IconTip := "XPPEN AHK"
+}
+
+_SandboxRecargar() {
+    try _RemapCargarHotkeys()   ; ya llama _LegadoRecargar() y _ModCfgInvalidar()
+    try _HudLimpiarCache()
+    try _CompInvalidar()
+}
+
+_SandboxVigilar() {
+    global CALPY_PID
+    if (!CALPY_PID || !ProcessExist(CALPY_PID))
+        SandboxDetener()    ; cubre cierre normal, kill y crash del calibrador
+}
+
+AbrirCalibradorPy(customIni := "", customCat := "") {
+    global PERFIL, CALPY_PID, SANDBOX_ACTIVO
+    if (customIni = "" && SANDBOX_ACTIVO)
+        SandboxDetener()
     pyExe := _CalPyResolverExe()
     if (pyExe = "") {
         _CalPyLog("no se encontró pythonw.exe real (ni instalado, ni .venv, ni PATH)")
@@ -80,18 +119,39 @@ AbrirCalibradorPy(*) {
     catch as e
         _CalPyLog("exportar catálogo: " e.Message)
     perfil := IsSet(PERFIL) ? PERFIL : 1
+    iniPath := (customIni != "") ? customIni : _PosGuiIniPath()
     cmd := '"' pyExe '" -m xppen_calibrador'
-        . ' --ini "' _PosGuiIniPath() '"'
+        . ' --ini "' iniPath '"'
         . ' --perfil ' perfil
         . ' --modo ' _CalPyModoActual()
         . ' --ahk-hwnd ' A_ScriptHwnd
+    if (customCat != "")
+        cmd .= ' --catalogo "' customCat '"'
     try {
         Run(cmd, CALPY_DIR, , &CALPY_PID)
     } catch as e {
         _CalPyLog("Run falló: " e.Message " | cmd: " cmd)
         ; Fallback con consola (mismo intérprete, python.exe) para ver el traceback
-        Run('"' StrReplace(pyExe, "pythonw.exe", "python.exe") '" -m xppen_calibrador --ini "' _PosGuiIniPath()
-            . '" --perfil ' perfil ' --ahk-hwnd ' A_ScriptHwnd, CALPY_DIR, , &CALPY_PID)
+        fbCmd := '"' StrReplace(pyExe, "pythonw.exe", "python.exe") '" -m xppen_calibrador --ini "' iniPath
+            . '" --perfil ' perfil ' --ahk-hwnd ' A_ScriptHwnd
+        if (customCat != "")
+            fbCmd .= ' --catalogo "' customCat '"'
+        Run(fbCmd, CALPY_DIR, , &CALPY_PID)
+    }
+}
+
+AbrirCalibradorVacio(*) {
+    global SANDBOX_ACTIVO, CALPY_PID
+    if (SANDBOX_ACTIVO && CALPY_PID && ProcessExist(CALPY_PID))
+        return WinActivate("ahk_pid " CALPY_PID)      ; evita doble instancia
+    iniVacio := A_ScriptDir "\posiciones_gui_vacio.ini"
+    catVacio := CALPY_DIR "\data\catalogo_vacio.json"
+    SandboxIniciar(iniVacio)                           ; ANTES de lanzar
+    try
+        AbrirCalibradorPy(iniVacio, catVacio)
+    catch as e {
+        SandboxDetener()                               ; rollback si falla el Run
+        throw e
     }
 }
 
@@ -100,8 +160,10 @@ _CalPyModoActual() {
     return "normal"
 }
 
-; ── Catálogo: AHK es dueño de ids / nombres / grupos ──────────────────────
+; ── Catálogo: AHK solo exporta si catalogo.json no existe ─────────────────
 _CalPyExportarCatalogo() {
+    if FileExist(CALPY_DIR "\data\catalogo.json")
+        return
     defs := _PtsEventosDefs()                               ; ANCLA: lista de [id, nombre, grupo]
     out := '{"eventos":['
     sep := ""
@@ -253,14 +315,31 @@ _CalPyReiniciarSeguro() {
 }
 
 _CalPyRecargarIni() {
+    static audioFirma := ""   ; el audio solo se reinicia si cambió la config de sonido
     ; Relectura en caliente SIN Reload(): cada gancho va en try; si no existe se registra y se sigue.
     ; Orden: caché de puntos -> puntos -> zonas -> escalas -> HUD -> hotkeys -> reset toggles pausados -> espacial/pill -> audio -> lock.
     for nombre in ["_PtsCache", "_CompInvalidar", "CargarPuntos", "RecalcularZonas", "CargarEscala", "CargarEscalaAvisos"
                  , "_HudLimpiarCache", "_RemapCargarHotkeys", "_ModToggleResetPausados", "_EspacialCargar", "_PillSincronizarDinamicas"
-                 , "_CompanionRestaurarAudio", "ActualizarLockGUI"] {
+                 , "_CompanionRestaurarAudioSilencioso", "ActualizarLockGUI"] {
+        if (nombre = "_CompanionRestaurarAudioSilencioso") {
+            firma := _CalPyAudioFirma()
+            if (firma = audioFirma)
+                continue
+            audioFirma := firma
+        }
         if !_CalPyLlamar([nombre])
             OutputDebug("_CalPyRecargarIni: gancho no disponible -> " nombre)
     }
+}
+
+; Firma de la config de sonido: si no cambió, RELOAD_INI no toca el subsistema de audio.
+_CalPyAudioFirma() {
+    f := ""
+    ini := _PosGuiIniPath()
+    for sec in ["Sonidos", "HudSonido1", "HudSonido2", "HudSonido3"] {
+        try f .= sec "`n" IniRead(ini, sec) "`n"
+    }
+    return f
 }
 
 ; Llama a la primera función existente de `candidatos`; registra si no hay ancla.

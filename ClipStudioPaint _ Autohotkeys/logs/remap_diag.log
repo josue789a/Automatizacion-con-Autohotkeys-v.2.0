@@ -1,0 +1,504 @@
+20261121122416 REG aerografo hk=$w
+20261121122416 REG borrador hk=$e
+20261121122416 REG borrador_all_layers hk=$^e
+20261121122416 REG borrador_lazo hk=~RButton & e
+20261121122416 REG capa_visibilidad hk=$e
+20261121122416 REG color_mix hk=$!x
+20261121122416 REG copiar hk=$^c
+20261121122416 REG cuentagotas hk=$g
+20261121122416 REG deshacer hk=$^z
+20261121122416 REG difu_mixer hk=~RButton & w
+20261121122416 REG flip_horizontal hk=$!b
+20261121122416 REG guardar hk=$^s
+20261121122416 REG inv_seleccion hk=$RButton
+20261121122416 REG lazo hk=$s
+20261121122416 REG opc_presion hk=$!w
+20261121122416 REG pincel_duro hk=~RButton & q
+20261121122416 REG pincel_suave hk=$!q
+20261121122416 REG pluma hk=$q
+20261121122416 REG regla_ocultar hk=~RButton & t
+20261121122416 REG rehacer hk=$^y
+20261121122416 REG relleno hk=~RButton & 1
+20261121122416 REG shift_sostenido hk=~RButton & f
+20261121122416 REG smear hk=$!f
+20261121122416 REG zoom_lienzo hk=$z
+20261121122417 REG aerografo hk=$w
+20261121122417 REG borrador hk=$e
+20261121122417 REG borrador_all_layers hk=$^e
+20261121122417 REG borrador_lazo hk=~RButton & e
+20261121122417 REG capa_visibilidad hk=$e
+20261121122417 REG color_mix hk=$!x
+20261121122417 REG copiar hk=$^c
+20261121122417 REG cuentagotas hk=$g
+20261121122417 REG deshacer hk=$^z
+20261121122417 REG difu_mixer hk=~RButton & w
+20261121122417 REG flip_horizontal hk=$!b
+20261121122417 REG guardar hk=$^s
+20261121122417 REG inv_seleccion hk=$RButton
+20261121122417 REG lazo hk=$s
+20261121122417 REG opc_presion hk=$!w
+20261121122417 REG pincel_duro hk=~RButton & q
+20261121122417 REG pincel_suave hk=$!q
+20261121122417 REG pluma hk=$q
+20261121122417 REG regla_ocultar hk=~RButton & t
+20261121122417 REG rehacer hk=$^y
+20261121122417 REG relleno hk=~RButton & 1
+20261121122417 REG shift_sostenido hk=~RButton & f
+20261121122417 REG smear hk=$!f
+20261121122417 REG zoom_lienzo hk=$z
+20261121122424.227 DISPARO2 pluma P=0 dt=2516
+20261121122424 DISPARO pluma tecla=q held=0 pausado=0
+20261121122424.602 DISPARO2 pluma P=0 dt=375
+20261121122424 DISPARO pluma tecla=q held=0 pausado=0
+20261121122424.708 DISPARO2 aerografo P=0 dt=94
+20261121122424 DISPARO aerografo tecla=w held=0 pausado=0
+20261121122425.009 DISPARO2 borrador P=0 dt=312
+20261121122425 DISPARO borrador tecla=e held=0 pausado=0
+20261121122425.218 DISPARO2 pluma P=0 dt=203
+20261121122425 DISPARO pluma tecla=q held=0 pausado=0
+20261121122425.315 DISPARO2 aerografo P=0 dt=78
+20261121122425 DISPARO aerografo tecla=w held=0 pausado=0
+20261121122425.489 DISPARO2 borrador P=0 dt=172
+20261121122425 DISPARO borrador tecla=e held=0 pausado=0
+20261121122425.742 DISPARO2 pluma P=0 dt=78
+20261121122425 DISPARO pluma tecla=q held=0 pausado=0
+20261121122425.877 DISPARO2 aerografo P=0 dt=125
+20261121122425 DISPARO aerografo tecla=w held=0 pausado=0
+20261121122426.005 DISPARO2 borrador P=0 dt=125
+20261121122426 DISPARO borrador tecla=e held=0 pausado=0
+20261121122427.108 DISPARO2 pluma P=0 dt=94
+20261121122427 DISPARO pluma tecla=q held=0 pausado=0
+20261121122428.367 DISPARO2 aerografo P=0 dt=219
+20261121122428 DISPARO aerografo tecla=w held=0 pausado=0
+20261121122429.290 DISPARO2 pluma P=0 dt=172
+20261121122429 DISPARO pluma tecla=q held=0 pausado=0
+20261121122429.859 DISPARO2 aerografo P=0 dt=562
+20261121122429 DISPARO aerografo tecla=w held=0 pausado=0
+20261121122430.212 DISPARO2 aerografo P=0 dt=359
+20261121122430 DISPARO aerografo tecla=w held=0 pausado=0
+20261121122430.415 DISPARO2 borrador P=0 dt=204
+20261121122430 DISPARO borrador tecla=e held=0 pausado=0
+20261121122430.760 DISPARO2 borrador P=0 dt=218
+20261121122430 DISPARO borrador tecla=e held=0 pausado=0
+20261121122430.880 DISPARO2 pluma P=0 dt=110
+20261121122430 DISPARO pluma tecla=q held=0 pausado=0
+20261121122430.962 DISPARO2 aerografo P=0 dt=78
+20261121122430 DISPARO aerografo tecla=w held=0 pausado=0
+20261121122431.098 DISPARO2 borrador P=0 dt=125
+20261121122431 DISPARO borrador tecla=e held=0 pausado=0
+20261121122433.460 RB down csp=327754 arm=0
+20261121122433.574 RB up ctx held=1 combo=0
+20261121122448.120 RB down csp=327754 arm=0
+20261121122448.218 RB up ctx held=1 combo=0
+20261121125145 REG aerografo hk=$w
+20261121125145 REG borrador hk=$e
+20261121125145 REG borrador_all_layers hk=$^e
+20261121125145 REG borrador_lazo hk=~RButton & e
+20261121125145 REG capa_visibilidad hk=$e
+20261121125145 REG color_mix hk=$!x
+20261121125145 REG copiar hk=$^c
+20261121125145 REG cuentagotas hk=$g
+20261121125145 REG deshacer hk=$^z
+20261121125145 REG difu_mixer hk=~RButton & w
+20261121125145 REG flip_horizontal hk=$!b
+20261121125145 REG guardar hk=$^s
+20261121125145 REG inv_seleccion hk=$RButton
+20261121125145 REG lazo hk=$s
+20261121125145 REG opc_presion hk=$!w
+20261121125145 REG pincel_duro hk=~RButton & q
+20261121125145 REG pincel_suave hk=$!q
+20261121125145 REG pluma hk=$q
+20261121125145 REG regla_ocultar hk=~RButton & t
+20261121125145 REG rehacer hk=$^y
+20261121125146 REG relleno hk=~RButton & 1
+20261121125146 REG shift_sostenido hk=~RButton & f
+20261121125146 REG smear hk=$!f
+20261121125146 REG zoom_lienzo hk=$z
+20261121125146 REG aerografo hk=$w
+20261121125146 REG borrador hk=$e
+20261121125146 REG borrador_all_layers hk=$^e
+20261121125146 REG borrador_lazo hk=~RButton & e
+20261121125146 REG capa_visibilidad hk=$e
+20261121125146 REG color_mix hk=$!x
+20261121125146 REG copiar hk=$^c
+20261121125146 REG cuentagotas hk=$g
+20261121125146 REG deshacer hk=$^z
+20261121125146 REG difu_mixer hk=~RButton & w
+20261121125146 REG flip_horizontal hk=$!b
+20261121125146 REG guardar hk=$^s
+20261121125146 REG inv_seleccion hk=$RButton
+20261121125146 REG lazo hk=$s
+20261121125146 REG opc_presion hk=$!w
+20261121125146 REG pincel_duro hk=~RButton & q
+20261121125146 REG pincel_suave hk=$!q
+20261121125146 REG pluma hk=$q
+20261121125146 REG regla_ocultar hk=~RButton & t
+20261121125146 REG rehacer hk=$^y
+20261121125146 REG relleno hk=~RButton & 1
+20261121125146 REG shift_sostenido hk=~RButton & f
+20261121125146 REG smear hk=$!f
+20261121125146 REG zoom_lienzo hk=$z
+20261121130217 REG aerografo hk=$w
+20261121130217 REG borrador hk=$e
+20261121130217 REG borrador_all_layers hk=$^e
+20261121130217 REG borrador_lazo hk=~RButton & e
+20261121130217 REG capa_visibilidad hk=$e
+20261121130217 REG color_mix hk=$!x
+20261121130217 REG copiar hk=$^c
+20261121130217 REG cuentagotas hk=$g
+20261121130217 REG deshacer hk=$^z
+20261121130217 REG difu_mixer hk=~RButton & w
+20261121130217 REG flip_horizontal hk=$!b
+20261121130217 REG guardar hk=$^s
+20261121130217 REG inv_seleccion hk=$RButton
+20261121130217 REG lazo hk=$s
+20261121130217.403 RB down csp=327754 arm=0
+20261121130217 REG opc_presion hk=$!w
+20261121130217 REG pincel_duro hk=~RButton & q
+20261121130217 REG pincel_suave hk=$!q
+20261121130217.469 RB up ctx held=1 combo=0
+20261121130217 REG pluma hk=$q
+20261121130217 REG regla_ocultar hk=~RButton & t
+20261121130217 REG rehacer hk=$^y
+20261121130223 REG aerografo hk=$w
+20261121130223 REG borrador hk=$e
+20261121130223 REG borrador_all_layers hk=$^e
+20261121130223 REG borrador_lazo hk=~RButton & e
+20261121130223 REG capa_visibilidad hk=$e
+20261121130223 REG color_mix hk=$!x
+20261121130223 REG copiar hk=$^c
+20261121130223 REG cuentagotas hk=$g
+20261121130223 REG deshacer hk=$^z
+20261121130223 REG difu_mixer hk=~RButton & w
+20261121130223 REG flip_horizontal hk=$!b
+20261121130223 REG guardar hk=$^s
+20261121130223 REG inv_seleccion hk=$RButton
+20261121130223 REG lazo hk=$s
+20261121130223 REG opc_presion hk=$!w
+20261121130223 REG pincel_duro hk=~RButton & q
+20261121130223 REG pincel_suave hk=$!q
+20261121130223 REG pluma hk=$q
+20261121130223 REG regla_ocultar hk=~RButton & t
+20261121130223 REG rehacer hk=$^y
+20261121130223 REG relleno hk=~RButton & 1
+20261121130223 REG shift_sostenido hk=~RButton & f
+20261121130223 REG smear hk=$!f
+20261121130223 REG zoom_lienzo hk=$z
+20261121130223 REG relleno hk=~RButton & 1
+20261121130223 REG shift_sostenido hk=~RButton & f
+20261121130223 REG smear hk=$!f
+20261121130223 REG zoom_lienzo hk=$z
+20261121130230.814 RB down csp=327754 arm=0
+20261121130230.929 RB up ctx held=1 combo=0
+20261121130240.439 RB down csp=327754 arm=0
+20261121130240.523 RB up ctx held=1 combo=0
+20261121130250 REG aerografo hk=$w
+20261121130250 REG borrador hk=$e
+20261121130250 REG borrador_all_layers hk=$^e
+20261121130250 REG borrador_lazo hk=~RButton & e
+20261121130250 REG capa_visibilidad hk=$e
+20261121130250 REG color_mix hk=$!x
+20261121130250 REG copiar hk=$^c
+20261121130250 REG cuentagotas hk=$g
+20261121130250.528 RB down csp=327754 arm=0
+20261121130250 REG deshacer hk=$^z
+20261121130250 REG difu_mixer hk=~RButton & w
+20261121130250 REG flip_horizontal hk=$!b
+20261121130250 REG guardar hk=$^s
+20261121130250.632 RB up ctx held=1 combo=0
+20261121130250 REG inv_seleccion hk=$RButton
+20261121130250 REG lazo hk=$s
+20261121130250 REG opc_presion hk=$!w
+20261121130252 REG aerografo hk=$w
+20261121130252 REG borrador hk=$e
+20261121130252 REG borrador_all_layers hk=$^e
+20261121130252 REG borrador_lazo hk=~RButton & e
+20261121130252 REG capa_visibilidad hk=$e
+20261121130252 REG color_mix hk=$!x
+20261121130252 REG copiar hk=$^c
+20261121130252 REG cuentagotas hk=$g
+20261121130252 REG deshacer hk=$^z
+20261121130252 REG difu_mixer hk=~RButton & w
+20261121130252 REG flip_horizontal hk=$!b
+20261121130252 REG guardar hk=$^s
+20261121130252 REG inv_seleccion hk=$RButton
+20261121130252 REG lazo hk=$s
+20261121130252 REG opc_presion hk=$!w
+20261121130252 REG pincel_duro hk=~RButton & q
+20261121130252 REG pincel_suave hk=$!q
+20261121130252 REG pluma hk=$q
+20261121130252 REG regla_ocultar hk=~RButton & t
+20261121130252 REG rehacer hk=$^y
+20261121130252 REG relleno hk=~RButton & 1
+20261121130252 REG shift_sostenido hk=~RButton & f
+20261121130252 REG smear hk=$!f
+20261121130252 REG zoom_lienzo hk=$z
+20261121130252 REG pincel_duro hk=~RButton & q
+20261121130252 REG pincel_suave hk=$!q
+20261121130252 REG pluma hk=$q
+20261121130252 REG regla_ocultar hk=~RButton & t
+20261121130252 REG rehacer hk=$^y
+20261121130252 REG relleno hk=~RButton & 1
+20261121130252 REG shift_sostenido hk=~RButton & f
+20261121130252 REG smear hk=$!f
+20261121130252 REG zoom_lienzo hk=$z
+20261121130300.446 RB down csp=327754 arm=0
+20261121130300.546 RB up ctx held=1 combo=0
+20261121130406 REG aerografo hk=$w
+20261121130406 REG borrador hk=$e
+20261121130406 REG borrador_all_layers hk=$^e
+20261121130406 REG borrador_lazo hk=~RButton & e
+20261121130406 REG capa_visibilidad hk=$e
+20261121130406 REG color_mix hk=$!x
+20261121130406 REG copiar hk=$^c
+20261121130406 REG cuentagotas hk=$g
+20261121130407 REG deshacer hk=$^z
+20261121130407 REG difu_mixer hk=~RButton & w
+20261121130407 REG flip_horizontal hk=$!b
+20261121130407 REG guardar hk=$^s
+20261121130407 REG inv_seleccion hk=$RButton
+20261121130407 REG lazo hk=$s
+20261121130407 REG opc_presion hk=$!w
+20261121130407 REG pincel_duro hk=~RButton & q
+20261121130407 REG pincel_suave hk=$!q
+20261121130407 REG pluma hk=$q
+20261121130407 REG regla_ocultar hk=~RButton & t
+20261121130407 REG rehacer hk=$^y
+20261121130407 REG relleno hk=~RButton & 1
+20261121130407 REG shift_sostenido hk=~RButton & f
+20261121130407 REG smear hk=$!f
+20261121130407 REG zoom_lienzo hk=$z
+20261121130407 REG aerografo hk=$w
+20261121130407 REG borrador hk=$e
+20261121130407 REG borrador_all_layers hk=$^e
+20261121130407 REG borrador_lazo hk=~RButton & e
+20261121130407 REG capa_visibilidad hk=$e
+20261121130407 REG color_mix hk=$!x
+20261121130407 REG copiar hk=$^c
+20261121130407 REG cuentagotas hk=$g
+20261121130407 REG deshacer hk=$^z
+20261121130407 REG difu_mixer hk=~RButton & w
+20261121130407 REG flip_horizontal hk=$!b
+20261121130407 REG guardar hk=$^s
+20261121130407 REG inv_seleccion hk=$RButton
+20261121130407 REG lazo hk=$s
+20261121130407 REG opc_presion hk=$!w
+20261121130407 REG pincel_duro hk=~RButton & q
+20261121130407 REG pincel_suave hk=$!q
+20261121130407 REG pluma hk=$q
+20261121130407 REG regla_ocultar hk=~RButton & t
+20261121130408 REG rehacer hk=$^y
+20261121130408 REG relleno hk=~RButton & 1
+20261121130408 REG shift_sostenido hk=~RButton & f
+20261121130408 REG smear hk=$!f
+20261121130408 REG zoom_lienzo hk=$z
+20261121130410.437 DISPARO2 pluma P=0 dt=3672
+20261121130410 DISPARO pluma tecla=q held=0 pausado=0
+20261121130410.953 DISPARO2 pluma P=0 dt=516
+20261121130410 DISPARO pluma tecla=q held=0 pausado=0
+20261121130411.178 DISPARO2 pluma P=0 dt=234
+20261121130411 DISPARO pluma tecla=q held=0 pausado=0
+20261121130411.560 DISPARO2 aerografo P=0 dt=375
+20261121130411 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130411.860 DISPARO2 aerografo P=0 dt=297
+20261121130411 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130412.086 DISPARO2 aerografo P=0 dt=234
+20261121130412 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130412.372 DISPARO2 borrador P=0 dt=282
+20261121130412 DISPARO borrador tecla=e held=0 pausado=0
+20261121130412.611 DISPARO2 borrador P=0 dt=94
+20261121130412 DISPARO borrador tecla=e held=0 pausado=0
+20261121130412.873 DISPARO2 borrador P=0 dt=141
+20261121130412 DISPARO borrador tecla=e held=0 pausado=0
+20261121130413.098 DISPARO2 borrador P=0 dt=125
+20261121130413 DISPARO borrador tecla=e held=0 pausado=0
+20261121130413.383 DISPARO2 pluma P=0 dt=156
+20261121130413 DISPARO pluma tecla=q held=0 pausado=0
+20261121130413.608 DISPARO2 borrador P=0 dt=219
+20261121130413 DISPARO borrador tecla=e held=0 pausado=0
+20261121130414.321 DISPARO2 borrador P=0 dt=547
+20261121130414 DISPARO borrador tecla=e held=0 pausado=0
+20261121130414.553 DISPARO2 borrador P=0 dt=109
+20261121130414 DISPARO borrador tecla=e held=0 pausado=0
+20261121130414.778 DISPARO2 borrador P=0 dt=94
+20261121130414 DISPARO borrador tecla=e held=0 pausado=0
+20261121130415.551 DISPARO2 pluma P=0 dt=125
+20261121130415 DISPARO pluma tecla=q held=0 pausado=0
+20261121130416.181 DISPARO2 pluma P=0 dt=640
+20261121130416 DISPARO pluma tecla=q held=0 pausado=0
+20261121130416.616 DISPARO2 pluma P=0 dt=438
+20261121130416 DISPARO pluma tecla=q held=0 pausado=0
+20261121130417.088 DISPARO2 borrador P=0 dt=187
+20261121130417 DISPARO borrador tecla=e held=0 pausado=0
+20261121130417.321 DISPARO2 borrador P=0 dt=110
+20261121130417 DISPARO borrador tecla=e held=0 pausado=0
+20261121130417.569 DISPARO2 borrador P=0 dt=125
+20261121130417 DISPARO borrador tecla=e held=0 pausado=0
+20261121130417.839 DISPARO2 borrador P=0 dt=140
+20261121130417 DISPARO borrador tecla=e held=0 pausado=0
+20261121130418.033 DISPARO2 pluma P=0 dt=63
+20261121130418 DISPARO pluma tecla=q held=0 pausado=0
+20261121130418.116 DISPARO2 aerografo P=0 dt=94
+20261121130418 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130418.274 DISPARO2 borrador P=0 dt=156
+20261121130418 DISPARO borrador tecla=e held=0 pausado=0
+20261121130418.641 DISPARO2 pluma P=0 dt=359
+20261121130418 DISPARO pluma tecla=q held=0 pausado=0
+20261121130418.687 DISPARO2 aerografo P=0 dt=0
+20261121130418 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130420.252 RB down csp=327754 arm=0
+20261121130420.358 RB up ctx held=1 combo=0
+20261121130438.397 DISPARO2 pluma P=0 dt=13375
+20261121130438 DISPARO pluma tecla=q held=0 pausado=0
+20261121130438.682 DISPARO2 pluma P=0 dt=281
+20261121130438 DISPARO pluma tecla=q held=0 pausado=0
+20261121130438.951 DISPARO2 pluma P=0 dt=266
+20261121130438 DISPARO pluma tecla=q held=0 pausado=0
+20261121130439.162 DISPARO2 aerografo P=0 dt=203
+20261121130439 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130439.379 DISPARO2 aerografo P=0 dt=219
+20261121130439 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130439.702 DISPARO2 borrador P=0 dt=328
+20261121130439 DISPARO borrador tecla=e held=0 pausado=0
+20261121130440.035 DISPARO2 pluma P=0 dt=141
+20261121130440 DISPARO pluma tecla=q held=0 pausado=0
+20261121130440.114 DISPARO2 aerografo P=0 dt=78
+20261121130440 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130440.377 DISPARO2 borrador P=0 dt=266
+20261121130440 DISPARO borrador tecla=e held=0 pausado=0
+20261121130441.100 RB down csp=327754 arm=0
+20261121130441.212 RB up ctx held=1 combo=0
+20261121130448 REG aerografo hk=$w
+20261121130448 REG borrador hk=$e
+20261121130448 REG borrador_all_layers hk=$^e
+20261121130448 REG borrador_lazo hk=~RButton & e
+20261121130448 REG capa_visibilidad hk=$e
+20261121130448 REG color_mix hk=$!x
+20261121130448 REG copiar hk=$^c
+20261121130448 REG cuentagotas hk=$g
+20261121130448 REG deshacer hk=$^z
+20261121130448 REG difu_mixer hk=~RButton & w
+20261121130448 REG flip_horizontal hk=$!b
+20261121130448 REG guardar hk=$^s
+20261121130448 REG inv_seleccion hk=$RButton
+20261121130448 REG lazo hk=$s
+20261121130448 REG opc_presion hk=$!w
+20261121130448 REG pincel_duro hk=~RButton & q
+20261121130448 REG pincel_suave hk=$!q
+20261121130448 REG pluma hk=$q
+20261121130448 REG regla_ocultar hk=~RButton & t
+20261121130448 REG rehacer hk=$^y
+20261121130448 REG relleno hk=~RButton & 1
+20261121130448 REG shift_sostenido hk=~RButton & f
+20261121130448 REG smear hk=$!f
+20261121130448 REG zoom_lienzo hk=$z
+20261121130448.439 DISPARO2 pluma P=0 dt=640
+20261121130448 DISPARO pluma tecla=q held=0 pausado=0
+20261121130448.672 DISPARO2 pluma P=0 dt=235
+20261121130448 DISPARO pluma tecla=q held=0 pausado=0
+20261121130448.822 DISPARO2 aerografo P=0 dt=156
+20261121130448 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130448 REG aerografo hk=$w
+20261121130448 REG borrador hk=$e
+20261121130448 REG borrador_all_layers hk=$^e
+20261121130448 REG borrador_lazo hk=~RButton & e
+20261121130448 REG capa_visibilidad hk=$e
+20261121130448 REG color_mix hk=$!x
+20261121130448 REG copiar hk=$^c
+20261121130448 REG cuentagotas hk=$g
+20261121130448 REG deshacer hk=$^z
+20261121130448 REG difu_mixer hk=~RButton & w
+20261121130449 REG flip_horizontal hk=$!b
+20261121130449 REG guardar hk=$^s
+20261121130449 REG inv_seleccion hk=$RButton
+20261121130449 REG lazo hk=$s
+20261121130449 REG opc_presion hk=$!w
+20261121130449 REG pincel_duro hk=~RButton & q
+20261121130449 REG pincel_suave hk=$!q
+20261121130449 REG pluma hk=$q
+20261121130449.131 DISPARO2 aerografo P=0 dt=312
+20261121130449 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130449 REG regla_ocultar hk=~RButton & t
+20261121130449 REG rehacer hk=$^y
+20261121130449 REG relleno hk=~RButton & 1
+20261121130449 REG shift_sostenido hk=~RButton & f
+20261121130449 REG smear hk=$!f
+20261121130449 REG zoom_lienzo hk=$z
+20261121130449.253 DISPARO2 pluma P=0 dt=110
+20261121130449 DISPARO pluma tecla=q held=0 pausado=0
+20261121130449.347 DISPARO2 borrador P=0 dt=93
+20261121130449 DISPARO borrador tecla=e held=0 pausado=0
+20261121130449.670 DISPARO2 borrador P=0 dt=110
+20261121130449 DISPARO borrador tecla=e held=0 pausado=0
+20261121130449.962 DISPARO2 borrador P=0 dt=140
+20261121130449 DISPARO borrador tecla=e held=0 pausado=0
+20261121130450.179 DISPARO2 aerografo P=0 dt=109
+20261121130450 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130450.922 DISPARO2 pluma P=0 dt=141
+20261121130450 DISPARO pluma tecla=q held=0 pausado=0
+20261121130451.223 DISPARO2 pluma P=0 dt=296
+20261121130451 DISPARO pluma tecla=q held=0 pausado=0
+20261121130451.470 DISPARO2 pluma P=0 dt=250
+20261121130451 DISPARO pluma tecla=q held=0 pausado=0
+20261121130451.650 DISPARO2 pluma P=0 dt=188
+20261121130451 DISPARO pluma tecla=q held=0 pausado=0
+20261121130451.936 DISPARO2 aerografo P=0 dt=281
+20261121130451 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130452.175 DISPARO2 pluma P=0 dt=235
+20261121130452 DISPARO pluma tecla=q held=0 pausado=0
+20261121130452.202 DISPARO2 borrador P=0 dt=31
+20261121130452 DISPARO borrador tecla=e held=0 pausado=0
+20261121130452.520 DISPARO2 pluma P=0 dt=156
+20261121130452 DISPARO pluma tecla=q held=0 pausado=0
+20261121130452.580 DISPARO2 aerografo P=0 dt=63
+20261121130452 DISPARO aerografo tecla=w held=0 pausado=0
+20261121130452.669 DISPARO2 borrador P=0 dt=94
+20261121130452 DISPARO borrador tecla=e held=0 pausado=0
+20261121130534 REG aerografo hk=$w
+20261121130534 REG borrador hk=$e
+20261121130534 REG borrador_all_layers hk=$^e
+20261121130534 REG borrador_lazo hk=~RButton & e
+20261121130534 REG capa_visibilidad hk=$e
+20261121130534 REG color_mix hk=$!x
+20261121130534 REG copiar hk=$^c
+20261121130534 REG cuentagotas hk=$g
+20261121130534 REG deshacer hk=$^z
+20261121130534 REG difu_mixer hk=~RButton & w
+20261121130534 REG flip_horizontal hk=$!b
+20261121130534 REG guardar hk=$^s
+20261121130534 REG inv_seleccion hk=$RButton
+20261121130534 REG lazo hk=$s
+20261121130534 REG opc_presion hk=$!w
+20261121130534 REG pincel_duro hk=~RButton & q
+20261121130534 REG pincel_suave hk=$!q
+20261121130534 REG pluma hk=$q
+20261121130534 REG regla_ocultar hk=~RButton & t
+20261121130534 REG rehacer hk=$^y
+20261121130534 REG relleno hk=~RButton & 1
+20261121130534 REG shift_sostenido hk=~RButton & f
+20261121130534 REG smear hk=$!f
+20261121130534 REG zoom_lienzo hk=$z
+20261121130534 REG aerografo hk=$w
+20261121130534 REG borrador hk=$e
+20261121130534 REG borrador_all_layers hk=$^e
+20261121130534 REG borrador_lazo hk=~RButton & e
+20261121130534 REG capa_visibilidad hk=$e
+20261121130534 REG color_mix hk=$!x
+20261121130534 REG copiar hk=$^c
+20261121130534 REG cuentagotas hk=$g
+20261121130534 REG deshacer hk=$^z
+20261121130535 REG difu_mixer hk=~RButton & w
+20261121130535 REG flip_horizontal hk=$!b
+20261121130535 REG guardar hk=$^s
+20261121130535 REG inv_seleccion hk=$RButton
+20261121130535 REG lazo hk=$s
+20261121130535 REG opc_presion hk=$!w
+20261121130535 REG pincel_duro hk=~RButton & q
+20261121130535 REG pincel_suave hk=$!q
+20261121130535 REG pluma hk=$q
+20261121130535 REG regla_ocultar hk=~RButton & t
+20261121130535 REG rehacer hk=$^y
+20261121130535 REG relleno hk=~RButton & 1
+20261121130535 REG shift_sostenido hk=~RButton & f
+20261121130535 REG smear hk=$!f
+20261121130535 REG zoom_lienzo hk=$z

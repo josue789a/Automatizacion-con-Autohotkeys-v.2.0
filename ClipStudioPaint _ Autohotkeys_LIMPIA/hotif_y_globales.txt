@@ -1,0 +1,1167 @@
+﻿
+> CALIBRADOR_LIMPIO.ahk:3:#Warn All, OutputDebug
+  CALIBRADOR_LIMPIO.ahk:4:
+  CALIBRADOR_LIMPIO.ahk:5:; ==============================================================================
+> test_debug_acc.ahk:2:#Warn All, OutputDebug
+  test_debug_acc.ahk:3:SetWorkingDir(A_ScriptDir)
+  test_debug_acc.ahk:4:#Include "XPPEN_NO_ADMIN.ahk"
+> XPPEN AHK VERSION ESTABLE.ahk:3:#Warn All, OutputDebug
+  XPPEN AHK VERSION ESTABLE.ahk:4:if !A_IsAdmin {
+  XPPEN AHK VERSION ESTABLE.ahk:5:    try Run('*RunAs "' A_ScriptFullPath '"')
+> XPPEN AHK VERSION ESTABLE.ahk:255:OnExit(_AudAlSalir)
+  XPPEN AHK VERSION ESTABLE.ahk:256:CalPyInit()
+  XPPEN AHK VERSION ESTABLE.ahk:257:SetTimer(_AudPrecargar, -400)
+> XPPEN AHK VERSION ESTABLE.ahk:282:#HotIf
+> XPPEN AHK VERSION ESTABLE.ahk:283:^!+q:: ExitApp()
+  XPPEN AHK VERSION ESTABLE.ahk:284:
+> XPPEN_NO_ADMIN.ahk:3:#Warn All, OutputDebug
+  XPPEN_NO_ADMIN.ahk:4:
+  XPPEN_NO_ADMIN.ahk:5:; if !A_IsAdmin {
+> XPPEN_NO_ADMIN.ahk:263:OnExit(Salir)
+  XPPEN_NO_ADMIN.ahk:264:Salud_Iniciar()
+  XPPEN_NO_ADMIN.ahk:265:CalPyInit()
+> XPPEN_NO_ADMIN.ahk:284:#HotIf
+> XPPEN_NO_ADMIN.ahk:285:^!+q:: {
+  XPPEN_NO_ADMIN.ahk:286:    TrayTip("Companion No-Admin", "Finalizadas las pruebas en Companion. Proceso de pruebas 
+cerrado.")
+  XPPEN_NO_ADMIN.ahk:287:    Sleep(800)
+> lib\calibrador_py.ahk:21:    OnExit(_CalPyCerrarInstancia)
+  lib\calibrador_py.ahk:22:}
+  lib\calibrador_py.ahk:23:
+> lib\calibrador_py_20261116_144712.bak.ahk:20:    OnExit(_CalPyCerrarInstancia)
+  lib\calibrador_py_20261116_144712.bak.ahk:21:}
+  lib\calibrador_py_20261116_144712.bak.ahk:22:
+> lib\calibrador_py_20261116_164810.bak.ahk:20:    OnExit(_CalPyCerrarInstancia)
+  lib\calibrador_py_20261116_164810.bak.ahk:21:}
+  lib\calibrador_py_20261116_164810.bak.ahk:22:
+> lib\companion.ahk:487:_CompanionRestaurarAudio() {
+  lib\companion.ahk:488:    res := 0
+  lib\companion.ahk:489:    try res := _AudReiniciar()
+> lib\companion_flotantes.ahk:1577:_Companion_WM_RBUTTON(wParam,lParam,msg,hwnd) {
+  lib\companion_flotantes.ahk:1578:    global hubGui, lockGui, frenteGui, puntosGui, estabBtnGui, reloadGui, dsGui, 
+ccGui, arGui, hcGui
+  lib\companion_flotantes.ahk:1579:    hwnds := []
+> lib\companion_flotantes.ahk:1638:            _CompanionRestaurarAudio()
+  lib\companion_flotantes.ahk:1639:    }
+  lib\companion_flotantes.ahk:1640:    ActualizarHubGUI()
+> lib\companion_lienzos.ahk:374:; Restauración idempotente en OnExit (ExitApp, ^!+q, Reload). No toca el INI:
+  lib\companion_lienzos.ahk:375:; las entradas siguen para que NvRehidratar re-gestione tras Reload.
+  lib\companion_lienzos.ahk:376:NvRestaurarAlSalir(*) {
+> lib\companion_lienzos.ahk:579:    OnExit(NvRestaurarAlSalir, -1)          ; -1: corre ANTES que _AudAlSalir / Salir
+  lib\companion_lienzos.ahk:580:    SetTimer(_NvSondeoSueltas, 1500)
+  lib\companion_lienzos.ahk:581:}
+> lib\espacial.ahk:20:    OnExit(_EspacialSalir)
+  lib\espacial.ahk:21:}
+  lib\espacial.ahk:22:
+> lib\espacial.ahk:26:    return 0   ; 0 = permitir la salida (no bloquear otros OnExit)
+  lib\espacial.ahk:27:}
+  lib\espacial.ahk:28:
+> lib\espacial_20261115_135944.bak.ahk:20:    OnExit(_EspacialSalir)
+  lib\espacial_20261115_135944.bak.ahk:21:}
+  lib\espacial_20261115_135944.bak.ahk:22:
+> lib\espacial_20261115_135944.bak.ahk:26:    return 0   ; 0 = permitir la salida (no bloquear otros OnExit)
+  lib\espacial_20261115_135944.bak.ahk:27:}
+  lib\espacial_20261115_135944.bak.ahk:28:
+> lib\hotkeys_csp.ahk:68:OnExit((*) => _LiberarModificadores(true))   ; libera el Shift anclado al salir o recargar
+  lib\hotkeys_csp.ahk:69:
+  lib\hotkeys_csp.ahk:70:global _briefingLanzado := WinExist("ahk_exe CLIPStudioPaint.exe") ? true : false   ; recarga 
+con CSP ya abierto = no relanza
+> lib\hotkeys_csp.ahk:300:#HotIf
+  lib\hotkeys_csp.ahk:301:^!b:: LanzarBriefing()
+  lib\hotkeys_csp.ahk:302:
+> lib\hotkeys_csp.ahk:304:#HotIf EsEditorTexto()
+  lib\hotkeys_csp.ahk:305:^s:: {
+  lib\hotkeys_csp.ahk:306:    SendInput("^s")
+> lib\hotkeys_csp.ahk:320:#HotIf
+  lib\hotkeys_csp.ahk:321:#SuspendExempt
+  lib\hotkeys_csp.ahk:322:; Control de Modo Escritura con tecla ` (o sc029):
+> lib\hotkeys_csp.ahk:385:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp.ahk:386:RButton:: {
+  lib\hotkeys_csp.ahk:387:    stylus.rButtonHeld := true
+> lib\hotkeys_csp.ahk:402:Space & RButton:: {
+  lib\hotkeys_csp.ahk:403:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:404:    _InvSeleccionConGUI()
+> lib\hotkeys_csp.ahk:450:~!b:: {
+  lib\hotkeys_csp.ahk:451:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount - stylus.bSinteticoTick) : 9999
+  lib\hotkeys_csp.ahk:452:    if (elapsedB < UP_SINTETICO_MS) {
+> lib\hotkeys_csp.ahk:460:~!b up:: {
+  lib\hotkeys_csp.ahk:461:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount - stylus.bSinteticoTick) : 9999
+  lib\hotkeys_csp.ahk:462:    if (elapsedB < UP_SINTETICO_MS) {
+> lib\hotkeys_csp.ahk:583:#HotIf stylus.altActive && !WinActive("ahk_exe PureRef.exe")
+  lib\hotkeys_csp.ahk:584:z:: {
+  lib\hotkeys_csp.ahk:585:    SendInput("^c")
+> lib\hotkeys_csp.ahk:589:w:: {
+  lib\hotkeys_csp.ahk:590:    Send("+s")
+  lib\hotkeys_csp.ahk:591:    MostrarHUD("SHIFT+S","00E5FF",800)   ; solo visual, sin llamada a _SonarUI
+> lib\hotkeys_csp.ahk:651:$Space:: {
+  lib\hotkeys_csp.ahk:652:    stylus.comboUsado := true
+  lib\hotkeys_csp.ahk:653:    SendInput("!g")
+> lib\hotkeys_csp.ahk:657:#HotIf
+> lib\hotkeys_csp.ahk:658:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp.ahk:659:$a:: {
+  lib\hotkeys_csp.ahk:660:    _FlushPendentes()
+> lib\hotkeys_csp.ahk:724:    MostrarBadgeCombo("ALT + Q","SOFT BRUSH","FF6B00",2200)
+  lib\hotkeys_csp.ahk:725:}
+  lib\hotkeys_csp.ahk:726:~LAlt & 1::
+> lib\hotkeys_csp.ahk:741:$w:: {
+  lib\hotkeys_csp.ahk:742:    _FlushPendentes()
+  lib\hotkeys_csp.ahk:743:    global colorEstado
+> lib\hotkeys_csp.ahk:982:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe") && stylus.altActive
+  lib\hotkeys_csp.ahk:983:$!x:: {
+  lib\hotkeys_csp.ahk:984:    now := A_TickCount
+> lib\hotkeys_csp.ahk:999:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp.ahk:1000:__AltX_SEND_NORMAL() {
+  lib\hotkeys_csp.ahk:1001:    if !AltB_a_state.timerRunning
+> lib\hotkeys_csp.ahk:1176:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  lib\hotkeys_csp.ahk:1177:}
+  lib\hotkeys_csp.ahk:1178:; Shift sostenido: Space + -
+> lib\hotkeys_csp.ahk:1185:#HotIf GetKeyState("Space") && WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp.ahk:1186:*e:: _SpaceE_Dispatch()
+> lib\hotkeys_csp.ahk:1187:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp.ahk:1188:
+  lib\hotkeys_csp.ahk:1189:; Space+E: K7+K1 = Mostrar/Ocultar capa; K7+K3 (macro Shift+E del driver) = Shift anclado.
+> lib\hotkeys_csp.ahk:1403:    MostrarBadgeCombo("PEN + W","DIFU MIXER 2","00E5FF",2200)
+  lib\hotkeys_csp.ahk:1404:}
+  lib\hotkeys_csp.ahk:1405:!w:: {
+> lib\hotkeys_csp.ahk:1407:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 2","00E5FF",2200)
+  lib\hotkeys_csp.ahk:1408:}
+  lib\hotkeys_csp.ahk:1409:~RButton & -:: {
+> lib\hotkeys_csp.ahk:1570:~Space & NumpadAdd:: {
+  lib\hotkeys_csp.ahk:1571:    Send("+p")
+  lib\hotkeys_csp.ahk:1572:    MostrarMiniTexto("SPACE  +  +","1E8449",700)
+> lib\hotkeys_csp.ahk:1574:~Space & NumpadSub:: {
+  lib\hotkeys_csp.ahk:1575:    Send("^+p")
+  lib\hotkeys_csp.ahk:1576:    MostrarMiniTexto("SPACE  +  −","922B21",700)
+> lib\hotkeys_csp.ahk:1578:~Space & w:: {
+  lib\hotkeys_csp.ahk:1579:    _FlushPendentes()
+  lib\hotkeys_csp.ahk:1580:    Send("+w")
+> lib\hotkeys_csp.ahk:1583:~Space & x:: {
+  lib\hotkeys_csp.ahk:1584:    _FlushPendentes()
+  lib\hotkeys_csp.ahk:1585:    Send("+s")
+> lib\hotkeys_csp.ahk:1588:~Space & e:: _SpaceE_Dispatch()
+> lib\hotkeys_csp.ahk:1589:~Space & q:: {
+  lib\hotkeys_csp.ahk:1590:    _FlushPendentes()
+  lib\hotkeys_csp.ahk:1591:    AccionEnfoque()
+> lib\hotkeys_csp.ahk:1593:~Space & s:: {
+  lib\hotkeys_csp.ahk:1594:    _FlushPendentes()
+  lib\hotkeys_csp.ahk:1595:    SendInput("!h")   ; CSP: Alt+H = ventana de capa
+> lib\hotkeys_csp.ahk:1599:~Space & f:: {
+  lib\hotkeys_csp.ahk:1600:    _FlushPendentes()
+  lib\hotkeys_csp.ahk:1601:    static estado := 0
+> lib\hotkeys_csp.ahk:1611:~Space & Numpad1::
+> lib\hotkeys_csp.ahk:1612:~Space & Numpad2::
+> lib\hotkeys_csp.ahk:1613:~Space & Numpad3::
+> lib\hotkeys_csp.ahk:1614:~Space & Numpad4::
+> lib\hotkeys_csp.ahk:1615:~Space & Numpad5::
+> lib\hotkeys_csp.ahk:1616:~Space & Numpad6:: {
+  lib\hotkeys_csp.ahk:1617:    tecla := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  lib\hotkeys_csp.ahk:1618:    tipos := Map("1","HSV","2","Brillo/Contraste","3","Equilibrio color","4","Curva 
+tonos","5","Niveles","6","Degradado")
+> lib\hotkeys_csp.ahk:1634:~*Space:: {
+  lib\hotkeys_csp.ahk:1635:    spc.downTick := A_TickCount
+  lib\hotkeys_csp.ahk:1636:    LienzoHUD_ChequeoSpace()
+> lib\hotkeys_csp.ahk:1638:~*Space up:: {
+  lib\hotkeys_csp.ahk:1639:    held := A_TickCount - spc.downTick
+  lib\hotkeys_csp.ahk:1640:    now := A_TickCount
+> lib\hotkeys_csp.ahk:1663:#HotIf
+  lib\hotkeys_csp.ahk:1664:$^F11:: _CapturarLayout("Normal")
+  lib\hotkeys_csp.ahk:1665:$^F12:: _CapturarLayout("Enfoque")
+> lib\hotkeys_csp.ahk:1681:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp.ahk:1682:!f:: {
+  lib\hotkeys_csp.ahk:1683:    global _bSmearAbajo
+> lib\hotkeys_csp.ahk:1721:#HotIf
+> lib\hotkeys_csp.ahk:1722:#HotIf
+> lib\hotkeys_csp_20261115_024309.bak.ahk:68:OnExit((*) => _LiberarModificadores(true))   ; libera el Shift anclado al 
+salir o recargar
+  lib\hotkeys_csp_20261115_024309.bak.ahk:69:
+  lib\hotkeys_csp_20261115_024309.bak.ahk:70:global _briefingLanzado := WinExist("ahk_exe CLIPStudioPaint.exe") ? true 
+: false   ; recarga con CSP ya abierto = no relanza
+> lib\hotkeys_csp_20261115_024309.bak.ahk:142:#HotIf
+  lib\hotkeys_csp_20261115_024309.bak.ahk:143:^!b:: LanzarBriefing()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:144:
+> lib\hotkeys_csp_20261115_024309.bak.ahk:146:#HotIf EsEditorTexto()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:147:^s:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:148:    SendInput("^s")
+> lib\hotkeys_csp_20261115_024309.bak.ahk:162:#HotIf
+  lib\hotkeys_csp_20261115_024309.bak.ahk:163:#SuspendExempt
+  lib\hotkeys_csp_20261115_024309.bak.ahk:164:; Control de Modo Escritura con tecla ` (o sc029):
+> lib\hotkeys_csp_20261115_024309.bak.ahk:227:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:228:RButton:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:229:    stylus.rButtonHeld := true
+> lib\hotkeys_csp_20261115_024309.bak.ahk:244:Space & RButton:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:245:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:246:    _InvSeleccionConGUI()
+> lib\hotkeys_csp_20261115_024309.bak.ahk:292:~!b:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:293:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount - 
+stylus.bSinteticoTick) : 9999
+  lib\hotkeys_csp_20261115_024309.bak.ahk:294:    if (elapsedB < UP_SINTETICO_MS) {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:302:~!b up:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:303:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount - 
+stylus.bSinteticoTick) : 9999
+  lib\hotkeys_csp_20261115_024309.bak.ahk:304:    if (elapsedB < UP_SINTETICO_MS) {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:425:#HotIf stylus.altActive && !WinActive("ahk_exe PureRef.exe")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:426:z:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:427:    SendInput("^c")
+> lib\hotkeys_csp_20261115_024309.bak.ahk:431:w:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:432:    Send("+s")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:433:    MostrarHUD("SHIFT+S","00E5FF",800)   ; solo visual, sin llamada a 
+_SonarUI
+> lib\hotkeys_csp_20261115_024309.bak.ahk:493:$Space:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:494:    stylus.comboUsado := true
+  lib\hotkeys_csp_20261115_024309.bak.ahk:495:    SendInput("!g")
+> lib\hotkeys_csp_20261115_024309.bak.ahk:499:#HotIf
+> lib\hotkeys_csp_20261115_024309.bak.ahk:500:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:501:$a:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:502:    _FlushPendentes()
+> lib\hotkeys_csp_20261115_024309.bak.ahk:566:    MostrarBadgeCombo("ALT + Q","SOFT BRUSH","FF6B00",2200)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:567:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:568:~LAlt & 1::
+> lib\hotkeys_csp_20261115_024309.bak.ahk:583:$w:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:584:    _FlushPendentes()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:585:    global colorEstado
+> lib\hotkeys_csp_20261115_024309.bak.ahk:824:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe") && stylus.altActive
+  lib\hotkeys_csp_20261115_024309.bak.ahk:825:$!x:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:826:    now := A_TickCount
+> lib\hotkeys_csp_20261115_024309.bak.ahk:841:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:842:__AltX_SEND_NORMAL() {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:843:    if !AltB_a_state.timerRunning
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1018:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1019:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1020:; Shift sostenido: Space + -
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1027:#HotIf GetKeyState("Space") && WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1028:*e:: _SpaceE_Dispatch()
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1029:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1030:
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1031:; Space+E: K7+K1 = Mostrar/Ocultar capa; K7+K3 (macro Shift+E del 
+driver) = Shift anclado.
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1245:    MostrarBadgeCombo("PEN + W","DIFU MIXER 2","00E5FF",2200)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1246:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1247:!w:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1249:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 2","00E5FF",2200)
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1250:}
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1251:~RButton & -:: {
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1412:~Space & NumpadAdd:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1413:    Send("+p")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1414:    MostrarMiniTexto("SPACE  +  +","1E8449",700)
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1416:~Space & NumpadSub:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1417:    Send("^+p")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1418:    MostrarMiniTexto("SPACE  +  −","922B21",700)
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1420:~Space & w:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1421:    _FlushPendentes()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1422:    Send("+w")
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1425:~Space & x:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1426:    _FlushPendentes()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1427:    Send("+s")
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1430:~Space & e:: _SpaceE_Dispatch()
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1431:~Space & q:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1432:    _FlushPendentes()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1433:    AccionEnfoque()
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1435:~Space & s:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1436:    _FlushPendentes()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1437:    SendInput("!h")   ; CSP: Alt+H = ventana de capa
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1441:~Space & f:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1442:    _FlushPendentes()
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1443:    static estado := 0
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1453:~Space & Numpad1::
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1454:~Space & Numpad2::
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1455:~Space & Numpad3::
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1456:~Space & Numpad4::
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1457:~Space & Numpad5::
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1458:~Space & Numpad6:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1459:    tecla := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1460:    tipos := Map("1","HSV","2","Brillo/Contraste","3","Equilibrio 
+color","4","Curva tonos","5","Niveles","6","Degradado")
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1476:~*Space:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1477:    spc.downTick := A_TickCount
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1478:    LienzoHUD_ChequeoSpace()
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1480:~*Space up:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1481:    held := A_TickCount - spc.downTick
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1482:    now := A_TickCount
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1505:#HotIf
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1506:$^F11:: _CapturarLayout("Normal")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1507:$^F12:: _CapturarLayout("Enfoque")
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1522:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1523:!f:: {
+  lib\hotkeys_csp_20261115_024309.bak.ahk:1524:    global _bSmearAbajo
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1562:#HotIf
+> lib\hotkeys_csp_20261115_024309.bak.ahk:1563:#HotIf
+> lib\hud_badges.ahk:514:MostrarBadgeCombo(comboText, toolText, colorAcento := "00E5FF", duracion := 1500, zona := 2) {
+  lib\hud_badges.ahk:515:    ev := _MapearTextoAEvento(toolText)
+  lib\hud_badges.ahk:516:    if (!ev)
+> lib\salida.ahk:9:;  - Orquestador unico OnExit con prioridad numerica estricta.
+  lib\salida.ahk:10:; ============================================================================
+  lib\salida.ahk:11:
+> lib\salida.ahk:118:; Salir: Orquestador unico de OnExit.
+  lib\salida.ahk:119:; Bloquea interrupciones (Critical), ejecuta fases en orden y garantiza retorno 0.
+  lib\salida.ahk:120:; ---------------------------------------------------------------------------
+> lib\theme_gfx.ahk:227:        OnExit(_GfxGdipAlSalir)   ; se suma a _AudAlSalir y demás, no los reemplaza
+  lib\theme_gfx.ahk:228:        alSalir := true
+  lib\theme_gfx.ahk:229:    }
+> _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:3:#Warn All, OutputDebug
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:4:if !A_IsAdmin {
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:5:    try Run('*RunAs "' A_ScriptFullPath '"')
+> _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:250:OnExit(_AudAlSalir)
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:251:SetTimer(_AudPrecargar, -400)
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:252:#Include %A_ScriptDir%\lib\core_config.ahk
+> _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:271:#HotIf
+> _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:272:^!+q:: ExitApp()
+  _backups\XPPEN AHK VERSION ESTABLE_20261112_135016.bak.ahk:273:
+> _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:3:#Warn All, OutputDebug
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:4:
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:5:; if !A_IsAdmin {
+> _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:258:OnExit(Salir)
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:259:Salud_Iniciar()
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:260:SetTimer(_AudPrecargar, -400)
+> _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:273:#HotIf
+> _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:274:^!+q:: {
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:275:    TrayTip("Companion No-Admin", "Finalizadas las pruebas en 
+Companion. Proceso de pruebas cerrado.")
+  _backups\XPPEN_NO_ADMIN_20261112_135016.bak.ahk:276:    Sleep(800)
+> _backups\lib_baks\companion_20261108_143444.bak.ahk:1657:_Companion_WM_RBUTTON(wParam,lParam,msg,hwnd) {
+  _backups\lib_baks\companion_20261108_143444.bak.ahk:1658:    global hubGui, lockGui, frenteGui, puntosGui, 
+estabBtnGui, reloadGui, dsGui, ccGui, arGui, hcGui
+  _backups\lib_baks\companion_20261108_143444.bak.ahk:1659:    hwnds := []
+> _backups\lib_baks\companion_20261108_143444.bak.ahk:1712:            _CompanionRestaurarAudio()
+  _backups\lib_baks\companion_20261108_143444.bak.ahk:1713:    }
+  _backups\lib_baks\companion_20261108_143444.bak.ahk:1714:    ActualizarHubGUI()
+> _backups\lib_baks\companion_20261108_143444.bak.ahk:1948:_CompanionRestaurarAudio() {
+  _backups\lib_baks\companion_20261108_143444.bak.ahk:1949:    res := 0
+  _backups\lib_baks\companion_20261108_143444.bak.ahk:1950:    try res := _AudReiniciar()
+> _backups\lib_baks\companion_20261108_150309.bak.ahk:1657:_Companion_WM_RBUTTON(wParam,lParam,msg,hwnd) {
+  _backups\lib_baks\companion_20261108_150309.bak.ahk:1658:    global hubGui, lockGui, frenteGui, puntosGui, 
+estabBtnGui, reloadGui, dsGui, ccGui, arGui, hcGui
+  _backups\lib_baks\companion_20261108_150309.bak.ahk:1659:    hwnds := []
+> _backups\lib_baks\companion_20261108_150309.bak.ahk:1712:            _CompanionRestaurarAudio()
+  _backups\lib_baks\companion_20261108_150309.bak.ahk:1713:    }
+  _backups\lib_baks\companion_20261108_150309.bak.ahk:1714:    ActualizarHubGUI()
+> _backups\lib_baks\companion_20261108_150309.bak.ahk:1948:_CompanionRestaurarAudio() {
+  _backups\lib_baks\companion_20261108_150309.bak.ahk:1949:    res := 0
+  _backups\lib_baks\companion_20261108_150309.bak.ahk:1950:    try res := _AudReiniciar()
+> _backups\lib_baks\companion_20261108_155522.bak.ahk:1657:_Companion_WM_RBUTTON(wParam,lParam,msg,hwnd) {
+  _backups\lib_baks\companion_20261108_155522.bak.ahk:1658:    global hubGui, lockGui, frenteGui, puntosGui, 
+estabBtnGui, reloadGui, dsGui, ccGui, arGui, hcGui
+  _backups\lib_baks\companion_20261108_155522.bak.ahk:1659:    hwnds := []
+> _backups\lib_baks\companion_20261108_155522.bak.ahk:1712:            _CompanionRestaurarAudio()
+  _backups\lib_baks\companion_20261108_155522.bak.ahk:1713:    }
+  _backups\lib_baks\companion_20261108_155522.bak.ahk:1714:    ActualizarHubGUI()
+> _backups\lib_baks\companion_20261108_155522.bak.ahk:1948:_CompanionRestaurarAudio() {
+  _backups\lib_baks\companion_20261108_155522.bak.ahk:1949:    res := 0
+  _backups\lib_baks\companion_20261108_155522.bak.ahk:1950:    try res := _AudReiniciar()
+> _backups\lib_baks\companion_20261112_131914.bak.ahk:2230:_Companion_WM_RBUTTON(wParam,lParam,msg,hwnd) {
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:2231:    global hubGui, lockGui, frenteGui, puntosGui, 
+estabBtnGui, reloadGui, dsGui, ccGui, arGui, hcGui
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:2232:    hwnds := []
+> _backups\lib_baks\companion_20261112_131914.bak.ahk:2287:            _CompanionRestaurarAudio()
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:2288:    }
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:2289:    ActualizarHubGUI()
+> _backups\lib_baks\companion_20261112_131914.bak.ahk:2573:_CompanionRestaurarAudio() {
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:2574:    res := 0
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:2575:    try res := _AudReiniciar()
+> _backups\lib_baks\companion_20261112_131914.bak.ahk:3464:; Restauración idempotente en OnExit (ExitApp, ^!+q, 
+Reload). No toca el INI:
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:3465:; las entradas siguen para que NvRehidratar re-gestione 
+tras Reload.
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:3466:NvRestaurarAlSalir(*) {
+> _backups\lib_baks\companion_20261112_131914.bak.ahk:3641:    OnExit(NvRestaurarAlSalir, -1)          ; -1: corre 
+ANTES que _AudAlSalir / Salir
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:3642:    SetTimer(_NvSondeoSueltas, 1500)
+  _backups\lib_baks\companion_20261112_131914.bak.ahk:3643:}
+> _backups\lib_baks\companion_20261112_154112.bak.ahk:2230:_Companion_WM_RBUTTON(wParam,lParam,msg,hwnd) {
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:2231:    global hubGui, lockGui, frenteGui, puntosGui, 
+estabBtnGui, reloadGui, dsGui, ccGui, arGui, hcGui
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:2232:    hwnds := []
+> _backups\lib_baks\companion_20261112_154112.bak.ahk:2287:            _CompanionRestaurarAudio()
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:2288:    }
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:2289:    ActualizarHubGUI()
+> _backups\lib_baks\companion_20261112_154112.bak.ahk:2573:_CompanionRestaurarAudio() {
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:2574:    res := 0
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:2575:    try res := _AudReiniciar()
+> _backups\lib_baks\companion_20261112_154112.bak.ahk:3464:; Restauración idempotente en OnExit (ExitApp, ^!+q, 
+Reload). No toca el INI:
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:3465:; las entradas siguen para que NvRehidratar re-gestione 
+tras Reload.
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:3466:NvRestaurarAlSalir(*) {
+> _backups\lib_baks\companion_20261112_154112.bak.ahk:3641:    OnExit(NvRestaurarAlSalir, -1)          ; -1: corre 
+ANTES que _AudAlSalir / Salir
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:3642:    SetTimer(_NvSondeoSueltas, 1500)
+  _backups\lib_baks\companion_20261112_154112.bak.ahk:3643:}
+> _backups\lib_baks\companion_20261112_154428.bak.ahk:2232:_Companion_WM_RBUTTON(wParam,lParam,msg,hwnd) {
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:2233:    global hubGui, lockGui, frenteGui, puntosGui, 
+estabBtnGui, reloadGui, dsGui, ccGui, arGui, hcGui
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:2234:    hwnds := []
+> _backups\lib_baks\companion_20261112_154428.bak.ahk:2289:            _CompanionRestaurarAudio()
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:2290:    }
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:2291:    ActualizarHubGUI()
+> _backups\lib_baks\companion_20261112_154428.bak.ahk:2575:_CompanionRestaurarAudio() {
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:2576:    res := 0
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:2577:    try res := _AudReiniciar()
+> _backups\lib_baks\companion_20261112_154428.bak.ahk:3466:; Restauración idempotente en OnExit (ExitApp, ^!+q, 
+Reload). No toca el INI:
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:3467:; las entradas siguen para que NvRehidratar re-gestione 
+tras Reload.
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:3468:NvRestaurarAlSalir(*) {
+> _backups\lib_baks\companion_20261112_154428.bak.ahk:3643:    OnExit(NvRestaurarAlSalir, -1)          ; -1: corre 
+ANTES que _AudAlSalir / Salir
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:3644:    SetTimer(_NvSondeoSueltas, 1500)
+  _backups\lib_baks\companion_20261112_154428.bak.ahk:3645:}
+> _backups\lib_baks\companion_20261113_232654.bak.ahk:2242:_Companion_WM_RBUTTON(wParam,lParam,msg,hwnd) {
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:2243:    global hubGui, lockGui, frenteGui, puntosGui, 
+estabBtnGui, reloadGui, dsGui, ccGui, arGui, hcGui
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:2244:    hwnds := []
+> _backups\lib_baks\companion_20261113_232654.bak.ahk:2299:            _CompanionRestaurarAudio()
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:2300:    }
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:2301:    ActualizarHubGUI()
+> _backups\lib_baks\companion_20261113_232654.bak.ahk:2585:_CompanionRestaurarAudio() {
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:2586:    res := 0
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:2587:    try res := _AudReiniciar()
+> _backups\lib_baks\companion_20261113_232654.bak.ahk:3476:; Restauración idempotente en OnExit (ExitApp, ^!+q, 
+Reload). No toca el INI:
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:3477:; las entradas siguen para que NvRehidratar re-gestione 
+tras Reload.
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:3478:NvRestaurarAlSalir(*) {
+> _backups\lib_baks\companion_20261113_232654.bak.ahk:3653:    OnExit(NvRestaurarAlSalir, -1)          ; -1: corre 
+ANTES que _AudAlSalir / Salir
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:3654:    SetTimer(_NvSondeoSueltas, 1500)
+  _backups\lib_baks\companion_20261113_232654.bak.ahk:3655:}
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:55:OnExit((*) => _LiberarModificadores(true))   ; libera el 
+Shift anclado al salir o recargar
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:56:
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:57:global _briefingLanzado := WinExist("ahk_exe 
+CLIPStudioPaint.exe") ? true : false   ; recarga con CSP ya abierto = no relanza
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:80:#HotIf
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:81:^!b:: LanzarBriefing()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:82:
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:84:#HotIf EsEditorTexto()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:85:^s:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:86:    SendInput("^s")
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:100:#HotIf
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:101:#SuspendExempt
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:102:; ENTRAR: solo si NO estamos en modo escritura. Dentro, 
+esta tecla no es hotkey y escribe normal.
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:103:#HotIf !sys.modoEscritura
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:104:$`::
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:105:$sc029:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:109:#HotIf
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:110:; Pause alterna siempre (única salida del modo escritura; 
+también entra)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:111:Pause:: _EscrituraSet(!sys.modoEscritura)
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:129:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:130:RButton:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:131:    stylus.rButtonHeld := true
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:146:Space & RButton:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:147:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:148:    _InvSeleccionConGUI()
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:194:~!b:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:195:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount 
+- stylus.bSinteticoTick) : 9999
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:196:    if (elapsedB < UP_SINTETICO_MS) {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:204:~!b up:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:205:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount 
+- stylus.bSinteticoTick) : 9999
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:206:    if (elapsedB < UP_SINTETICO_MS) {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:327:#HotIf stylus.altActive && !WinActive("ahk_exe 
+PureRef.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:328:z:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:329:    SendInput("^c")
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:333:w:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:334:    Send("+s")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:335:    MostrarHUD("SHIFT+S","00E5FF",800)   ; solo visual, 
+sin llamada a _SonarUI
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:395:$Space:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:396:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:397:    SendInput("!g")
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:401:#HotIf
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:402:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:403:$a:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:404:    _FlushPendentes()
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:468:    MostrarBadgeCombo("ALT + Q","SOFT BRUSH","FF6B00",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:469:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:470:~LAlt & 1::
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:485:$w:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:486:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:487:    global colorEstado
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:735:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe") && 
+stylus.altActive
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:736:$!x:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:737:    now := A_TickCount
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:752:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:753:__AltX_SEND_NORMAL() {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:754:    if !AltB_a_state.timerRunning
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:936:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:937:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:938:; Shift sostenido: Space + -  (antes ~RButton & f)
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1139:    MostrarBadgeCombo("PEN + W","DIFU MIXER 
+2","00E5FF",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1140:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1141:!w:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1143:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 
+2","00E5FF",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1144:}
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1145:~RButton & -:: {
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1306:~Space & NumpadAdd:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1307:    Send("+p")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1308:    MostrarMiniTexto("SPACE  +  +","1E8449",700)
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1310:~Space & NumpadSub:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1311:    Send("^+p")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1312:    MostrarMiniTexto("SPACE  +  −","922B21",700)
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1314:~Space & w:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1315:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1316:    Send("+w")
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1319:~Space & x:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1320:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1321:    Send("+s")
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1324:~Space & e:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1325:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1326:    _ToggleLayerVis()
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1328:~Space & q:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1329:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1330:    AccionEnfoque()
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1332:~Space & s:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1333:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1334:    SendInput("!h")   ; CSP: Alt+H = ventana de capa
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1338:~Space & f:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1339:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1340:    static estado := 0
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1350:~Space & Numpad1::
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1351:~Space & Numpad2::
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1352:~Space & Numpad3::
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1353:~Space & Numpad4::
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1354:~Space & Numpad5::
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1355:~Space & Numpad6:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1356:    tecla := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1357:    tipos := 
+Map("1","HSV","2","Brillo/Contraste","3","Equilibrio color","4","Curva tonos","5","Niveles","6","Degradado")
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1373:~*Space:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1374:    spc.downTick := A_TickCount
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1375:    LienzoHUD_ChequeoSpace()
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1377:~*Space up:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1378:    held := A_TickCount - spc.downTick
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1379:    now := A_TickCount
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1402:#HotIf
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1403:$^F11:: _CapturarLayout("Normal")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1404:$^F12:: _CapturarLayout("Enfoque")
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1419:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1420:!f:: {
+  _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1421:    global _bSmearAbajo
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1459:#HotIf
+> _backups\lib_baks\hotkeys_csp_20261113_201621.bak.ahk:1460:#HotIf
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:68:OnExit((*) => _LiberarModificadores(true))   ; libera el 
+Shift anclado al salir o recargar
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:69:
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:70:global _briefingLanzado := WinExist("ahk_exe 
+CLIPStudioPaint.exe") ? true : false   ; recarga con CSP ya abierto = no relanza
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:93:#HotIf
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:94:^!b:: LanzarBriefing()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:95:
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:97:#HotIf EsEditorTexto()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:98:^s:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:99:    SendInput("^s")
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:113:#HotIf
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:114:#SuspendExempt
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:115:; Control de Modo Escritura con tecla ` (o sc029):
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:178:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:179:RButton:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:180:    stylus.rButtonHeld := true
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:195:Space & RButton:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:196:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:197:    _InvSeleccionConGUI()
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:243:~!b:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:244:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount 
+- stylus.bSinteticoTick) : 9999
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:245:    if (elapsedB < UP_SINTETICO_MS) {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:253:~!b up:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:254:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount 
+- stylus.bSinteticoTick) : 9999
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:255:    if (elapsedB < UP_SINTETICO_MS) {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:376:#HotIf stylus.altActive && !WinActive("ahk_exe 
+PureRef.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:377:z:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:378:    SendInput("^c")
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:382:w:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:383:    Send("+s")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:384:    MostrarHUD("SHIFT+S","00E5FF",800)   ; solo visual, 
+sin llamada a _SonarUI
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:444:$Space:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:445:    stylus.comboUsado := true
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:446:    SendInput("!g")
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:450:#HotIf
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:451:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:452:$a:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:453:    _FlushPendentes()
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:517:    MostrarBadgeCombo("ALT + Q","SOFT BRUSH","FF6B00",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:518:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:519:~LAlt & 1::
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:534:$w:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:535:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:536:    global colorEstado
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:784:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe") && 
+stylus.altActive
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:785:$!x:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:786:    now := A_TickCount
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:801:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:802:__AltX_SEND_NORMAL() {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:803:    if !AltB_a_state.timerRunning
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:985:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:986:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:987:; Shift sostenido: Space + (Shift + e) desde Keydial (K7 + 
+K3), o Space + -
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:994:#HotIf GetKeyState("Space") && WinActive("ahk_exe 
+CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:995:*e:: _SpaceE_Dispatch()
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:996:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:997:
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:998:; Space+E: teclado = Mostrar/Ocultar capa; K7+K3 (macro 
+Shift+E del driver) = Shift anclado.
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1212:    MostrarBadgeCombo("PEN + W","DIFU MIXER 
+2","00E5FF",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1213:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1214:!w:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1216:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 
+2","00E5FF",2200)
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1217:}
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1218:~RButton & -:: {
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1379:~Space & NumpadAdd:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1380:    Send("+p")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1381:    MostrarMiniTexto("SPACE  +  +","1E8449",700)
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1383:~Space & NumpadSub:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1384:    Send("^+p")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1385:    MostrarMiniTexto("SPACE  +  −","922B21",700)
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1387:~Space & w:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1388:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1389:    Send("+w")
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1392:~Space & x:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1393:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1394:    Send("+s")
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1397:~Space & e:: _SpaceE_Dispatch()
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1398:~Space & q:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1399:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1400:    AccionEnfoque()
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1402:~Space & s:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1403:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1404:    SendInput("!h")   ; CSP: Alt+H = ventana de capa
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1408:~Space & f:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1409:    _FlushPendentes()
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1410:    static estado := 0
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1420:~Space & Numpad1::
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1421:~Space & Numpad2::
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1422:~Space & Numpad3::
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1423:~Space & Numpad4::
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1424:~Space & Numpad5::
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1425:~Space & Numpad6:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1426:    tecla := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1427:    tipos := 
+Map("1","HSV","2","Brillo/Contraste","3","Equilibrio color","4","Curva tonos","5","Niveles","6","Degradado")
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1443:~*Space:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1444:    spc.downTick := A_TickCount
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1445:    LienzoHUD_ChequeoSpace()
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1447:~*Space up:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1448:    held := A_TickCount - spc.downTick
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1449:    now := A_TickCount
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1472:#HotIf
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1473:$^F11:: _CapturarLayout("Normal")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1474:$^F12:: _CapturarLayout("Enfoque")
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1489:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1490:!f:: {
+  _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1491:    global _bSmearAbajo
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1529:#HotIf
+> _backups\lib_baks\hotkeys_csp_20261113_220310.bak.ahk:1530:#HotIf
+> _backups\lib_baks\hud_badges_20261112_133306.bak.ahk:466:MostrarBadgeCombo(comboText, toolText, colorAcento := 
+"00E5FF", duracion := 1500, zona := 2) {
+  _backups\lib_baks\hud_badges_20261112_133306.bak.ahk:467:    ev := _MapearTextoAEvento(toolText)
+  _backups\lib_baks\hud_badges_20261112_133306.bak.ahk:468:    if (!ev)
+> _backups\lib_baks\hud_badges_20261112_154112.bak.ahk:500:MostrarBadgeCombo(comboText, toolText, colorAcento := 
+"00E5FF", duracion := 1500, zona := 2) {
+  _backups\lib_baks\hud_badges_20261112_154112.bak.ahk:501:    ev := _MapearTextoAEvento(toolText)
+  _backups\lib_baks\hud_badges_20261112_154112.bak.ahk:502:    if (!ev)
+> _backups\lib_baks\theme_gfx_20261108_194742.bak.ahk:226:        OnExit(_GfxGdipAlSalir)   ; se suma a _AudAlSalir y 
+demás, no los reemplaza
+  _backups\lib_baks\theme_gfx_20261108_194742.bak.ahk:227:        alSalir := true
+  _backups\lib_baks\theme_gfx_20261108_194742.bak.ahk:228:    }
+> _backups\lib_baks\theme_gfx_20261114_011119.bak.ahk:226:        OnExit(_GfxGdipAlSalir)   ; se suma a _AudAlSalir y 
+demás, no los reemplaza
+  _backups\lib_baks\theme_gfx_20261114_011119.bak.ahk:227:        alSalir := true
+  _backups\lib_baks\theme_gfx_20261114_011119.bak.ahk:228:    }
+> _historico\galeria.ahk:31:OnExit(_AlSalir)
+  _historico\galeria.ahk:32:OnMessage(0x0201, _Click)
+  _historico\galeria.ahk:33:_CrearControl()
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:214:#HotIf EsEditorTexto()
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:215:^s:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:216:    SendInput("^s")
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:233:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:234:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:235:#SuspendExempt
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:256:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:257:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:258:RButton:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:276:Space & RButton:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:277:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:278:    _InvSeleccionConGUI()
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:364:~!b:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:365:    ; Ignorar el "down" sintético que nosotros mismos 
+generamos en
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:366:    ; __AltF_SEND_NORMAL (forzar {b up}{b down} porque 
+"Smear" en CSP
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:378:~!b up:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:379:    ; Mismo filtro que arriba, para el "up" sintético 
+del mismo forzado.
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:380:    elapsedB := (stylus.bSinteticoTick > 0) ? 
+(A_TickCount - stylus.bSinteticoTick) : 9999
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:521:#HotIf stylus.altActive && !WinActive("ahk_exe 
+PureRef.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:522:z:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:523:    SendInput("^c")
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:527:w:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:528:    Send("+s")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:529:    MostrarHUD("SHIFT+S", "00E5FF", 800)
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:604:$Space:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:605:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:606:    SendInput("!g")
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:610:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:611:
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:612:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:613:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:614:; ┌────────────────────┐
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:693:    MostrarBadgeCombo("ALT + Q", "SOFT BRUSH", "FF6B00", 
+2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:694:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:695:
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:729:$w:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:730:    global colorEstado
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:731:    now := A_TickCount
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:981:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe") && 
+stylus.altActive
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:982:$!x:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:983:    now := A_TickCount
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:996:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:997:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:998:__AltX_SEND_NORMAL() {
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1167:    MostrarBadgeCombo("PEN + Q", "HARD BRUSH", 
+"FF6B00", 2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1168:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1169:
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1191:    MostrarBadgeCombo("PEN + W", "DIFU MIXER 2", 
+"00E5FF", 2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1192:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1193:
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1196:    MostrarBadgeCombo("ALT + W", "★ OPC PRESSURE 2", 
+"00E5FF", 2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1197:}
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1198:
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1396:~Space & NumpadAdd:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1397:    Send("+p")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1398:    MostrarMiniTexto("SPACE  +  +", "1E8449", 700)
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1401:~Space & NumpadSub:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1402:    Send("^+p")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1403:    MostrarMiniTexto("SPACE  +  −", "922B21", 700)
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1409:~Space & w:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1410:    Send("+w")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1411:    MostrarMiniTexto("Up", "1E8449", 700)
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1415:~Space & x:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1416:    Send("+s")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1417:    MostrarMiniTexto("Down", "1E8449", 700)
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1423:~Space & e:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1424:    _ToggleLayerVis()
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1425:}
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1429:~Space & q:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1430:    AccionEnfoque()
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1431:}
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1435:~Space & s:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1436:    SendInput("+f")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1437:    SetTimer(() => SoundPlay(A_WinDir 
+"\Media\chord.wav"), -1)
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1442:~Space & f:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1443:    static estado := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1444:    Send("{Insert}")
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1454:~Space & Numpad1::
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1455:~Space & Numpad2::
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1456:~Space & Numpad3::
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1457:~Space & Numpad4::
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1458:~Space & Numpad5::
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1459:~Space & Numpad6:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1460:    tecla := SubStr(A_ThisHotkey, StrLen(A_ThisHotkey))
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1461:    tipos := Map("1", "HSV (Hue / Sat / Val)"
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1487:~Space:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1488:    spc.downTick := A_TickCount
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1489:}
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1491:~Space up:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1492:    held := A_TickCount - spc.downTick
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1493:    now  := A_TickCount
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1526:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1527:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:1528:; 
+┌────────────────────────────────────────────────────────────────┐
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:2172:MostrarBadgeCombo(comboText, toolText, colorAcento := 
+"00E5FF", duracion := 2200) {
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:2173:    global PUNTOS, AVISO_ESC, floatGui
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:2174:    if IsObject(floatGui.miniTip)
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:2836:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:2837:; Sin SetTimer/diferido: responde de inmediato en cada 
+toque real, sin el
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:2838:; lag de 250ms. AltF_state.held bloquea el auto-repeat 
+de Windows mientras
+> _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:2880:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:2881:
+  _historico\XPPEN_a16pg2_displayAS_secondary - copia.ahk:2882:; 
+┌──────────────────────────────────────────────────────────┐
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:113:#HotIf EsEditorTexto()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:114:^s:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:115:    SendInput("^s")
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:128:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:129:#SuspendExempt
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:130:`:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:141:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:142:RButton:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:143:    stylus.rButtonHeld := true
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:158:Space & RButton:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:159:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:160:    _InvSeleccionConGUI()
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:180:~!b:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:181:    Critical(true)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:182:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount - 
+stylus.bSinteticoTick) : 9999
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:192:~!b up:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:193:    Critical(true)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:194:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount - 
+stylus.bSinteticoTick) : 9999
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:291:#HotIf stylus.altActive && !WinActive("ahk_exe PureRef.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:292:z:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:293:    SendInput("^c")
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:297:w:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:298:    Send("+s")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:299:    MostrarHUD("SHIFT+S","00E5FF",800)
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:359:$Space:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:360:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:361:    SendInput("!g")
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:365:#HotIf
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:366:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:367:$a:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:368:    Critical(true)
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:432:    MostrarBadgeCombo("ALT + Q","SOFT BRUSH","FF6B00",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:433:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:434:~LAlt & 1::
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:449:$w:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:450:    Critical(true)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:451:    _FlushPendentes()
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:642:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe") && 
+stylus.altActive
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:643:$!x:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:644:    Critical(true)
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:658:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:659:__AltX_SEND_NORMAL() {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:660:    Critical(true)
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:800:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:801:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:802:~RButton & f:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:818:    MostrarBadgeCombo("PEN + W","DIFU MIXER 2","00E5FF",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:819:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:820:!w:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:822:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 2","00E5FF",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:823:}
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:824:~RButton & -:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:985:~Space & NumpadAdd:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:986:    Send("+p")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:987:    MostrarMiniTexto("SPACE  +  +","1E8449",700)
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:989:~Space & NumpadSub:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:990:    Send("^+p")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:991:    MostrarMiniTexto("SPACE  +  −","922B21",700)
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:993:~Space & w:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:994:    _FlushPendentes()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:995:    Send("+w")
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:998:~Space & x:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:999:    _FlushPendentes()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1000:    Send("+s")
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1003:~Space & e:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1004:    _FlushPendentes()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1005:    _ToggleLayerVis()
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1007:~Space & q:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1008:    _FlushPendentes()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1009:    AccionEnfoque()
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1011:~Space & s:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1012:    _FlushPendentes()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1013:    SendInput("+f")
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1017:~Space & f:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1018:    _FlushPendentes()
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1019:    static estado := 0
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1029:~Space & Numpad1::
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1030:~Space & Numpad2::
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1031:~Space & Numpad3::
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1032:~Space & Numpad4::
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1033:~Space & Numpad5::
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1034:~Space & Numpad6:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1035:    tecla := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1036:    tipos := 
+Map("1","HSV","2","Brillo/Contraste","3","Equilibrio color","4","Curva tonos","5","Niveles","6","Degradado")
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1052:~Space:: spc.downTick := A_TickCount
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1053:~Space up:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1054:    held := A_TickCount - spc.downTick
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1055:    now := A_TickCount
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1078:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1079:class BorderFrame {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1080:    T := 0
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1552:MostrarBadgeCombo(comboText,toolText,colorAcento := 
+"00E5FF",duracion := 2200) {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1553:    global AVISO_ESC
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:1554:    if IsObject(floatGui.miniTip)
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2076:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2077:!f:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2078:    Critical(true)
+> _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2112:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2113:_PosGuiIniPath() => A_ScriptDir "\posiciones_gui.ini"
+  _historico\XPPEN_a16pg2_displayAS_secondary.ahk:2114:GuardarPosicionGUI(nombre,hwnd) {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:103:#HotIf EsEditorTexto()
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:104:^s:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:105:    SendInput("^s")
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:118:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:119:#SuspendExempt
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:120:`:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:131:#HotIf WinActive("ahk_exe 
+CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:132:RButton:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:133:    stylus.rButtonHeld := true
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:148:Space & RButton:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:149:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:150:    _InvSeleccionConGUI()
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:170:~!b:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:171:    elapsedB := (stylus.bSinteticoTick > 
+0) ? (A_TickCount - stylus.bSinteticoTick) : 9999
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:172:    if (elapsedB < UP_SINTETICO_MS) {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:180:~!b up:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:181:    elapsedB := (stylus.bSinteticoTick > 
+0) ? (A_TickCount - stylus.bSinteticoTick) : 9999
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:182:    if (elapsedB < UP_SINTETICO_MS) {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:278:#HotIf stylus.altActive && 
+!WinActive("ahk_exe PureRef.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:279:z:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:280:    SendInput("^c")
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:284:w:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:285:    Send("+s")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:286:    MostrarHUD("SHIFT+S","00E5FF",800)
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:346:$Space:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:347:    stylus.comboUsado := true
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:348:    SendInput("!g")
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:352:#HotIf
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:353:#HotIf WinActive("ahk_exe 
+CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:354:$a:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:355:    if stylus.altActive
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:415:    MostrarBadgeCombo("ALT + Q","SOFT 
+BRUSH","FF6B00",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:416:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:417:~LAlt & 1::
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:432:$w:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:433:    global colorEstado
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:434:    now := A_TickCount
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:618:#HotIf WinActive("ahk_exe 
+CLIPStudioPaint.exe") && stylus.altActive
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:619:$!x:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:620:    now := A_TickCount
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:633:#HotIf WinActive("ahk_exe 
+CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:634:__AltX_SEND_NORMAL() {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:635:    if !AltB_a_state.timerRunning
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:769:    MostrarBadgeCombo("PEN + Q","HARD 
+BRUSH","FF6B00",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:770:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:771:~RButton & f:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:787:    MostrarBadgeCombo("PEN + W","DIFU 
+MIXER 2","00E5FF",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:788:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:789:!w:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:791:    MostrarBadgeCombo("ALT + W","★ OPC 
+PRESSURE 2","00E5FF",2200)
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:792:}
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:793:~RButton & -:: {
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:950:~Space & NumpadAdd:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:951:    Send("+p")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:952:    MostrarMiniTexto("SPACE  +  
++","1E8449",700)
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:954:~Space & NumpadSub:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:955:    Send("^+p")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:956:    MostrarMiniTexto("SPACE  +  
+−","922B21",700)
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:958:~Space & w:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:959:    Send("+w")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:960:    MostrarMiniTexto("Up","1E8449",700)
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:962:~Space & x:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:963:    Send("+s")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:964:    MostrarMiniTexto("Down","1E8449",700)
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:966:~Space & e:: _ToggleLayerVis()
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:967:~Space & q:: AccionEnfoque()
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:968:~Space & s:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:969:    SendInput("+f")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:970:    SetTimer(() => SoundPlay(A_WinDir 
+"\Media\chord.wav"),-1)
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:973:~Space & f:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:974:    static estado := 0
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:975:    Send("{Insert}")
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:984:~Space & Numpad1::
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:985:~Space & Numpad2::
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:986:~Space & Numpad3::
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:987:~Space & Numpad4::
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:988:~Space & Numpad5::
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:989:~Space & Numpad6:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:990:    tecla := 
+SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:991:    tipos := 
+Map("1","HSV","2","Brillo/Contraste","3","Equilibrio color","4","Curva tonos","5","Niveles","6","Degradado")
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1007:~Space:: spc.downTick := A_TickCount
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1008:~Space up:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1009:    held := A_TickCount - spc.downTick
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1010:    now := A_TickCount
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1033:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1034:class BorderFrame {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1035:    T := 0
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de 
+CLAUDE.ahk:1517:MostrarBadgeCombo(comboText,toolText,colorAcento := "00E5FF",duracion := 2200) {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1518:    global AVISO_ESC
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1519:    if IsObject(floatGui.miniTip)
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1952:#HotIf WinActive("ahk_exe 
+CLIPStudioPaint.exe")
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1953:!f:: {
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1954:    if !stylus.altActive
+> _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1987:#HotIf
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1988:_PosGuiIniPath() => A_ScriptDir 
+"\posiciones_gui.ini"
+  _historico\XPPEN_a16pg2_displayAS_secondary_copia antes de CLAUDE.ahk:1989:GuardarPosicionGUI(nombre,hwnd) {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:109:#HotIf EsEditorTexto()
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:110:^s:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:111:    SendInput("^s")
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:124:#HotIf
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:125:#SuspendExempt
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:126:`:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:137:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:138:RButton:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:139:    stylus.rButtonHeld := true
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:154:Space & RButton:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:155:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:156:    _InvSeleccionConGUI()
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:176:~!b:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:177:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount - 
+stylus.bSinteticoTick) : 9999
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:178:    if (elapsedB < UP_SINTETICO_MS) {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:186:~!b up:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:187:    elapsedB := (stylus.bSinteticoTick > 0) ? (A_TickCount - 
+stylus.bSinteticoTick) : 9999
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:188:    if (elapsedB < UP_SINTETICO_MS) {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:284:#HotIf stylus.altActive && !WinActive("ahk_exe PureRef.exe")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:285:z:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:286:    SendInput("^c")
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:290:w:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:291:    Send("+s")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:292:    MostrarHUD("SHIFT+S","00E5FF",800)
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:352:$Space:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:353:    stylus.comboUsado := true
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:354:    SendInput("!g")
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:358:#HotIf
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:359:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:360:$a:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:361:    if stylus.altActive
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:421:    MostrarBadgeCombo("ALT + Q","SOFT BRUSH","FF6B00",2200)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:422:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:423:~LAlt & 1::
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:438:$w:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:439:    global colorEstado
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:440:    now := A_TickCount
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:624:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe") && 
+stylus.altActive
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:625:$!x:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:626:    now := A_TickCount
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:639:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:640:__AltX_SEND_NORMAL() {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:641:    if !AltB_a_state.timerRunning
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:775:    MostrarBadgeCombo("PEN + Q","HARD BRUSH","FF6B00",2200)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:776:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:777:~RButton & f:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:793:    MostrarBadgeCombo("PEN + W","DIFU MIXER 2","00E5FF",2200)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:794:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:795:!w:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:797:    MostrarBadgeCombo("ALT + W","★ OPC PRESSURE 
+2","00E5FF",2200)
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:798:}
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:799:~RButton & -:: {
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:959:~Space & NumpadAdd:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:960:    Send("+p")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:961:    MostrarMiniTexto("SPACE  +  +","1E8449",700)
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:963:~Space & NumpadSub:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:964:    Send("^+p")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:965:    MostrarMiniTexto("SPACE  +  −","922B21",700)
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:967:~Space & w:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:968:    Send("+w")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:969:    MostrarMiniTexto("Up","1E8449",700)
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:971:~Space & x:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:972:    Send("+s")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:973:    MostrarMiniTexto("Down","1E8449",700)
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:975:~Space & e:: _ToggleLayerVis()
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:976:~Space & q:: AccionEnfoque()
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:977:~Space & s:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:978:    SendInput("+f")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:979:    SetTimer(() => SoundPlay(A_WinDir "\Media\chord.wav"),-1)
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:982:~Space & f:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:983:    static estado := 0
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:984:    Send("{Insert}")
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:993:~Space & Numpad1::
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:994:~Space & Numpad2::
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:995:~Space & Numpad3::
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:996:~Space & Numpad4::
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:997:~Space & Numpad5::
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:998:~Space & Numpad6:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:999:    tecla := SubStr(A_ThisHotkey,StrLen(A_ThisHotkey))
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1000:    tipos := 
+Map("1","HSV","2","Brillo/Contraste","3","Equilibrio color","4","Curva tonos","5","Niveles","6","Degradado")
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1016:~Space:: spc.downTick := A_TickCount
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1017:~Space up:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1018:    held := A_TickCount - spc.downTick
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1019:    now := A_TickCount
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1042:#HotIf
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1043:class BorderFrame {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1044:    T := 0
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1528:MostrarBadgeCombo(comboText,toolText,colorAcento := 
+"00E5FF",duracion := 2200) {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1529:    global AVISO_ESC
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1530:    if IsObject(floatGui.miniTip)
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1983:#HotIf WinActive("ahk_exe CLIPStudioPaint.exe")
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1984:!f:: {
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:1985:    if !stylus.altActive
+> _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:2018:#HotIf
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:2019:_PosGuiIniPath() => A_ScriptDir "\posiciones_gui.ini"
+  _historico\XxxPPEN_a16pg2_displayAS_secondary.ahk:2020:GuardarPosicionGUI(nombre,hwnd) {
+> _historico\Autohotkeys_ESTETICA_F0_v1\Autohotkeys\docs\ESTETICA\spike\galeria.ahk:31:OnExit(_AlSalir)
+  _historico\Autohotkeys_ESTETICA_F0_v1\Autohotkeys\docs\ESTETICA\spike\galeria.ahk:32:OnMessage(0x0201, _Click)
+  _historico\Autohotkeys_ESTETICA_F0_v1\Autohotkeys\docs\ESTETICA\spike\galeria.ahk:33:_CrearControl()
+> _historico\diagnosticos_y_tests\diagnostico_keydial.ahk:3:#Warn All, OutputDebug
+  _historico\diagnosticos_y_tests\diagnostico_keydial.ahk:4:
+  _historico\diagnosticos_y_tests\diagnostico_keydial.ahk:5:; 
+==============================================================================
+> _historico\diagnosticos_y_tests\diagnostico_keydial.ahk:64:^!+q:: ExitApp()
+  _historico\diagnosticos_y_tests\diagnostico_keydial.ahk:65:
+  _historico\diagnosticos_y_tests\diagnostico_keydial.ahk:66:; 
+==============================================================================
+> _historico\diagnosticos_y_tests\diagnostico_keydial_final.ahk:3:#Warn All, OutputDebug
+  _historico\diagnosticos_y_tests\diagnostico_keydial_final.ahk:4:
+  _historico\diagnosticos_y_tests\diagnostico_keydial_final.ahk:5:archivo := A_ScriptDir 
+"\diagnostico_keydial_final.txt"
+> _historico\diagnosticos_y_tests\diagnostico_keydial_xpp.ahk:3:#Warn All, OutputDebug
+  _historico\diagnosticos_y_tests\diagnostico_keydial_xpp.ahk:4:
+  _historico\diagnosticos_y_tests\diagnostico_keydial_xpp.ahk:5:; 
+==============================================================================
+> _historico\diagnosticos_y_tests\diagnostico_keydial_xpp.ahk:64:^!+q:: ExitApp()
+  _historico\diagnosticos_y_tests\diagnostico_keydial_xpp.ahk:65:
+  _historico\diagnosticos_y_tests\diagnostico_keydial_xpp.ahk:66:; 
+==============================================================================
+> _historico\diagnosticos_y_tests\diagnostico_teclas.ahk:3:#Warn All, OutputDebug
+  _historico\diagnosticos_y_tests\diagnostico_teclas.ahk:4:
+  _historico\diagnosticos_y_tests\diagnostico_teclas.ahk:5:~*:: {
+> _historico\diagnosticos_y_tests\diagnostico_teclas.ahk:12:Esc:: ExitApp()
+  _historico\diagnosticos_y_tests\diagnostico_teclas.ahk:13:
+  _historico\diagnosticos_y_tests\diagnostico_teclas.ahk:14:while (true)
+> _historico\diagnosticos_y_tests\test_completo.ahk:3:#Warn All, OutputDebug
+  _historico\diagnosticos_y_tests\test_completo.ahk:4:
+  _historico\diagnosticos_y_tests\test_completo.ahk:5:; Arnés de prueba 100% libre de permisos de Administrador
+> _historico\informe-qoder-f0v2\artifacts\scripts-parcheados\galeria.ahk:63:OnExit(_AlSalir)
+  _historico\informe-qoder-f0v2\artifacts\scripts-parcheados\galeria.ahk:64:if OCULTO
+  _historico\informe-qoder-f0v2\artifacts\scripts-parcheados\galeria.ahk:65:    OnError(_OnErr)
+> _historico\_f0v2\Autohotkeys_ESTETICA_F0_v2\docs\ESTETICA\spike\galeria.ahk:63:OnExit(_AlSalir)
+  _historico\_f0v2\Autohotkeys_ESTETICA_F0_v2\docs\ESTETICA\spike\galeria.ahk:64:if OCULTO
+  _historico\_f0v2\Autohotkeys_ESTETICA_F0_v2\docs\ESTETICA\spike\galeria.ahk:65:    OnError(_OnErr)
+
+

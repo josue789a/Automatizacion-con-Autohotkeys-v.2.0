@@ -1,0 +1,255 @@
+﻿diff --git a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/core/draft.py b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/core/draft.py
+index f0b0b56..c7eb481 100644
+--- a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/core/draft.py	
++++ b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/core/draft.py	
+@@ -49,6 +49,16 @@ class Draft:
+                 raw = dv
+         return to_ui(name, raw)
+ 
++    def explicito(self, name: str, id_ev: str) -> bool:
++        """True si la clave tiene valor propio (en el borrador o en el INI).
++
++        False = no está asignada y la UI debe mostrar el valor de fábrica en gris.
++        """
++        sec, key = self.resolve(name, id_ev)
++        if (sec.lower(), key.lower()) in self.pending:
++            return True
++        return self.store.get(sec, key) is not None
++
+     def set(self, name: str, id_ev: str, value) -> bool:
+         """False si el valor es inválido (no se registra)."""
+         val = to_ini(name, value)
+diff --git a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/blocks.py b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/blocks.py
+index 8874a1f..793e98d 100644
+--- a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/blocks.py	
++++ b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/blocks.py	
+@@ -20,6 +20,13 @@ class Ctx:
+     def get(self, name):
+         return self.draft.get(name, self.eid(name))
+ 
++    def explicito(self, name) -> bool:
++        """False = la clave no tiene valor propio (se muestra la fábrica en gris)."""
++        try:
++            return self.draft.explicito(name, self.eid(name))
++        except Exception:
++            return True
++
+     def set(self, name, value) -> bool:
+         ok = self.draft.set(name, self.eid(name), value)
+         if ok:
+@@ -264,10 +271,53 @@ class Block(ctk.CTkFrame):
+             w.delete(0, "end")
+             if cur and cur.lower() != str(vacio).lower():
+                 w.insert(0, cur)            # valor propio -> negro
++            else:
++                # delete() borra el texto del placeholder: hay que reactivarlo
++                try:
++                    w._activate_placeholder()
++                except Exception:
++                    pass
+             w.configure(border_color=T.FIELD_BORDER)
+         self._loaders.append(load)
+         return w
+ 
++    def f_stepper_default(self, parent, name, step=1, width=48, suffix=""):
++        """Stepper con valor de fábrica en gris y valor propio en negro.
++
++        - Sin valor propio: se muestra el valor efectivo de fábrica en gris
++          (p. ej. el `quick_ms` del evento: 250/300/400 según la tabla de
++          particularidades), no un número inventado.
++        - Con valor propio: negro.
++        - Vaciar el campo y confirmar vuelve al valor de fábrica.
++        - Los ▴/▾ parten del valor de fábrica aunque el campo esté en gris.
++
++        Reutilizable en cualquier bloque; B03 lo usa para el umbral (ms).
++        """
++        f = FIELDS[name]
++        w = Stepper(parent, f.lo, f.hi, step, width, suffix=suffix,
++                    on_commit=lambda t: self._commit_stepper_default(name, w, t))
++
++        def load():
++            val = self.ctx.get(name)
++            if self.ctx.explicito(name):
++                w.set(val)                  # propio -> negro
++            else:
++                w.set_default(val)          # fábrica -> gris
++        self._loaders.append(load)
++        return w
++
++    def _commit_stepper_default(self, name, w, texto):
++        txt = str(texto).strip()
++        if txt == "":
++            txt = str(w.fallback if w.fallback is not None else FIELDS[name].default)
++        if not self._commit(name, txt):
++            return False
++        if self.ctx.explicito(name):
++            w.set(self.ctx.get(name))
++        else:
++            w.set_default(self.ctx.get(name))
++        return True
++
+     def f_key_entry(self, parent, name, width=90, on_clear=None):
+         """Campo estándar para captura de atajos de teclado (hasta 4 teclas).
+         Incluye Entry con fuente condensada, attach_keycapture y dúo compacto ✓/✕."""
+@@ -610,24 +660,48 @@ class B03Modulacion(Block):
+         p.grid_columnconfigure(0, weight=1)
+         p.grid_columnconfigure(1, weight=1)
+ 
+-        # Columna Izquierda: Pulsación rápida
++        # ── Columna Izquierda: Pulsación rápida ──
+         a = ctk.CTkFrame(p, fg_color="transparent")
+         a.grid(row=0, column=0, sticky="nsew", padx=(0, 12))
+-        ra1 = ctk.CTkFrame(a, fg_color="transparent")
+-        ra1.pack(fill="x", pady=(0, 4))
+-        self.f_check(ra1, "quick", "Pulsación rápida").pack(side="left", padx=(0, 10))
+-        lbl(ra1, "Umbral:", 11, T.TXT2).pack(side="left", padx=(0, 4))
+-        self.f_stepper(ra1, "quick_ms", 50, 48, "ms").pack(side="left", padx=(0, 4))
+ 
++        # 1) Renglón A/B: fija la referencia de ancho de la columna.
+         ra2 = ctk.CTkFrame(a, fg_color="transparent")
+-        ra2.pack(fill="x")
++        ra2.grid(row=1, column=0, sticky="w")
+         lbl(ra2, "A:", 11, T.TXT2).pack(side="left", padx=(0, 4))
+         c_qa, _ = self.f_key_entry(ra2, "quick_a", 90)
+         c_qa.pack(side="left", padx=(0, 8))
+         lbl(ra2, "B:", 11, T.TXT2).pack(side="left", padx=(0, 4))
+-        c_qb, _ = self.f_key_entry(ra2, "quick_b", 90)
++        c_qb, e_qb = self.f_key_entry(ra2, "quick_b", 90)
+         c_qb.pack(side="left")
+ 
++        # 2) Renglón del umbral: «ms» va DENTRO de la caja y el borde derecho de
++        #    la caja queda alineado con el de la caja B de abajo (hueco elástico).
++        ra1 = ctk.CTkFrame(a, fg_color="transparent")
++        ra1.grid(row=0, column=0, sticky="w", pady=(0, 4))
++        chk = self.f_check(ra1, "quick", "Pulsación rápida")
++        chk.pack(side="left")
++        self._gap = ctk.CTkFrame(ra1, fg_color="transparent", width=8, height=1)
++        self._gap.pack(side="left")
++        mun = ctk.CTkFrame(ra1, fg_color="transparent")
++        mun.pack(side="left")
++        lbl(mun, "Umbral:", 11, T.TXT2).pack(side="left", padx=(0, 4))
++        self.f_stepper_default(mun, "quick_ms", 50, 62, "ms").pack(side="left")
++
++        def _alinear(*_):
++            try:
++                wb = e_qb.winfo_width()
++                if wb <= 20:                                    # aún sin geometría
++                    a.after(60, _alinear)
++                    return
++                x_b = c_qb.winfo_x() + wb                       # borde der. de la caja B (px)
++                hueco = x_b - chk.winfo_reqwidth() - mun.winfo_reqwidth()
++                self._gap.configure(width=self._reverse_widget_scaling(max(4, hueco)))
++            except Exception:
++                pass
++        a.bind("<Configure>", _alinear, add="+")
++        self.after(60, _alinear)
++        self._loaders.append(lambda: a.after_idle(_alinear))
++
+         # Columna Derecha: Alternador A ⇄ B
+         b = ctk.CTkFrame(p, fg_color="transparent")
+         b.grid(row=0, column=1, sticky="nsew")
+diff --git a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/widgets.py b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/widgets.py
+index ed82b70..543b144 100644
+--- a/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/widgets.py	
++++ b/ClipStudioPaint _ Autohotkeys/calibrador_py/xppen_calibrador/ui/widgets.py	
+@@ -112,14 +112,25 @@ class Hint(ctk.CTkLabel):
+ 
+ 
+ class Stepper(ctk.CTkFrame):
+-    """Spinbox vertical compacto: [valor] [▴/▾] estilo caja casi cuadrada."""
+-    def __init__(self, parent, lo, hi, step=1, width=38, on_commit=None):
++    """Spinbox vertical compacto: [valor] [sufijo] [▴/▾] estilo caja casi cuadrada.
++
++    El sufijo (p. ej. «ms») se dibuja **dentro** del marco: el borde derecho de
++    la caja es también el final del grupo, así puede alinearse con otras cajas
++    de la misma columna sin que el texto se salga de la línea.
++
++    Modo «valor de fábrica»: `set_default()` muestra el número en gris (sin
++    valor propio); `set()` lo muestra en negro (asignado a mano).
++    """
++    def __init__(self, parent, lo, hi, step=1, width=38, on_commit=None, suffix=""):
+         super().__init__(parent, fg_color="#FAF9FD", corner_radius=4, border_width=1, border_color="#D8D2E7", height=24)
+         self.lo, self.hi, self.step, self.on_commit = lo, hi, step, on_commit
++        self.fallback = None            # valor de fábrica (se pinta en gris)
++        self._factory = False
+         self._v = tk.StringVar(value=str(lo))
+ 
++        sfx_w = 14 if suffix else 0
+         # Entry sin relleno interno: CTkEntry reserva >= 6 px por lado y recortaba el "100"
+-        ent_w = max(26, width - 12)
++        ent_w = max(26, width - 12 - sfx_w)
+         self.ent = ctk.CTkEntry(self, width=ent_w, height=20, textvariable=self._v, justify="center",
+                                 font=T.font_cap(11), fg_color="transparent", border_width=0,
+                                 corner_radius=0, text_color=T.TXT)
+@@ -129,6 +140,10 @@ class Stepper(ctk.CTkFrame):
+             pass
+         self.ent.pack(side="left", padx=(1, 0), pady=1)
+ 
++        if suffix:
++            ctk.CTkLabel(self, text=suffix, width=sfx_w, font=T.font(9),
++                         text_color=T.TXT2, height=1).pack(side="left")
++
+         # Micro-muescas: mismo tamaño y vector, espejadas respecto al eje y=7 (14 - y)
+         cv = tk.Canvas(self, width=9, height=14, bg="#FAF9FD", highlightthickness=0, bd=0, cursor="hand2")
+         cv.pack(side="left", padx=(0, 2))
+@@ -156,20 +171,56 @@ class Stepper(ctk.CTkFrame):
+ 
+         self.ent.bind("<Return>", self._commit)
+         self.ent.bind("<FocusOut>", self._commit)
++        self.ent.bind("<FocusIn>", self._focus_in)
++        self.ent.bind("<KeyRelease>", self._typed)
+ 
+     def set(self, value):
+-        self._v.set(str(value))
++        """Valor propio (negro)."""
++        self._factory, self.fallback = False, None
++        self._v.set("" if value is None else str(value))
++        self.ent.configure(text_color=T.TXT)
+         self.configure(border_color="#D8D2E7")
+ 
+-    def _bump(self, d):
++    def set_default(self, texto):
++        """Sin valor propio: muestra el valor de fábrica en gris."""
++        try:
++            self.fallback = int(str(texto).strip())
++        except (TypeError, ValueError):
++            self.fallback = None
++        self._factory = True
++        self._v.set("" if texto is None else str(texto))
++        self.ent.configure(text_color=T.TXT3)
++        self.configure(border_color="#D8D2E7")
++
++    def _value(self):
+         try:
+-            cur = int(self._v.get())
++            return int(self._v.get())
+         except ValueError:
+-            cur = self.lo
++            return self.fallback if self.fallback is not None else self.lo
++
++    def _focus_in(self, _e=None):
++        # En modo fábrica el texto se selecciona para que escribir lo reemplace
++        if self._factory:
++            try:
++                self.ent._entry.selection_range(0, "end")
++            except Exception:
++                pass
++
++    def _typed(self, _e=None):
++        if self._factory and self._value() != self.fallback:
++            self._factory = False
++            self.ent.configure(text_color=T.TXT)
++
++    def _bump(self, d):
++        cur = self._value()
++        self._factory = False
++        self.ent.configure(text_color=T.TXT)
+         self._v.set(str(max(self.lo, min(self.hi, cur + d))))
+         self._commit()
+ 
+     def _commit(self, _e=None):
++        if self._factory and self._value() == self.fallback:
++            self.ent.configure(text_color=T.TXT3)
+         ok = self.on_commit(self._v.get()) if self.on_commit else True
+         self.configure(border_color="#D8D2E7" if ok else T.DANGER)
+ 

@@ -417,6 +417,13 @@ _AvisoEvento(clave, textoPrincipal := "", subtexto := "", colorAcento := "00E5FF
             }
         }
     }
+    if (textoPrincipal = "") {
+        try {
+            evCust := IniRead(_PosGuiIniPath(), "EventosCustom", clave, "")
+            if (evCust != "")
+                textoPrincipal := Trim(StrSplit(evCust, "|")[1])
+        }
+    }
     if (clave != "deshacer" && clave != "rehacer")
         _SndEvento(clave)          ; independiente de c.formato (suena aunque sea "desactivado")
     MostrarAvisoUI(c.formato, textoPrincipal, subtexto, zNum, colorAcento, duracion, c.opacidad, clave)

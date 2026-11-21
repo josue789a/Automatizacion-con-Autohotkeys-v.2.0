@@ -490,13 +490,20 @@ _AplicarEstabVisibilidadBase() {
         try estabGui.g.Hide()
     }
 }
-_CompanionRestaurarAudio() {
+_CompanionRestaurarAudio(silencioso := false) {
     res := 0
     try res := _AudReiniciar()
+    if (silencioso)
+        return res
     if (res)
         MostrarAvisoUI("moderno", "AUDIO RESTAURADO", "SUBSISTEMA REINICIADO", 1, "00E5FF", 1200)
     else
         MostrarAvisoUI("moderno", "AUDIO EN CURSO", "REINICIO YA EN PROCESO", 2, "FF6B00", 1000)
+}
+
+; Gancho para RELOAD_INI (Companion Python): reinicia audio sin banners.
+_CompanionRestaurarAudioSilencioso() {
+    return _CompanionRestaurarAudio(true)
 }
 
 
